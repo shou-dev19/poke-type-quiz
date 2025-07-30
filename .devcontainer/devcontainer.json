@@ -1,0 +1,64 @@
+{
+  "name": "Pokemon Type Quiz App Development",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:18",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-json",
+        "ms-playwright.playwright",
+        "ms-vscode.test-adapter-converter",
+        "ms-vscode.js-debug",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "typescript.preferences.quoteStyle": "single",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "files.eol": "\n",
+        "typescript.preferences.importModuleSpecifier": "relative"
+      }
+    }
+  },
+
+  "forwardPorts": [3000, 8080, 5173],
+  "portsAttributes": {
+    "3000": {
+      "label": "Development Server",
+      "onAutoForward": "notify"
+    },
+    "8080": {  
+      "label": "Preview Server",
+      "onAutoForward": "silent"
+    },
+    "5173": {
+      "label": "Vite Dev Server", 
+      "onAutoForward": "notify"
+    }
+  },
+
+  "postCreateCommand": "npm install",
+  
+  "mounts": [
+    "source=${localWorkspaceFolder}/.env.example,target=${containerWorkspaceFolder}/.env,type=bind,consistency=cached"
+  ],
+
+  "remoteUser": "node"
+}
