@@ -1,50 +1,32 @@
 import { useState } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import StartScreen from '@/components/screens/StartScreen';
 import QuizScreen from '@/components/screens/QuizScreen';
 import ResultScreen from '@/components/screens/ResultScreen';
-import { QuizState, Difficulty, DamageMultiplier } from '@/types/pokemon';
-import { generateQuestions } from '@/utils/quizLogic';
+import { useQuizState } from '@/hooks/useQuizState';
+import { Difficulty, DamageMultiplier } from '@/types/pokemon';
 
 type AppState = 'start' | 'quiz' | 'result';
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>('start');
-  const [quizState, setQuizState] = useState<QuizState>({
-    currentQuestion: 0,
-    totalQuestions: 10,
-    score: 0,
-    difficulty: 'ふつう',
-    questions: [],
-    showResult: false,
-    selectedAnswer: null,
-    isAnimating: false
-  });
+  const {
+    quizState,
+    startQuiz,
+    answerQuestion,
+    nextQuestion,
+    resetQuiz,
+    restartQuiz,
+    quitQuiz
+  } = useQuizState();
 
   const handleStart = (difficulty: Difficulty, questionCount: number) => {
-    const questions = generateQuestions(difficulty, questionCount);
-    setQuizState({
-      currentQuestion: 0,
-      totalQuestions: questionCount,
-      score: 0,
-      difficulty,
-      questions,
-      showResult: false,
-      selectedAnswer: null,
-      isAnimating: false
-    });
+    startQuiz(difficulty, questionCount);
     setAppState('quiz');
   };
 
   const handleAnswer = (answer: DamageMultiplier) => {
-    const currentQuestion = quizState.questions[quizState.currentQuestion];
-    const isCorrect = answer === currentQuestion.correctAnswer;
-    
-    setQuizState(prev => ({
-      ...prev,
-      selectedAnswer: answer,
-      isAnimating: true,
-      score: isCorrect ? prev.score + 1 : prev.score
-    }));
+    answerQuestion(answer);
   };
 
   const handleNext = () => {
@@ -55,61 +37,50 @@ export default function App() {
       setAppState('result');
     } else {
       // 次の問題へ
-      setQuizState(prev => ({
-        ...prev,
-        currentQuestion: nextQuestionIndex,
-        showResult: false,
-        selectedAnswer: null,
-        isAnimating: false
-      }));
+      nextQuestion();
     }
   };
 
   const handleQuit = () => {
+    quitQuiz();
     setAppState('start');
   };
 
   const handleRestart = () => {
-    const questions = generateQuestions(quizState.difficulty, quizState.totalQuestions);
-    setQuizState(prev => ({
-      ...prev,
-      currentQuestion: 0,
-      score: 0,
-      questions,
-      showResult: false,
-      selectedAnswer: null,
-      isAnimating: false
-    }));
+    restartQuiz();
     setAppState('quiz');
   };
 
   const handleBackToMenu = () => {
+    resetQuiz();
     setAppState('start');
   };
 
 
   return (
-    <div className="min-h-screen">
-      {appState === 'start' && (
-        <StartScreen onStart={handleStart} />
-      )}
-      
-      {appState === 'quiz' && (
-        <QuizScreen 
-          quizState={quizState}
-          onAnswer={handleAnswer}
-          onNext={handleNext}
-          onQuit={handleQuit}
-        />
-      )}
-      
-      {appState === 'result' && (
-        <ResultScreen 
-          quizState={quizState}
-          onRestart={handleRestart}
-          onBackToMenu={handleBackToMenu}
-        />
-      )}
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen">
+        {appState === 'start' && (
+          <StartScreen onStart={handleStart} />
+        )}
+        
+        {appState === 'quiz' && (
+          <QuizScreen 
+            quizState={quizState}
+            onAnswer={handleAnswer}
+            onNext={handleNext}
+            onQuit={handleQuit}
+          />
+        )}
+        
+        {appState === 'result' && (
+          <ResultScreen 
+            quizState={quizState}
+            onRestart={handleRestart}
+            onBackToMenu={handleBackToMenu}
+          />
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }
