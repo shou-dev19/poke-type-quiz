@@ -3,10 +3,10 @@ import {
   QuizQuestion, 
   Difficulty, 
   DamageMultiplier, 
-  POKEMON_TYPES, 
   TYPE_EFFECTIVENESS, 
-  DUAL_TYPES 
-} from '../types/pokemon';
+  DUAL_TYPES,
+  DIFFICULTY_CONFIG 
+} from '@/types/pokemon';
 
 export function calculateDamage(
   attackType: PokemonType, 
@@ -34,36 +34,21 @@ export function calculateDamage(
 export function generateQuestions(difficulty: Difficulty, count: number): QuizQuestion[] {
   const questions: QuizQuestion[] = [];
   const usedCombinations = new Set<string>();
+  const config = DIFFICULTY_CONFIG[difficulty];
 
   while (questions.length < count) {
     let attackType: PokemonType;
     let defendType: PokemonType | [PokemonType, PokemonType];
 
-    // 難易度に応じて問題を生成
-    switch (difficulty) {
-      case 'かんたん':
-        // 基本的なタイプのみ（効果的な相性がわかりやすいもの）
-        const basicTypes: PokemonType[] = ['ほのお', 'みず', 'くさ', 'でんき', 'こおり', 'かくとう', 'ひこう', 'いわ'];
-        attackType = basicTypes[Math.floor(Math.random() * basicTypes.length)];
-        defendType = basicTypes[Math.floor(Math.random() * basicTypes.length)];
-        break;
-        
-      case 'ふつう':
-        // 全18タイプから選択
-        attackType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-        defendType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-        break;
-        
-      case 'むずかしい':
-        // 複合タイプも含む
-        attackType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-        if (Math.random() < 0.4) {
-          // 40%の確率で複合タイプ
-          defendType = DUAL_TYPES[Math.floor(Math.random() * DUAL_TYPES.length)];
-        } else {
-          defendType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-        }
-        break;
+    // 設定に応じてタイプを選択
+    const availableTypes = config.types;
+    attackType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+
+    if (config.dualTypes && Math.random() < 0.4) {
+      // 複合タイプを使用
+      defendType = DUAL_TYPES[Math.floor(Math.random() * DUAL_TYPES.length)];
+    } else {
+      defendType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
     }
 
     // 重複チェック
@@ -86,12 +71,12 @@ export function generateQuestions(difficulty: Difficulty, count: number): QuizQu
 }
 
 export function getAnswerChoices(difficulty: Difficulty): DamageMultiplier[] {
-  switch (difficulty) {
-    case 'かんたん':
-    case 'ふつう':
-      return [2, 1, 0.5, 0];
-    case 'むずかしい':
-      return [4, 2, 1, 0.5, 0.25, 0];
+  const config = DIFFICULTY_CONFIG[difficulty];
+  
+  if (config.choices === 4) {
+    return [2, 1, 0.5, 0];
+  } else {
+    return [4, 2, 1, 0.5, 0.25, 0];
   }
 }
 
@@ -111,4 +96,85 @@ export function formatDefendType(defendType: PokemonType | [PokemonType, Pokemon
     return `${defendType[0]}・${defendType[1]}`;
   }
   return defendType;
+}
+
+// スコア計算関数
+export function calculateScore(correctAnswers: number, totalQuestions: number, difficulty: Difficulty): number {
+  const baseScore = (correctAnswers / totalQuestions) * 100;
+  
+  // 難易度ボーナス
+  const difficultyMultiplier = {
+    'かんたん': 1.0,
+    'ふつう': 1.2,
+    'むずかしい': 1.5
+  };
+  
+  return Math.round(baseScore * difficultyMultiplier[difficulty]);
+}
+
+// 結果評価関数
+export function getGradeInfo(percentage: number) {
+  if (percentage >= 90) return { grade: 'S', color: 'text-yellow-500', message: 'ポケモンマスター！' };
+  if (percentage >= 80) return { grade: 'A', color: 'text-green-500', message: 'すばらしい！' };
+  if (percentage >= 70) return { grade: 'B', color: 'text-blue-500', message: 'よくできました！' };
+  if (percentage >= 60) return { grade: 'C', color: 'text-orange-500', message: 'もう少し！' };
+  return { grade: 'D', color: 'text-red-500', message: 'がんばろう！' };
+}
+
+// ヒント生成関数
+export function generateHint(attackType: PokemonType, defendType: PokemonType | [PokemonType, PokemonType]): string {
+  const hints: Record<string, string> = {
+    'ほのお→くさ': 'ほのおタイプは くさタイプを よく燃やします',
+    'みず→ほのお': 'みずタイプは ほのおタイプを 消火します',
+    'くさ→みず': 'くさタイプは みずを よく吸収します',
+    'でんき→みず': 'でんきタイプは みずタイプに よく流れます',
+    'でんき→ひこう': 'でんきタイプは そらを飛ぶ ポケモンに よく当たります',
+    'こおり→くさ': 'こおりタイプは くさタイプを 凍らせます',
+    'こおり→ドラゴン': 'ドラゴンタイプは さむさが 苦手です',
+    'かくとう→ノーマル': 'かくとうタイプは ノーマルタイプに 強いです',
+    'どく→くさ': 'どくタイプは くさタイプを 枯らします',
+    'じめん→でんき': 'じめんタイプは でんきを アースします',
+    'ひこう→くさ': 'ひこうタイプは くさタイプを 踏みつけます',
+    'エスパー→かくとう': 'エスパータイプは ちからより こころで 戦います',
+    'むし→エスパー': 'むしタイプは エスパーの 集中力を 乱します',
+    'いわ→ひこう': 'いわタイプは そらを飛ぶ ポケモンを 撃ち落とします',
+    'ゴースト→エスパー': 'ゴーストタイプは エスパーの こころを 乱します',
+    'あく→エスパー': 'あくタイプは エスパーの よみを 封じます',
+    'はがね→こおり': 'はがねタイプは こおりを くだきます',
+    'フェアリー→ドラゴン': 'フェアリータイプは ドラゴンを 魅了します'
+  };
+
+  if (Array.isArray(defendType)) {
+    return '複合タイプの場合は 両方のタイプとの相性を かけ算します';
+  }
+
+  const key = `${attackType}→${defendType}`;
+  return hints[key] || 'タイプ相性を よく考えてみましょう';
+}
+
+// 問題の難易度評価
+export function getQuestionDifficulty(attackType: PokemonType, defendType: PokemonType | [PokemonType, PokemonType]): 'easy' | 'medium' | 'hard' {
+  if (Array.isArray(defendType)) {
+    return 'hard';
+  }
+
+  const effectiveness = TYPE_EFFECTIVENESS[attackType][defendType];
+  
+  // 基本的な相性（2倍、0.5倍、0倍）は簡単
+  if (effectiveness === 2 || effectiveness === 0.5 || effectiveness === 0) {
+    return 'easy';
+  }
+  
+  // 等倍は中程度
+  return 'medium';
+}
+
+// シャッフル用ユーティリティ関数
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
