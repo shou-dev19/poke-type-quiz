@@ -124,7 +124,7 @@
   - 難易度選択UI（3段階）
   - 問題数設定機能（5,10,15,20問）
   - タイプアイコンのデモ表示
-- [ ] **3.2.2** QuizScreenの改修
+- [x] **3.2.2** QuizScreenの改修
   - 既存 `figma_output/components/QuizScreen.tsx` をベースに改修
   - 進行状況表示（プログレスバー）
   - 難易度表示
