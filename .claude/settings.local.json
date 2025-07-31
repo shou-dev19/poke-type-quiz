@@ -19,7 +19,9 @@
       "Bash(git reset:*)",
       "Bash(npx tailwindcss init:*)",
       "Bash(timeout 10s npm run dev -- --port 3000 --host)",
-      "Bash(true)"
+      "Bash(true)",
+      "Bash(npx:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }
