@@ -20,7 +20,10 @@ const routes: RouteRecordRaw[] = [
     component: Home,
     meta: {
       title: 'Pokemon Type Quiz - Home',
-      description: 'Learn Pokemon type effectiveness with interactive quizzes'
+      description: 'Learn Pokemon type effectiveness with interactive quizzes',
+      showBreadcrumbs: false,
+      transition: 'fade',
+      icon: '🏠'
     }
   },
   {
@@ -29,7 +32,10 @@ const routes: RouteRecordRaw[] = [
     component: Quiz,
     meta: {
       title: 'Pokemon Type Quiz - Quiz',
-      description: 'Test your knowledge of Pokemon type effectiveness'
+      description: 'Test your knowledge of Pokemon type effectiveness',
+      breadcrumbLabel: 'Quiz',
+      transition: 'slide-left',
+      icon: '🎮'
     }
   },
   {
@@ -39,7 +45,11 @@ const routes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: 'Pokemon Type Quiz - Active Session',
-      description: 'Continue your quiz session'
+      description: 'Continue your quiz session',
+      breadcrumbLabel: 'Active Session',
+      transition: 'scale',
+      icon: '🎯',
+      scrollToTop: false
     }
   },
   {
@@ -48,7 +58,10 @@ const routes: RouteRecordRaw[] = [
     component: Types,
     meta: {
       title: 'Pokemon Type Quiz - Type Information',
-      description: 'Browse comprehensive Pokemon type information and effectiveness charts'
+      description: 'Browse comprehensive Pokemon type information and effectiveness charts',
+      breadcrumbLabel: 'Types',
+      transition: 'slide-right',
+      icon: '📚'
     }
   },
   {
@@ -58,7 +71,10 @@ const routes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: 'Pokemon Type Quiz - Type Details',
-      description: 'Detailed information about a specific Pokemon type'
+      description: 'Detailed information about a specific Pokemon type',
+      breadcrumbLabel: 'Type Details',
+      transition: 'scale',
+      icon: '🔍'
     }
   },
   {
@@ -68,7 +84,10 @@ const routes: RouteRecordRaw[] = [
     alias: '/stats',
     meta: {
       title: 'Pokemon Type Quiz - Statistics',
-      description: 'View your quiz performance and learning progress'
+      description: 'View your quiz performance and learning progress',
+      breadcrumbLabel: 'Statistics',
+      transition: 'slide-left',
+      icon: '📊'
     }
   },
   {
@@ -77,7 +96,10 @@ const routes: RouteRecordRaw[] = [
     component: NotFound,
     meta: {
       title: 'Pokemon Type Quiz - Page Not Found',
-      description: 'The requested page could not be found'
+      description: 'The requested page could not be found',
+      showBreadcrumbs: false,
+      transition: 'fade',
+      icon: '❓'
     }
   }
 ];

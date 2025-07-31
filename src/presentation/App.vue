@@ -1,172 +1,309 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-blue-600 text-white shadow-lg">
-      <div class="container mx-auto px-4 py-6">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="text-3xl">🎯</div>
-            <div>
-              <h1 class="text-2xl font-bold">Pokemon Type Quiz</h1>
-              <p class="text-blue-200">Master the type effectiveness system</p>
-            </div>
-          </div>
-          <nav class="hidden md:flex space-x-6">
-            <router-link 
-              to="/" 
-              class="hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Home
-            </router-link>
-            <router-link 
-              to="/quiz" 
-              class="hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Quiz
-            </router-link>
-            <router-link 
-              to="/types" 
-              class="hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Types
-            </router-link>
-            <router-link 
-              to="/stats" 
-              class="hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Statistics
-            </router-link>
-          </nav>
-          <button 
-            @click="toggleMobileMenu"
-            class="md:hidden text-white hover:text-blue-200"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div v-if="showMobileMenu" class="md:hidden mt-4 pt-4 border-t border-blue-500">
-          <nav class="flex flex-col space-y-2">
-            <router-link 
-              to="/" 
-              @click="closeMobileMenu"
-              class="py-2 hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Home
-            </router-link>
-            <router-link 
-              to="/quiz" 
-              @click="closeMobileMenu"
-              class="py-2 hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Quiz
-            </router-link>
-            <router-link 
-              to="/types" 
-              @click="closeMobileMenu"
-              class="py-2 hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Types
-            </router-link>
-            <router-link 
-              to="/stats" 
-              @click="closeMobileMenu"
-              class="py-2 hover:text-blue-200 transition-colors"
-              active-class="text-yellow-300"
-            >
-              Statistics
-            </router-link>
-          </nav>
-        </div>
-      </div>
-    </header>
+  <div id="app" class="app-container">
+    <!-- Navigation Header -->
+    <AppNavigation 
+      :is-mobile-menu-open="showMobileMenu"
+      @toggle-mobile-menu="toggleMobileMenu"
+      @close-mobile-menu="closeMobileMenu"
+    />
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-      <router-view />
+    <!-- Breadcrumb Navigation -->
+    <BreadcrumbNavigation 
+      v-if="showBreadcrumbs"
+      :items="breadcrumbItems"
+    />
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <router-view v-slot="{ Component, route }">
+        <Transition :name="getTransitionName(route)" mode="out-in" appear>
+          <component :is="Component" :key="route.path" />
+        </Transition>
+      </router-view>
     </main>
 
+    <!-- Back to Top Button -->
+    <BackToTopButton v-if="showBackToTop" />
+
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white mt-16">
-      <div class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 class="text-lg font-semibold mb-4">Pokemon Type Quiz</h3>
-            <p class="text-gray-400">
-              Learn and master Pokemon type effectiveness with interactive quizzes and comprehensive type information.
-            </p>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold mb-4">Features</h3>
-            <ul class="text-gray-400 space-y-2">
-              <li>Interactive Quiz System</li>
-              <li>Comprehensive Type Database</li>
-              <li>Performance Statistics</li>
-              <li>Progress Tracking</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold mb-4">Architecture</h3>
-            <ul class="text-gray-400 space-y-2">
-              <li>Clean Architecture</li>
-              <li>TypeScript + Vue.js</li>
-              <li>Comprehensive Testing</li>
-              <li>Modern Development</li>
-            </ul>
-          </div>
-        </div>
-        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Pokemon Type Quiz. Built with Clean Architecture principles.</p>
-        </div>
-      </div>
-    </footer>
+    <AppFooter />
+
+    <!-- Loading Bar -->
+    <div v-if="isNavigating" class="loading-bar"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import AppNavigation from './components/AppNavigation.vue';
+import BreadcrumbNavigation from './components/BreadcrumbNavigation.vue';
+import BackToTopButton from './components/BackToTopButton.vue';
+import AppFooter from './components/AppFooter.vue';
 
-// Mobile menu state
+const route = useRoute();
+const router = useRouter();
+
+// Navigation state
 const showMobileMenu = ref(false);
+const isNavigating = ref(false);
+const showBackToTop = ref(false);
 
-const toggleMobileMenu = () => {
+// Breadcrumb configuration
+const showBreadcrumbs = computed(() => {
+  return route.path !== '/' && route.meta?.showBreadcrumbs !== false;
+});
+
+const breadcrumbItems = computed(() => {
+  const items = [];
+  const pathSegments = route.path.split('/').filter(segment => segment);
+  
+  // Always include home
+  items.push({
+    path: '/',
+    label: 'Home',
+    icon: '🏠',
+    current: false
+  });
+  
+  // Add path segments
+  let currentPath = '';
+  pathSegments.forEach((segment, index) => {
+    currentPath += `/${segment}`;
+    const isLast = index === pathSegments.length - 1;
+    
+    items.push({
+      path: currentPath,
+      label: getBreadcrumbLabel(segment, route),
+      icon: getBreadcrumbIcon(segment),
+      current: isLast
+    });
+  });
+  
+  return items;
+});
+
+// Mobile menu handlers
+function toggleMobileMenu() {
   showMobileMenu.value = !showMobileMenu.value;
-};
+}
 
-const closeMobileMenu = () => {
+function closeMobileMenu() {
   showMobileMenu.value = false;
-};
+}
+
+// Route transition names
+function getTransitionName(route: any) {
+  return route.meta?.transition || 'fade';
+}
+
+// Breadcrumb helpers
+function getBreadcrumbLabel(segment: string, route: any): string {
+  const labelMap: Record<string, string> = {
+    quiz: 'Quiz',
+    types: 'Types',
+    statistics: 'Statistics'
+  };
+  
+  return route.meta?.breadcrumbLabel || labelMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
+}
+
+function getBreadcrumbIcon(segment: string): string {
+  const iconMap: Record<string, string> = {
+    quiz: '🎮',
+    types: '📚',
+    statistics: '📊'
+  };
+  
+  return iconMap[segment] || '📄';
+}
+
+// Scroll tracking for back to top button
+function handleScroll() {
+  showBackToTop.value = window.scrollY > 400;
+}
+
+// Navigation loading state
+router.beforeResolve((to, from) => {
+  if (to.path !== from.path) {
+    isNavigating.value = true;
+  }
+});
+
+router.afterEach(() => {
+  isNavigating.value = false;
+  // Close mobile menu on navigation
+  closeMobileMenu();
+  // Scroll to top on route change (optional)
+  if (route.meta?.scrollToTop !== false) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
+// Close mobile menu when clicking outside or pressing Escape
+function handleGlobalClick(event: MouseEvent) {
+  if (showMobileMenu.value && !(event.target as Element)?.closest('.mobile-nav-content')) {
+    closeMobileMenu();
+  }
+}
+
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && showMobileMenu.value) {
+    closeMobileMenu();
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  document.addEventListener('click', handleGlobalClick);
+  document.addEventListener('keydown', handleKeydown);
+  handleScroll(); // Check initial scroll position
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+  document.removeEventListener('click', handleGlobalClick);
+  document.removeEventListener('keydown', handleKeydown);
+});
+
+// Prevent body scroll when mobile menu is open
+watch(showMobileMenu, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
 </script>
 
 <style scoped>
-/* Component-specific styles */
-.router-link-active {
-  @apply font-medium;
+.app-container {
+  @apply min-h-screen bg-gray-50 flex flex-col;
 }
 
-/* Mobile-first responsive design */
-.container {
-  max-width: 1200px;
+.main-content {
+  @apply flex-1 pt-20;
 }
 
-/* Custom animations */
+/* Loading Bar */
+.loading-bar {
+  @apply fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 z-50;
+  animation: loading 2s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Route Transitions */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(-20px);
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scale-enter-from {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(1.1);
+}
+
+/* Responsive Container */
+.container {
+  @apply max-w-7xl;
+}
+
+/* Focus Management */
+.app-container:focus-within {
+  @apply outline-none;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .fade-enter-active,
+  .fade-leave-active,
+  .slide-left-enter-active,
+  .slide-left-leave-active,
+  .slide-right-enter-active,
+  .slide-right-leave-active,
+  .scale-enter-active,
+  .scale-leave-active {
+    transition: none;
+  }
+  
+  .loading-bar {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .app-header,
+  .breadcrumb-nav,
+  .back-to-top-btn,
+  .app-footer {
+    @apply hidden;
+  }
+  
+  .main-content {
+    @apply pt-0;
+  }
 }
 </style>
