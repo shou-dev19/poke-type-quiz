@@ -1,4 +1,4 @@
-import { PokemonType, TYPE_COLORS } from '@/types/pokemon';
+import { PokemonType, TYPE_COLORS, TYPE_SYMBOLS, TYPE_ANIMATIONS } from '@/types/pokemon';
 
 interface TypeIconProps {
   type: PokemonType;
@@ -15,56 +15,31 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
   };
 
   const getTypeAnimation = (type: PokemonType) => {
-    const baseClass = 'transition-all duration-300';
+    const baseClass = 'transition-all';
     
-    if (!animated) return baseClass;
+    if (!animated) return `${baseClass} duration-300`;
 
-    const animations: Record<PokemonType, string> = {
-      'ほのお': `${baseClass} animate-pulse hover:animate-bounce`,
-      'みず': `${baseClass} hover:animate-pulse`,
-      'でんき': `${baseClass} animate-pulse hover:animate-ping`,
-      'くさ': `${baseClass} hover:animate-bounce`,
-      'こおり': `${baseClass} animate-pulse hover:animate-spin`,
-      'かくとう': `${baseClass} hover:animate-bounce`,
-      'どく': `${baseClass} animate-pulse`,
-      'じめん': `${baseClass} hover:animate-bounce`,
-      'ひこう': `${baseClass} hover:animate-bounce`,
-      'エスパー': `${baseClass} animate-pulse hover:animate-ping`,
-      'むし': `${baseClass} hover:animate-bounce`,
-      'いわ': `${baseClass} hover:animate-pulse`,
-      'ゴースト': `${baseClass} animate-pulse hover:animate-ping`,
-      'ドラゴン': `${baseClass} animate-pulse hover:animate-bounce`,
-      'あく': `${baseClass} hover:animate-pulse`,
-      'はがね': `${baseClass} hover:animate-pulse`,
-      'フェアリー': `${baseClass} animate-pulse hover:animate-bounce`,
-      'ノーマル': `${baseClass} hover:animate-pulse`
+    const config = TYPE_ANIMATIONS[type];
+    const effectClasses = {
+      'pulse': 'animate-pulse',
+      'bounce': 'animate-bounce',
+      'ping': 'animate-ping',
+      'spin': 'animate-spin',
+      'shake': 'animate-bounce' // Tailwindに標準的なshakeがないためbounceで代用
     };
 
-    return animations[type];
+    const durationClass = config.duration <= 0.3 ? 'duration-300' :
+                         config.duration <= 0.6 ? 'duration-500' :
+                         config.duration <= 0.9 ? 'duration-700' : 'duration-1000';
+
+    const intensityClass = config.intensity === 'high' ? 'hover:scale-125' :
+                          config.intensity === 'medium' ? 'hover:scale-110' : 'hover:scale-105';
+
+    return `${baseClass} ${durationClass} ${effectClasses[config.effect]} ${intensityClass}`;
   };
 
   const getTypeSymbol = (type: PokemonType) => {
-    const symbols: Record<PokemonType, string> = {
-      'ノーマル': '○',
-      'ほのお': '🔥',
-      'みず': '💧',
-      'でんき': '⚡',
-      'くさ': '🌿',
-      'こおり': '❄️',
-      'かくとう': '👊',
-      'どく': '☠️',
-      'じめん': '🌍',
-      'ひこう': '🪶',
-      'エスパー': '🔮',
-      'むし': '🐛',
-      'いわ': '🗿',
-      'ゴースト': '👻',
-      'ドラゴン': '🐉',
-      'あく': '🌑',
-      'はがね': '⚙️',
-      'フェアリー': '✨'
-    };
-    return symbols[type];
+    return TYPE_SYMBOLS[type];
   };
 
   return (
@@ -91,35 +66,59 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
       </span>
       
       {/* タイプ別の特殊エフェクト */}
-      {type === 'ほのお' && animated && (
-        <div className="absolute inset-0 bg-gradient-to-t from-red-600 via-orange-500 to-yellow-400 opacity-60 animate-pulse" />
-      )}
-      
-      {type === 'みず' && animated && (
-        <div className="absolute inset-0">
-          <div className="absolute top-2 left-2 w-2 h-2 bg-blue-200 rounded-full animate-ping opacity-60" />
-          <div className="absolute bottom-3 right-3 w-1 h-1 bg-white rounded-full animate-pulse" />
-        </div>
-      )}
-      
-      {type === 'でんき' && animated && (
-        <div className="absolute inset-0">
-          <div className="absolute top-1 right-2 w-1 h-4 bg-yellow-200 animate-pulse opacity-80" />
-          <div className="absolute bottom-2 left-3 w-1 h-3 bg-white animate-ping opacity-60" />
-        </div>
-      )}
-      
-      {type === 'フェアリー' && animated && (
-        <div className="absolute inset-0">
-          <div className="absolute top-2 left-2 w-1 h-1 bg-pink-200 rounded-full animate-ping" />
-          <div className="absolute top-4 right-3 w-1 h-1 bg-white rounded-full animate-pulse" />
-          <div className="absolute bottom-3 left-4 w-1 h-1 bg-pink-100 rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
-        </div>
-      )}
-      
-      {type === 'ゴースト' && animated && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-700 via-purple-900 to-gray-900 opacity-50 animate-pulse" />
-      )}
+      {animated && (() => {
+        const config = TYPE_ANIMATIONS[type];
+        
+        switch (type) {
+          case 'ほのお':
+            return <div className="absolute inset-0 bg-gradient-to-t from-red-600 via-orange-500 to-yellow-400 opacity-60 animate-pulse" />;
+          
+          case 'みず':
+            return (
+              <div className="absolute inset-0">
+                <div className="absolute top-2 left-2 w-2 h-2 bg-blue-200 rounded-full animate-ping opacity-60" />
+                <div className="absolute bottom-3 right-3 w-1 h-1 bg-white rounded-full animate-pulse" />
+              </div>
+            );
+          
+          case 'でんき':
+            return (
+              <div className="absolute inset-0">
+                <div className="absolute top-1 right-2 w-1 h-4 bg-yellow-200 animate-pulse opacity-80" />
+                <div className="absolute bottom-2 left-3 w-1 h-3 bg-white animate-ping opacity-60" />
+              </div>
+            );
+          
+          case 'フェアリー':
+            return (
+              <div className="absolute inset-0">
+                <div className="absolute top-2 left-2 w-1 h-1 bg-pink-200 rounded-full animate-ping" />
+                <div className="absolute top-4 right-3 w-1 h-1 bg-white rounded-full animate-pulse" />
+                <div className="absolute bottom-3 left-4 w-1 h-1 bg-pink-100 rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
+              </div>
+            );
+          
+          case 'ゴースト':
+            return <div className="absolute inset-0 bg-gradient-to-br from-purple-700 via-purple-900 to-gray-900 opacity-50 animate-pulse" />;
+          
+          case 'ドラゴン':
+            return <div className="absolute inset-0 bg-gradient-to-r from-purple-800 via-blue-700 to-purple-800 opacity-40 animate-pulse" />;
+          
+          case 'こおり':
+            return (
+              <div className="absolute inset-0">
+                <div className="absolute top-1 left-1 w-1 h-1 bg-blue-100 rounded-full animate-ping opacity-80" />
+                <div className="absolute top-3 right-2 w-1 h-1 bg-white rounded-full animate-pulse opacity-90" />
+                <div className="absolute bottom-2 left-3 w-1 h-1 bg-cyan-100 rounded-full animate-ping opacity-70" style={{ animationDelay: '0.3s' }} />
+              </div>
+            );
+          
+          default:
+            return config.intensity === 'high' ? (
+              <div className="absolute inset-0 opacity-20 animate-pulse" style={{ backgroundColor: config.color }} />
+            ) : null;
+        }
+      })()}
     </div>
   );
 }
