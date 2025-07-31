@@ -1,3 +1,5 @@
+@custom-variant dark (&:is(.dark *));
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -12,6 +14,161 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  /* Base design system colors */
+  --font-size: 14px;
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+
+  /* Pokemon type colors (from type_table.png) */
+  --pokemon-normal: #A8A878;
+  --pokemon-fire: #F08030;
+  --pokemon-water: #6890F0;
+  --pokemon-electric: #F8D030;
+  --pokemon-grass: #78C850;
+  --pokemon-ice: #98D8D8;
+  --pokemon-fighting: #C03028;
+  --pokemon-poison: #A040A0;
+  --pokemon-ground: #E0C068;
+  --pokemon-flying: #A890F0;
+  --pokemon-psychic: #F85888;
+  --pokemon-bug: #A8B820;
+  --pokemon-rock: #B8A038;
+  --pokemon-ghost: #705898;
+  --pokemon-dragon: #7038F8;
+  --pokemon-dark: #705848;
+  --pokemon-steel: #B8B8D0;
+  --pokemon-fairy: #EE99AC;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Pokemon type colors as Tailwind utilities */
+  --color-pokemon-normal: var(--pokemon-normal);
+  --color-pokemon-fire: var(--pokemon-fire);
+  --color-pokemon-water: var(--pokemon-water);
+  --color-pokemon-electric: var(--pokemon-electric);
+  --color-pokemon-grass: var(--pokemon-grass);
+  --color-pokemon-ice: var(--pokemon-ice);
+  --color-pokemon-fighting: var(--pokemon-fighting);
+  --color-pokemon-poison: var(--pokemon-poison);
+  --color-pokemon-ground: var(--pokemon-ground);
+  --color-pokemon-flying: var(--pokemon-flying);
+  --color-pokemon-psychic: var(--pokemon-psychic);
+  --color-pokemon-bug: var(--pokemon-bug);
+  --color-pokemon-rock: var(--pokemon-rock);
+  --color-pokemon-ghost: var(--pokemon-ghost);
+  --color-pokemon-dragon: var(--pokemon-dragon);
+  --color-pokemon-dark: var(--pokemon-dark);
+  --color-pokemon-steel: var(--pokemon-steel);
+  --color-pokemon-fairy: var(--pokemon-fairy);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+}
+
+html {
+  font-size: var(--font-size);
 }
 
 a {
