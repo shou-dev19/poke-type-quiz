@@ -1,125 +1,167 @@
 <template>
   <div class="statistics-view">
-    <div class="container-lg">
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">Statistics & Analytics</h1>
-        <p class="text-lg text-gray-600">
+    <!-- Header Section -->
+    <div class="statistics-header">
+      <div class="header-content">
+        <div class="header-icon">📊</div>
+        <h1 class="header-title">Statistics & Analytics</h1>
+        <p class="header-description">
           Track your learning progress and analyze your Pokemon type knowledge performance
         </p>
       </div>
+    </div>
 
-      <!-- Quick Stats Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-blue-600 mb-2">{{ totalTypes }}</div>
-          <div class="text-gray-600">Total Types</div>
-          <div class="text-sm text-gray-500 mt-1">Available for learning</div>
-        </div>
+    <!-- Quick Stats Overview -->
+    <div class="stats-overview">
+      <div class="overview-container">
+        <StatsCard
+          :value="totalTypes"
+          label="Total Types"
+          description="Available for learning"
+          icon="🎯"
+          color="blue"
+          size="lg"
+          animated
+        />
         
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-green-600 mb-2">{{ totalCombinations }}</div>
-          <div class="text-gray-600">Type Combinations</div>
-          <div class="text-sm text-gray-500 mt-1">Possible matchups</div>
-        </div>
+        <StatsCard
+          :value="totalCombinations"
+          label="Type Combinations"
+          description="Possible matchups"
+          icon="⚔️"
+          color="green"
+          size="lg"
+          animated
+        />
         
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-purple-600 mb-2">{{ sessionCount }}</div>
-          <div class="text-gray-600">Quiz Sessions</div>
-          <div class="text-sm text-gray-500 mt-1">Practice sessions</div>
-        </div>
+        <StatsCard
+          :value="sessionCount"
+          label="Quiz Sessions"
+          description="Practice sessions"
+          icon="🎮"
+          color="purple"
+          size="lg"
+          animated
+        />
         
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-orange-600 mb-2">{{ averageAccuracy }}%</div>
-          <div class="text-gray-600">Average Accuracy</div>
-          <div class="text-sm text-gray-500 mt-1">Overall performance</div>
-        </div>
+        <StatsCard
+          :value="`${averageAccuracy}%`"
+          label="Average Accuracy"
+          description="Overall performance"
+          icon="✅"
+          color="yellow"
+          size="lg"
+          animated
+          :trend="accuracyTrend"
+        />
       </div>
+    </div>
 
-      <!-- Tab Navigation -->
-      <div class="border-b border-gray-200 mb-8">
-        <nav class="flex space-x-8">
+    <!-- Tab Navigation -->
+    <div class="tabs-section">
+      <div class="tabs-container">
+        <div class="tabs-nav">
           <button
             v-for="tab in tabs"
             :key="tab.id"
             @click="activeTab = tab.id"
-            :class="[
-              'py-2 px-1 border-b-2 font-medium text-sm',
-              activeTab === tab.id
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            ]"
+            :class="getTabClass(tab.id)"
           >
-            {{ tab.label }}
+            <span class="tab-icon">{{ tab.icon }}</span>
+            <span class="tab-label">{{ tab.label }}</span>
+            <span v-if="tab.badge" class="tab-badge">{{ tab.badge }}</span>
           </button>
-        </nav>
+        </div>
       </div>
+    </div>
 
+    <!-- Loading State -->
+    <LoadingSpinner
+      v-if="isLoading"
+      message="Loading statistics..."
+      overlay
+      color="white"
+      size="lg"
+    />
+
+    <!-- Tab Content -->
+    <div v-else class="tab-content">
       <!-- Overview Tab -->
-      <div v-if="activeTab === 'overview'" class="space-y-8">
+      <div v-if="activeTab === 'overview'" class="tab-pane overview-pane">
         <!-- Type Distribution Chart -->
-        <div class="card">
+        <div class="content-card">
           <div class="card-header">
-            <h2 class="text-xl font-bold text-gray-900">Type Distribution</h2>
-            <p class="text-gray-600">Frequency of each Pokemon type in the database</p>
+            <div class="header-info">
+              <h2 class="card-title">Type Distribution</h2>
+              <p class="card-description">Frequency of each Pokemon type in the database</p>
+            </div>
+            <div class="header-actions">
+              <button class="action-btn" @click="handleRefreshTypeStats">
+                <span class="btn-icon">🔄</span>
+                Refresh
+              </button>
+            </div>
           </div>
           
-          <div v-if="typeStatistics?.colorDistribution" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div v-if="typeStatistics?.colorDistribution" class="type-distribution">
             <div
               v-for="(count, color) in typeStatistics.colorDistribution"
               :key="color"
-              class="text-center"
+              class="distribution-item"
             >
               <div
-                class="w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold"
+                class="distribution-circle"
                 :style="{ backgroundColor: color }"
               >
                 {{ count }}
               </div>
-              <div class="text-sm text-gray-600">{{ getColorName(color) }}</div>
+              <div class="distribution-label">{{ getColorName(color) }}</div>
             </div>
           </div>
         </div>
 
         <!-- System Performance -->
-        <div class="card">
+        <div class="content-card">
           <div class="card-header">
-            <h2 class="text-xl font-bold text-gray-900">System Performance</h2>
-            <p class="text-gray-600">Performance metrics and system health</p>
+            <div class="header-info">
+              <h2 class="card-title">System Performance</h2>
+              <p class="card-description">Performance metrics and system health</p>
+            </div>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 class="font-medium text-gray-900 mb-4">Question Generation</h3>
-              <div class="space-y-3">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Average Generation Time</span>
-                  <span class="font-medium">{{ averageGenerationTime }}ms</span>
+          <div class="performance-grid">
+            <div class="performance-section">
+              <h3 class="section-title">Question Generation</h3>
+              <div class="metrics-list">
+                <div class="metric-item">
+                  <span class="metric-label">Average Generation Time</span>
+                  <span class="metric-value">{{ averageGenerationTime }}ms</span>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Success Rate</span>
-                  <span class="font-medium text-green-600">99.8%</span>
+                <div class="metric-item">
+                  <span class="metric-label">Success Rate</span>
+                  <span class="metric-value success">99.8%</span>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Cache Hit Rate</span>
-                  <span class="font-medium text-blue-600">87%</span>
+                <div class="metric-item">
+                  <span class="metric-label">Cache Hit Rate</span>
+                  <span class="metric-value info">87%</span>
                 </div>
               </div>
             </div>
             
-            <div>
-              <h3 class="font-medium text-gray-900 mb-4">Type Effectiveness</h3>
-              <div class="space-y-3">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Super Effective</span>
-                  <span class="font-medium text-red-600">{{ superEffectiveCount }}</span>
+            <div class="performance-section">
+              <h3 class="section-title">Type Effectiveness</h3>
+              <div class="metrics-list">
+                <div class="metric-item">
+                  <span class="metric-label">Super Effective</span>
+                  <span class="metric-value danger">{{ superEffectiveCount }}</span>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Not Very Effective</span>
-                  <span class="font-medium text-blue-600">{{ notVeryEffectiveCount }}</span>
+                <div class="metric-item">
+                  <span class="metric-label">Not Very Effective</span>
+                  <span class="metric-value info">{{ notVeryEffectiveCount }}</span>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">No Effect</span>
-                  <span class="font-medium text-gray-600">{{ noEffectCount }}</span>
+                <div class="metric-item">
+                  <span class="metric-label">No Effect</span>
+                  <span class="metric-value muted">{{ noEffectCount }}</span>
                 </div>
               </div>
             </div>
@@ -128,73 +170,83 @@
       </div>
 
       <!-- Question Analysis Tab -->
-      <div v-else-if="activeTab === 'questions'" class="space-y-8">
-        <div class="card">
+      <div v-else-if="activeTab === 'questions'" class="tab-pane questions-pane">
+        <div class="content-card">
           <div class="card-header">
-            <h2 class="text-xl font-bold text-gray-900">Question Statistics</h2>
-            <p class="text-gray-600">Analysis of question generation and performance</p>
+            <div class="header-info">
+              <h2 class="card-title">Question Statistics</h2>
+              <p class="card-description">Analysis of question generation and performance</p>
+            </div>
           </div>
           
-          <div v-if="questionStats" class="space-y-6">
+          <div v-if="questionStats" class="questions-content">
             <!-- Difficulty Distribution -->
-            <div>
-              <h3 class="font-medium text-gray-900 mb-4">Difficulty Distribution</h3>
-              <div class="grid grid-cols-3 gap-4">
-                <div class="text-center p-4 bg-green-50 rounded-lg">
-                  <div class="text-2xl font-bold text-green-600">{{ questionStats.difficultyDistribution?.easy || 0 }}</div>
-                  <div class="text-sm text-gray-600">Easy</div>
-                </div>
-                <div class="text-center p-4 bg-yellow-50 rounded-lg">
-                  <div class="text-2xl font-bold text-yellow-600">{{ questionStats.difficultyDistribution?.normal || 0 }}</div>
-                  <div class="text-sm text-gray-600">Normal</div>
-                </div>
-                <div class="text-center p-4 bg-red-50 rounded-lg">
-                  <div class="text-2xl font-bold text-red-600">{{ questionStats.difficultyDistribution?.hard || 0 }}</div>
-                  <div class="text-sm text-gray-600">Hard</div>
-                </div>
+            <div class="analysis-section">
+              <h3 class="section-title">Difficulty Distribution</h3>
+              <div class="difficulty-stats">
+                <StatsCard
+                  :value="questionStats.difficultyDistribution?.easy || 0"
+                  label="Easy Questions"
+                  icon="😊"
+                  color="green"
+                  size="md"
+                  animated
+                />
+                <StatsCard
+                  :value="questionStats.difficultyDistribution?.normal || 0"
+                  label="Normal Questions"
+                  icon="🤔"
+                  color="yellow"
+                  size="md"
+                  animated
+                />
+                <StatsCard
+                  :value="questionStats.difficultyDistribution?.hard || 0"
+                  label="Hard Questions"
+                  icon="😤"
+                  color="red"
+                  size="md"
+                  animated
+                />
               </div>
             </div>
 
             <!-- Type Usage -->
-            <div>
-              <h3 class="font-medium text-gray-900 mb-4">Most Used Types in Questions</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <h4 class="text-sm font-medium text-gray-700 mb-2">Attacking Types</h4>
-                  <div class="space-y-2">
+            <div class="analysis-section">
+              <h3 class="section-title">Most Used Types in Questions</h3>
+              <div class="type-usage-grid">
+                <div class="usage-column">
+                  <h4 class="column-title">Attacking Types</h4>
+                  <div class="type-list">
                     <div
                       v-for="(count, type) in topAttackingTypes"
                       :key="type"
-                      class="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      class="type-item"
                     >
-                      <div class="flex items-center space-x-2">
-                        <div
-                          class="w-4 h-4 rounded-full"
-                          :class="`type-${type}`"
-                        ></div>
-                        <span class="text-sm">{{ type }}</span>
-                      </div>
-                      <span class="text-sm font-medium">{{ count }}</span>
+                      <TypeBadge
+                        :type="type"
+                        size="sm"
+                        show-icon
+                      />
+                      <span class="type-count">{{ count }}</span>
                     </div>
                   </div>
                 </div>
                 
-                <div>
-                  <h4 class="text-sm font-medium text-gray-700 mb-2">Defending Types</h4>
-                  <div class="space-y-2">
+                <div class="usage-column">
+                  <h4 class="column-title">Defending Types</h4>
+                  <div class="type-list">
                     <div
                       v-for="(count, type) in topDefendingTypes"
                       :key="type"
-                      class="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      class="type-item"
                     >
-                      <div class="flex items-center space-x-2">
-                        <div
-                          class="w-4 h-4 rounded-full"
-                          :class="`type-${type}`"
-                        ></div>
-                        <span class="text-sm">{{ type }}</span>
-                      </div>
-                      <span class="text-sm font-medium">{{ count }}</span>
+                      <TypeBadge
+                        :type="type"
+                        size="sm"
+                        show-icon
+                      />
+                      <span class="type-count">{{ count }}</span>
                     </div>
                   </div>
                 </div>
@@ -205,97 +257,112 @@
       </div>
 
       <!-- Performance Tab -->
-      <div v-else-if="activeTab === 'performance'" class="space-y-8">
-        <div class="card">
+      <div v-else-if="activeTab === 'performance'" class="tab-pane performance-pane">
+        <div class="content-card">
           <div class="card-header">
-            <h2 class="text-xl font-bold text-gray-900">Learning Performance</h2>
-            <p class="text-gray-600">Track your progress and identify areas for improvement</p>
+            <div class="header-info">
+              <h2 class="card-title">Learning Performance</h2>
+              <p class="card-description">Track your progress and identify areas for improvement</p>
+            </div>
           </div>
           
-          <div class="text-center py-16">
-            <div class="text-6xl mb-4">📈</div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Performance Tracking Coming Soon</h3>
-            <p class="text-gray-600 mb-6">
+          <div class="empty-state">
+            <div class="empty-icon">📈</div>
+            <h3 class="empty-title">Performance Tracking Coming Soon</h3>
+            <p class="empty-description">
               Complete quizzes to see detailed performance analytics and learning progress
             </p>
-            <router-link to="/quiz" class="btn btn-primary">
-              Start Quiz to Generate Data
-            </router-link>
+            <div class="empty-actions">
+              <router-link to="/quiz" class="action-btn primary">
+                <span class="btn-icon">🚀</span>
+                Start Quiz to Generate Data
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Recommendations Tab -->
-      <div v-else-if="activeTab === 'recommendations'" class="space-y-8">
-        <div class="card">
+      <div v-else-if="activeTab === 'recommendations'" class="tab-pane recommendations-pane">
+        <div class="content-card">
           <div class="card-header">
-            <h2 class="text-xl font-bold text-gray-900">Personalized Recommendations</h2>
-            <p class="text-gray-600">Suggested areas of focus for your learning journey</p>
+            <div class="header-info">
+              <h2 class="card-title">Personalized Recommendations</h2>
+              <p class="card-description">Suggested areas of focus for your learning journey</p>
+            </div>
+            <div class="header-actions">
+              <button class="action-btn" @click="handleRefreshRecommendations">
+                <span class="btn-icon">🔄</span>
+                Refresh
+              </button>
+            </div>
           </div>
           
-          <div v-if="recommendations.length" class="space-y-4">
+          <div v-if="recommendations.length" class="recommendations-list">
             <div
               v-for="recommendation in recommendations"
               :key="recommendation.typeId"
-              class="p-4 border border-gray-200 rounded-lg"
+              class="recommendation-card"
             >
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center space-x-3">
-                  <div
-                    class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                    :class="`type-${recommendation.typeId}`"
-                  >
-                    {{ getTypeSymbol(recommendation.typeId) }}
-                  </div>
-                  <div>
-                    <h3 class="font-medium text-gray-900">{{ recommendation.typeName }}</h3>
-                    <div class="flex items-center space-x-2">
+              <div class="recommendation-header">
+                <div class="recommendation-info">
+                  <TypeBadge
+                    :type="recommendation.typeId"
+                    size="lg"
+                    show-icon
+                  />
+                  <div class="info-details">
+                    <h3 class="recommendation-title">{{ recommendation.typeName }}</h3>
+                    <div class="recommendation-tags">
                       <span
-                        class="px-2 py-1 text-xs rounded-full"
-                        :class="getPriorityColor(recommendation.learningPriority)"
+                        class="priority-tag"
+                        :class="getPriorityClass(recommendation.learningPriority)"
                       >
                         {{ recommendation.learningPriority }} priority
                       </span>
-                      <span
-                        class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
-                      >
+                      <span class="difficulty-tag">
                         {{ recommendation.difficultyLevel }}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div class="text-2xl font-bold text-blue-600">
+                <div class="recommendation-score">
                   {{ recommendation.recommendationScore }}
                 </div>
               </div>
-              <div class="text-sm text-gray-600">
-                <ul class="list-disc list-inside">
-                  <li v-for="reason in recommendation.reasons" :key="reason">
-                    {{ reason }}
+              <div class="recommendation-reasons">
+                <ul class="reasons-list">
+                  <li v-for="reason in recommendation.reasons" :key="reason" class="reason-item">
+                    <span class="reason-bullet">•</span>
+                    <span class="reason-text">{{ reason }}</span>
                   </li>
                 </ul>
+              </div>
+              <div class="recommendation-actions">
+                <router-link
+                  :to="`/quiz?focus=${recommendation.typeId}`"
+                  class="action-btn primary small"
+                >
+                  <span class="btn-icon">🎯</span>
+                  Practice This Type
+                </router-link>
               </div>
             </div>
           </div>
           
-          <div v-else class="text-center py-16">
-            <div class="text-6xl mb-4">🎯</div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">No Recommendations Yet</h3>
-            <p class="text-gray-600 mb-6">
+          <div v-else class="empty-state">
+            <div class="empty-icon">🎯</div>
+            <h3 class="empty-title">No Recommendations Yet</h3>
+            <p class="empty-description">
               Complete some quizzes to receive personalized learning recommendations
             </p>
-            <router-link to="/quiz" class="btn btn-primary">
-              Start Learning
-            </router-link>
+            <div class="empty-actions">
+              <router-link to="/quiz" class="action-btn primary">
+                <span class="btn-icon">🚀</span>
+                Start Learning
+              </router-link>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Loading State -->
-      <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 text-center">
-          <div class="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p class="text-gray-600">Loading statistics...</p>
         </div>
       </div>
     </div>
@@ -303,165 +370,499 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, inject, onMounted } from 'vue';
-import type { Application } from '@/application';
+import { ref, onMounted } from 'vue';
+import { StatsCard, LoadingSpinner, TypeBadge } from '@/presentation/components';
+import { useStatistics } from '@/presentation/composables';
 
-// Inject application instance
-const app = inject<Application>('app')!;
+// Use the statistics composable
+const {
+  // State
+  isLoading,
+  typeStatistics,
+  questionStats,
+  recommendations,
+  
+  // Computed
+  totalTypes,
+  totalCombinations,
+  sessionCount,
+  averageAccuracy,
+  accuracyTrend,
+  averageGenerationTime,
+  superEffectiveCount,
+  notVeryEffectiveCount,
+  noEffectCount,
+  topAttackingTypes,
+  topDefendingTypes,
+  
+  // Methods
+  loadStatistics,
+  refreshTypeStats,
+  refreshRecommendations,
+  getColorName,
+  getPriorityClass
+} = useStatistics();
 
-// Reactive state
-const isLoading = ref(false);
+// Local state for active tab
 const activeTab = ref('overview');
-const typeStatistics = ref<any>(null);
-const questionStats = ref<any>(null);
-const recommendations = ref<any[]>([]);
 
 // Tab configuration
 const tabs = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'questions', label: 'Question Analysis' },
-  { id: 'performance', label: 'Performance' },
-  { id: 'recommendations', label: 'Recommendations' }
+  { 
+    id: 'overview', 
+    label: 'Overview', 
+    icon: '📊',
+    badge: null
+  },
+  { 
+    id: 'questions', 
+    label: 'Question Analysis', 
+    icon: '❓',
+    badge: null
+  },
+  { 
+    id: 'performance', 
+    label: 'Performance', 
+    icon: '📈',
+    badge: 'Soon'
+  },
+  { 
+    id: 'recommendations', 
+    label: 'Recommendations', 
+    icon: '🎯',
+    badge: recommendations.value.length || null
+  }
 ];
 
-// Computed properties
-const totalTypes = computed(() => typeStatistics.value?.totalTypes || 18);
-
-const totalCombinations = computed(() => {
-  const types = totalTypes.value;
-  return types * types; // Each type can attack each type
-});
-
-const sessionCount = computed(() => 0); // Mock data - would come from user sessions
-
-const averageAccuracy = computed(() => 0); // Mock data - would come from user performance
-
-const averageGenerationTime = computed(() => 
-  typeStatistics.value?.averageGenerationTime || 0
-);
-
-const superEffectiveCount = computed(() => 
-  questionStats.value?.effectivenessDistribution?.SUPER_EFFECTIVE || 0
-);
-
-const notVeryEffectiveCount = computed(() => 
-  (questionStats.value?.effectivenessDistribution?.HALF_EFFECTIVE || 0) +
-  (questionStats.value?.effectivenessDistribution?.QUARTER_EFFECTIVE || 0)
-);
-
-const noEffectCount = computed(() => 
-  questionStats.value?.effectivenessDistribution?.NONE || 0
-);
-
-const topAttackingTypes = computed(() => {
-  if (!questionStats.value?.typeDistribution?.attackingTypes) return {};
-  
-  const types = questionStats.value.typeDistribution.attackingTypes;
-  const sorted = Object.entries(types)
-    .sort(([,a], [,b]) => (b as number) - (a as number))
-    .slice(0, 5);
-  
-  return Object.fromEntries(sorted);
-});
-
-const topDefendingTypes = computed(() => {
-  if (!questionStats.value?.typeDistribution?.defendingTypes) return {};
-  
-  const types = questionStats.value.typeDistribution.defendingTypes;
-  const sorted = Object.entries(types)
-    .sort(([,a], [,b]) => (b as number) - (a as number))
-    .slice(0, 5);
-  
-  return Object.fromEntries(sorted);
-});
-
-// Methods
-async function loadStatistics() {
+// Methods for handling UI interactions
+async function handleRefreshTypeStats() {
   try {
-    isLoading.value = true;
-    
-    const typeManagementUseCase = app.getTypeManagementUseCase();
-    const questionManagementUseCase = app.getQuestionManagementUseCase();
-    
-    // Load type statistics
-    const typeStatsResponse = await typeManagementUseCase.getTypeStatistics({
-      includeColorDistribution: true,
-      includeEffectiveness: true,
-      includeUsageStats: true
-    });
-    
-    typeStatistics.value = typeStatsResponse;
-    
-    // Load question statistics
-    const questionStatsResponse = await questionManagementUseCase.getQuestionStatistics({});
-    questionStats.value = questionStatsResponse;
-    
-    // Load recommendations
-    const recommendationsResponse = await typeManagementUseCase.getTypeRecommendations({
-      context: 'learning',
-      limit: 8
-    });
-    
-    recommendations.value = recommendationsResponse.recommendations;
-    
+    await refreshTypeStats();
   } catch (error) {
-    console.error('Failed to load statistics:', error);
-    alert('Failed to load statistics. Please try again.');
-  } finally {
-    isLoading.value = false;
+    console.error('Failed to refresh type statistics:', error);
+    alert('Failed to refresh type statistics. Please try again.');
   }
 }
 
-function getColorName(colorHex: string): string {
-  // Convert hex color to readable name
-  const colorMap: Record<string, string> = {
-    '#F08030': 'Fire',
-    '#6890F0': 'Water',
-    '#78C850': 'Grass',
-    '#F8D030': 'Electric',
-    '#F85888': 'Psychic',
-    '#98D8D8': 'Ice',
-    '#7038F8': 'Dragon',
-    '#705848': 'Dark',
-    '#EE99AC': 'Fairy',
-    '#A8A878': 'Normal',
-    '#C03028': 'Fighting',
-    '#A040A0': 'Poison',
-    '#E0C068': 'Ground',
-    '#A890F0': 'Flying',
-    '#A8B820': 'Bug',
-    '#B8A038': 'Rock',
-    '#705898': 'Ghost',
-    '#B8B8D0': 'Steel'
-  };
-  
-  return colorMap[colorHex] || 'Unknown';
+async function handleRefreshRecommendations() {
+  try {
+    await refreshRecommendations();
+  } catch (error) {
+    console.error('Failed to refresh recommendations:', error);
+    alert('Failed to refresh recommendations. Please try again.');
+  }
 }
 
-function getTypeSymbol(typeId: string): string {
-  // Return first character of type name as symbol
-  return typeId.charAt(0).toUpperCase();
-}
-
-function getPriorityColor(priority: string): string {
-  const colorMap: Record<string, string> = {
-    high: 'bg-red-100 text-red-600',
-    medium: 'bg-yellow-100 text-yellow-600',
-    low: 'bg-green-100 text-green-600'
-  };
-  
-  return colorMap[priority] || 'bg-gray-100 text-gray-600';
+// Helper functions for styling
+function getTabClass(tabId: string) {
+  const baseClasses = 'tab-button';
+  const activeClass = activeTab.value === tabId ? 'active' : '';
+  return `${baseClasses} ${activeClass}`;
 }
 
 // Lifecycle
 onMounted(async () => {
   document.title = 'Pokemon Type Quiz - Statistics';
-  await loadStatistics();
+  try {
+    await loadStatistics();
+  } catch (error) {
+    console.error('Failed to load statistics:', error);
+    alert('Failed to load statistics. Please try again.');
+  }
 });
 </script>
 
 <style scoped>
 .statistics-view {
-  min-height: 80vh;
+  @apply min-h-screen bg-gradient-to-br from-purple-50 to-pink-50;
+}
+
+/* Header Section */
+.statistics-header {
+  @apply bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16;
+}
+
+.header-content {
+  @apply container-lg text-center;
+}
+
+.header-icon {
+  @apply text-6xl mb-4 animate-pulse;
+}
+
+.header-title {
+  @apply text-4xl font-bold mb-4;
+}
+
+.header-description {
+  @apply text-xl text-purple-100 max-w-2xl mx-auto;
+}
+
+/* Stats Overview */
+.stats-overview {
+  @apply py-12;
+}
+
+.overview-container {
+  @apply container-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+/* Tabs Section */
+.tabs-section {
+  @apply bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10;
+}
+
+.tabs-container {
+  @apply container-lg;
+}
+
+.tabs-nav {
+  @apply flex overflow-x-auto scrollbar-hide;
+}
+
+.tab-button {
+  @apply flex-shrink-0 px-6 py-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 transition-all duration-200 flex items-center gap-3 font-medium;
+}
+
+.tab-button.active {
+  @apply border-purple-500 text-purple-600;
+}
+
+.tab-icon {
+  @apply text-lg;
+}
+
+.tab-label {
+  @apply whitespace-nowrap;
+}
+
+.tab-badge {
+  @apply px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full;
+}
+
+.tab-button.active .tab-badge {
+  @apply bg-purple-100 text-purple-600;
+}
+
+/* Tab Content */
+.tab-content {
+  @apply container-lg py-8;
+}
+
+.tab-pane {
+  @apply space-y-8;
+}
+
+/* Content Cards */
+.content-card {
+  @apply bg-white rounded-2xl shadow-lg overflow-hidden;
+}
+
+.card-header {
+  @apply p-6 border-b border-gray-100 flex items-center justify-between;
+}
+
+.header-info {
+  @apply flex-1;
+}
+
+.card-title {
+  @apply text-xl font-bold text-gray-900 mb-1;
+}
+
+.card-description {
+  @apply text-gray-600;
+}
+
+.header-actions {
+  @apply flex-shrink-0;
+}
+
+.action-btn {
+  @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2 font-medium text-sm;
+}
+
+.action-btn.primary {
+  @apply bg-purple-600 text-white hover:bg-purple-700;
+}
+
+.action-btn.small {
+  @apply px-3 py-1 text-xs;
+}
+
+.btn-icon {
+  @apply text-base;
+}
+
+/* Type Distribution */
+.type-distribution {
+  @apply p-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4;
+}
+
+.distribution-item {
+  @apply text-center;
+}
+
+.distribution-circle {
+  @apply w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold text-sm;
+}
+
+.distribution-label {
+  @apply text-sm text-gray-600;
+}
+
+/* Performance Grid */
+.performance-grid {
+  @apply p-6 grid grid-cols-1 md:grid-cols-2 gap-8;
+}
+
+.performance-section {
+  @apply space-y-4;
+}
+
+.section-title {
+  @apply font-bold text-gray-900 text-lg border-b border-gray-200 pb-2;
+}
+
+.metrics-list {
+  @apply space-y-3;
+}
+
+.metric-item {
+  @apply flex justify-between items-center;
+}
+
+.metric-label {
+  @apply text-gray-600;
+}
+
+.metric-value {
+  @apply font-bold;
+}
+
+.metric-value.success {
+  @apply text-green-600;
+}
+
+.metric-value.info {
+  @apply text-blue-600;
+}
+
+.metric-value.danger {
+  @apply text-red-600;
+}
+
+.metric-value.muted {
+  @apply text-gray-600;
+}
+
+/* Questions Content */
+.questions-content {
+  @apply p-6 space-y-8;
+}
+
+.analysis-section {
+  @apply space-y-6;
+}
+
+.difficulty-stats {
+  @apply grid grid-cols-1 sm:grid-cols-3 gap-6;
+}
+
+.type-usage-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-8;
+}
+
+.usage-column {
+  @apply space-y-4;
+}
+
+.column-title {
+  @apply font-medium text-gray-700 text-sm;
+}
+
+.type-list {
+  @apply space-y-3;
+}
+
+.type-item {
+  @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg;
+}
+
+.type-count {
+  @apply font-bold text-gray-900;
+}
+
+/* Recommendations */
+.recommendations-list {
+  @apply p-6 space-y-6;
+}
+
+.recommendation-card {
+  @apply border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow;
+}
+
+.recommendation-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.recommendation-info {
+  @apply flex items-center gap-4;
+}
+
+.info-details {
+  @apply space-y-2;
+}
+
+.recommendation-title {
+  @apply font-bold text-gray-900;
+}
+
+.recommendation-tags {
+  @apply flex items-center gap-2;
+}
+
+.priority-tag {
+  @apply px-2 py-1 text-xs rounded-full font-medium;
+}
+
+.priority-tag.high-priority {
+  @apply bg-red-100 text-red-600;
+}
+
+.priority-tag.medium-priority {
+  @apply bg-yellow-100 text-yellow-600;
+}
+
+.priority-tag.low-priority {
+  @apply bg-green-100 text-green-600;
+}
+
+.difficulty-tag {
+  @apply px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600;
+}
+
+.recommendation-score {
+  @apply text-2xl font-bold text-purple-600;
+}
+
+.recommendation-reasons {
+  @apply mb-4;
+}
+
+.reasons-list {
+  @apply space-y-1;
+}
+
+.reason-item {
+  @apply flex items-start gap-2 text-sm text-gray-700;
+}
+
+.reason-bullet {
+  @apply text-purple-600 font-bold;
+}
+
+.reason-text {
+  @apply flex-1;
+}
+
+.recommendation-actions {
+  @apply pt-4 border-t border-gray-100;
+}
+
+/* Empty State */
+.empty-state {
+  @apply text-center py-16;
+}
+
+.empty-icon {
+  @apply text-6xl mb-4 opacity-75;
+}
+
+.empty-title {
+  @apply text-2xl font-bold text-gray-900 mb-2;
+}
+
+.empty-description {
+  @apply text-gray-600 mb-6 max-w-md mx-auto;
+}
+
+.empty-actions {
+  @apply flex justify-center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .performance-grid {
+    @apply grid-cols-1;
+  }
+  
+  .type-usage-grid {
+    @apply grid-cols-1;
+  }
+  
+  .recommendation-header {
+    @apply flex-col items-start gap-4;
+  }
+  
+  .recommendation-info {
+    @apply w-full;
+  }
+  
+  .recommendation-score {
+    @apply self-end;
+  }
+}
+
+@media (max-width: 640px) {
+  .overview-container {
+    @apply grid-cols-1;
+  }
+  
+  .difficulty-stats {
+    @apply grid-cols-1;
+  }
+  
+  .type-distribution {
+    @apply grid-cols-2;
+  }
+}
+
+/* Animation Classes */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.content-card {
+  animation: slideInUp 0.5s ease-out;
+}
+
+.content-card:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+.recommendation-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.recommendation-card:nth-child(n) {
+  animation-delay: calc(var(--item-index, 0) * 0.1s);
+}
+
+/* Scrollbar Hide */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 </style>
