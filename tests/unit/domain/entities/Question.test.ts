@@ -2,7 +2,7 @@
  * Question Entity Unit Tests
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Question } from '@/domain/entities/Question';
 import { TypeEffectiveness } from '@/domain/entities/TypeEffectiveness';
 import type { Question as QuestionData, TypeId, DifficultyLevel, EffectivenessValue } from '@/domain/types';
@@ -116,7 +116,7 @@ describe('Question', () => {
 
       const invalidDefending = { 
         ...validSingleTypeQuestion, 
-        defendingType: ['invalid'] as TypeId[] 
+        defendingType: ['invalid'] as unknown as TypeId[] 
       };
       expect(() => new Question(invalidDefending)).toThrow('Invalid defendingType[0]: invalid');
     });

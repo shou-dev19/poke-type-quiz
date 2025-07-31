@@ -2,7 +2,7 @@
  * GameSessionUseCase Unit Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { GameSessionUseCase } from '@/application/usecases/GameSessionUseCase';
 import { TypeEffectivenessService } from '@/infrastructure/services/TypeEffectivenessService';
 import { QuestionGeneratorService } from '@/infrastructure/services/QuestionGeneratorService';
@@ -124,7 +124,7 @@ describe('GameSessionUseCase', () => {
 
       const correctAnswer = questionResponse.currentQuestion!.choices.find(choice => 
         choice.value === 'SUPER_EFFECTIVE' // Try a common answer
-      )?.value || questionResponse.currentQuestion!.choices[0].value;
+      )?.value || questionResponse.currentQuestion!.choices[0]?.value || 'NORMAL_EFFECTIVE';
 
       // Submit answer
       const submitRequest: SubmitAnswerRequest = {
@@ -163,7 +163,7 @@ describe('GameSessionUseCase', () => {
         if (questionResponse.currentQuestion) {
           const submitResponse = await useCase.submitAnswer({
             sessionId: createResponse.sessionId,
-            answer: questionResponse.currentQuestion.choices[0].value,
+            answer: questionResponse.currentQuestion.choices[0]?.value || 'NORMAL_EFFECTIVE',
             timeSpent: 1000
           });
 

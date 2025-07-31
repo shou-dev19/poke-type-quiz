@@ -41,7 +41,7 @@ export class GameSessionUseCase implements IGameSessionUseCase {
 
   constructor(
     private readonly questionGenerator: IQuestionGeneratorService,
-    private readonly typeEffectivenessService: ITypeEffectivenessService
+    private readonly _typeEffectivenessService: ITypeEffectivenessService
   ) {}
 
   /**
@@ -64,8 +64,8 @@ export class GameSessionUseCase implements IGameSessionUseCase {
     const generationOptions = {
       count: request.questionCount,
       difficulty: request.difficulty,
-      focusTypes: request.focusTypes as TypeId[],
-      excludeTypes: request.excludeTypes as TypeId[],
+      focusTypes: (request.focusTypes as TypeId[]) || [],
+      excludeTypes: (request.excludeTypes as TypeId[]) || [],
       seed: request.seed,
       allowDuplicates: false,
       minEffectivenessVariety: Math.min(3, Math.max(1, Math.floor(request.questionCount / 3)))
@@ -394,8 +394,8 @@ export class GameSessionUseCase implements IGameSessionUseCase {
         .filter(eff => ['HALF_EFFECTIVE', 'NORMAL_EFFECTIVE', 'SUPER_EFFECTIVE'].includes(eff.value))
         .map(eff => ({
           value: eff.value,
-          label: eff.displayText,
-          description: eff.description,
+          label: eff.getDisplayText(),
+          description: eff.getDescription(),
           multiplier: eff.multiplier
         }));
     }
@@ -406,8 +406,8 @@ export class GameSessionUseCase implements IGameSessionUseCase {
         .filter(eff => !['NONE', 'ULTRA_EFFECTIVE'].includes(eff.value))
         .map(eff => ({
           value: eff.value,
-          label: eff.displayText,
-          description: eff.description,
+          label: eff.getDisplayText(),
+          description: eff.getDescription(),
           multiplier: eff.multiplier
         }));
     }
@@ -415,8 +415,8 @@ export class GameSessionUseCase implements IGameSessionUseCase {
     // For hard, show all choices
     return allChoices.map(eff => ({
       value: eff.value,
-      label: eff.displayText,
-      description: eff.description,
+      label: eff.getDisplayText(),
+      description: eff.getDescription(),
       multiplier: eff.multiplier
     }));
   }
@@ -430,9 +430,9 @@ export class GameSessionUseCase implements IGameSessionUseCase {
     const correctEffectiveness = question.getCorrectAnswerEffectiveness();
 
     if (isCorrect) {
-      return `正解！${attackingType}タイプの技は${defendingTypes.join('・')}タイプに対して${correctEffectiveness.displayText}（${correctEffectiveness.multiplier}倍）です。`;
+      return `正解！${attackingType}タイプの技は${defendingTypes.join('・')}タイプに対して${correctEffectiveness.getDisplayText()}（${correctEffectiveness.multiplier}倍）です。`;
     } else {
-      return `不正解。${attackingType}タイプの技は${defendingTypes.join('・')}タイプに対して${correctEffectiveness.displayText}（${correctEffectiveness.multiplier}倍）が正解です。`;
+      return `不正解。${attackingType}タイプの技は${defendingTypes.join('・')}タイプに対して${correctEffectiveness.getDisplayText()}（${correctEffectiveness.multiplier}倍）が正解です。`;
     }
   }
 

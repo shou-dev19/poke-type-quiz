@@ -48,9 +48,10 @@ describe('FileTypeRepository', () => {
       const fireType = await repository.getTypeById('fire');
       
       expect(fireType).toBeInstanceOf(PokemonType);
-      expect(fireType?.id).toBe('fire');
-      expect(fireType?.nameJa).toBe('ほのお');
-      expect(fireType?.color).toBe('#F08030');
+      expect(fireType).not.toBeNull();
+      expect(fireType!.id).toBe('fire');
+      expect(fireType!.nameJa).toBe('ほのお');
+      expect(fireType!.color).toBe('#F08030');
     });
 
     it('should return null for invalid ID', async () => {
@@ -71,17 +72,17 @@ describe('FileTypeRepository', () => {
       const types = await repository.getTypesByIds(['fire', 'water', 'grass']);
       
       expect(types).toHaveLength(3);
-      expect(types[0].id).toBe('fire');
-      expect(types[1].id).toBe('water');
-      expect(types[2].id).toBe('grass');
+      expect(types[0]?.id).toBe('fire');
+      expect(types[1]?.id).toBe('water');
+      expect(types[2]?.id).toBe('grass');
     });
 
     it('should skip invalid IDs', async () => {
       const types = await repository.getTypesByIds(['fire', 'invalid' as TypeId, 'water']);
       
       expect(types).toHaveLength(2);
-      expect(types[0].id).toBe('fire');
-      expect(types[1].id).toBe('water');
+      expect(types[0]?.id).toBe('fire');
+      expect(types[1]?.id).toBe('water');
     });
 
     it('should return empty array for empty input', async () => {
@@ -163,8 +164,8 @@ describe('FileTypeRepository', () => {
       const types = await repository.searchByName('ほのお', true);
       
       expect(types).toHaveLength(1);
-      expect(types[0].id).toBe('fire');
-      expect(types[0].nameJa).toBe('ほのお');
+      expect(types[0]?.id).toBe('fire');
+      expect(types[0]?.nameJa).toBe('ほのお');
     });
 
     it('should find types by partial match', async () => {
@@ -188,7 +189,7 @@ describe('FileTypeRepository', () => {
       const types = await repository.searchByName('  ほのお  ', true);
       
       expect(types).toHaveLength(1);
-      expect(types[0].id).toBe('fire');
+      expect(types[0]?.id).toBe('fire');
     });
   });
 
@@ -346,7 +347,7 @@ describe('FileTypeRepository', () => {
         colorLight: '#789ABC',
         symbol: 'テ',
         animation: 'test-animation'
-      } as PokemonTypeData;
+      } as unknown as PokemonTypeData;
       
       await expect(repository.validateTypeData(invalidData)).rejects.toThrow('Invalid type data');
     });

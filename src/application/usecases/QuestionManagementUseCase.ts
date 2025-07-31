@@ -28,7 +28,6 @@ import type {
 } from '@/domain/services';
 import { Question } from '@/domain/entities/Question';
 import { TypeEffectiveness } from '@/domain/entities/TypeEffectiveness';
-import { PokemonType } from '@/domain/entities/PokemonType';
 import type { TypeId, DifficultyLevel } from '@/domain/types';
 
 /**
@@ -62,8 +61,8 @@ export class QuestionManagementUseCase implements IQuestionManagementUseCase {
     const generationOptions = {
       count: poolSize,
       difficulty: request.difficulty || 'normal',
-      focusTypes: request.attackingType ? [request.attackingType] : undefined,
-      excludeTypes: undefined,
+      focusTypes: request.attackingType ? [request.attackingType] : [],
+      excludeTypes: [],
       allowDuplicates: true, // Allow duplicates to meet count requirements
       minEffectivenessVariety: 1 // Minimal variety requirement
     };
@@ -145,8 +144,8 @@ export class QuestionManagementUseCase implements IQuestionManagementUseCase {
     const generationOptions = {
       count: sampleSize,
       difficulty,
-      focusTypes: request.typeFilter?.attackingType ? [request.typeFilter.attackingType] : undefined,
-      excludeTypes: undefined,
+      focusTypes: request.typeFilter?.attackingType ? [request.typeFilter.attackingType] : [],
+      excludeTypes: [],
       allowDuplicates: true,
       minEffectivenessVariety: 1
     };
@@ -255,7 +254,7 @@ export class QuestionManagementUseCase implements IQuestionManagementUseCase {
       count: Math.min(15, Math.max(10, (request.limit || 5) * 2)),
       difficulty: request.difficulty || 'normal',
       focusTypes: [request.attackingType],
-      excludeTypes: undefined,
+      excludeTypes: [],
       allowDuplicates: true,
       minEffectivenessVariety: 1
     };
@@ -297,9 +296,9 @@ export class QuestionManagementUseCase implements IQuestionManagementUseCase {
     const generationOptions = {
       count: request.poolSize,
       difficulty: request.difficulty,
-      focusTypes: request.focusTypes,
-      excludeTypes: request.excludeTypes,
-      seed: request.seed,
+      focusTypes: request.focusTypes || [],
+      excludeTypes: request.excludeTypes || [],
+      seed: request.seed || undefined,
       allowDuplicates: true, // Allow duplicates to meet requirements
       minEffectivenessVariety: 1 // Minimal variety to avoid generation failures
     };

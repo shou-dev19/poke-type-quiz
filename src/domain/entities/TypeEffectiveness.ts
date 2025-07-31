@@ -42,6 +42,14 @@ export class TypeEffectiveness {
   }
 
   /**
+   * Get effectiveness description
+   * @returns Detailed description of the effectiveness
+   */
+  getDescription(): string {
+    return this.getEffectivenessDescription();
+  }
+
+  /**
    * Check if this effectiveness is the same as another
    * @param other - Other TypeEffectiveness to compare
    * @returns True if values are equal

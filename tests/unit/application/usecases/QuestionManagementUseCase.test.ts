@@ -2,7 +2,7 @@
  * QuestionManagementUseCase Unit Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { QuestionManagementUseCase } from '@/application/usecases/QuestionManagementUseCase';
 import { TypeEffectivenessService } from '@/infrastructure/services/TypeEffectivenessService';
 import { QuestionGeneratorService } from '@/infrastructure/services/QuestionGeneratorService';
@@ -50,12 +50,13 @@ describe('QuestionManagementUseCase', () => {
 
       // Verify question structure
       const firstQuestion = response.questions[0];
-      expect(firstQuestion.id).toBeDefined();
-      expect(firstQuestion.attackingType).toBeDefined();
-      expect(firstQuestion.defendingType).toBeDefined();
-      expect(firstQuestion.difficulty).toBe('normal');
-      expect(firstQuestion.effectiveness).toBeDefined();
-      expect(firstQuestion.questionText).toBeDefined();
+      expect(firstQuestion).toBeDefined();
+      expect(firstQuestion!.id).toBeDefined();
+      expect(firstQuestion!.attackingType).toBeDefined();
+      expect(firstQuestion!.defendingType).toBeDefined();
+      expect(firstQuestion!.difficulty).toBe('normal');
+      expect(firstQuestion!.effectiveness).toBeDefined();
+      expect(firstQuestion!.questionText).toBeDefined();
     });
 
     it('should filter by attacking type', async () => {

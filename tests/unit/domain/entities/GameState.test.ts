@@ -122,7 +122,7 @@ describe('GameState', () => {
         difficulty: 'hard',
         defendingType: ['water', 'grass']
       });
-      const mixedQuestions = [questions[0], hardQuestion];
+      const mixedQuestions = [questions[0]!, hardQuestion];
       
       expect(() => new GameState(validConfig, mixedQuestions)).toThrow(
         'Question 1 difficulty mismatch: expected normal, got hard'
@@ -166,10 +166,11 @@ describe('GameState', () => {
         expect(gameState.getUserAnswers()).toHaveLength(1);
         
         const userAnswer = gameState.getUserAnswers()[0];
-        expect(userAnswer.questionId).toBe('q001');
-        expect(userAnswer.selectedAnswer).toBe('HALF_EFFECTIVE');
-        expect(userAnswer.isCorrect).toBe(true);
-        expect(userAnswer.timeSpent).toBe(1000);
+        expect(userAnswer).toBeDefined();
+        expect(userAnswer!.questionId).toBe('q001');
+        expect(userAnswer!.selectedAnswer).toBe('HALF_EFFECTIVE');
+        expect(userAnswer!.isCorrect).toBe(true);
+        expect(userAnswer!.timeSpent).toBe(1000);
       });
 
       it('should submit incorrect answer successfully', () => {
@@ -180,15 +181,17 @@ describe('GameState', () => {
         expect(gameState.getCurrentQuestionIndex()).toBe(1);
         
         const userAnswer = gameState.getUserAnswers()[0];
-        expect(userAnswer.isCorrect).toBe(false);
-        expect(userAnswer.timeSpent).toBe(2000);
+        expect(userAnswer).toBeDefined();
+        expect(userAnswer!.isCorrect).toBe(false);
+        expect(userAnswer!.timeSpent).toBe(2000);
       });
 
       it('should handle negative time spent', () => {
         gameState.submitAnswer(TypeEffectiveness.HALF_EFFECTIVE, -500);
         
         const userAnswer = gameState.getUserAnswers()[0];
-        expect(userAnswer.timeSpent).toBe(0);
+        expect(userAnswer).toBeDefined();
+        expect(userAnswer!.timeSpent).toBe(0);
       });
 
       it('should complete game after last question', () => {
@@ -264,8 +267,8 @@ describe('GameState', () => {
       it('should return all questions as immutable array', () => {
         const allQuestions = gameState.getAllQuestions();
         expect(allQuestions).toHaveLength(2);
-        expect(allQuestions[0].getId()).toBe('q001');
-        expect(allQuestions[1].getId()).toBe('q002');
+        expect(allQuestions[0]?.getId()).toBe('q001');
+        expect(allQuestions[1]?.getId()).toBe('q002');
         
         // Modifying returned array should not affect original
         allQuestions.pop();

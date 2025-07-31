@@ -2,7 +2,7 @@
  * PokemonType Entity Unit Tests
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { PokemonType } from '@/domain/entities/PokemonType';
 import type { PokemonTypeData, TypeId } from '@/domain/types';
 

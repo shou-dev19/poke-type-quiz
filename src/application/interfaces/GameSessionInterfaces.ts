@@ -3,8 +3,7 @@
  * Defines input/output DTOs and contracts for game session management
  */
 
-import type { DifficultyLevel, GameStatistics, UserAnswer } from '@/domain/types';
-import { Question } from '@/domain/entities/Question';
+import type { DifficultyLevel, GameStatistics } from '@/domain/types';
 
 // DTOs (Data Transfer Objects)
 

@@ -2,7 +2,7 @@
  * TypeManagementUseCase Unit Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { TypeManagementUseCase } from '@/application/usecases/TypeManagementUseCase';
 import { TypeEffectivenessService } from '@/infrastructure/services/TypeEffectivenessService';
 import { FileTypeRepository } from '@/infrastructure/repositories/FileTypeRepository';
@@ -40,10 +40,11 @@ describe('TypeManagementUseCase', () => {
 
       // Verify type structure
       const firstType = response.types[0];
-      expect(firstType.id).toBeDefined();
-      expect(firstType.name).toBeDefined();
-      expect(firstType.nameJa).toBeDefined();
-      expect(firstType.color).toBeDefined();
+      expect(firstType).toBeDefined();
+      expect(firstType!.id).toBeDefined();
+      expect(firstType!.name).toBeDefined();
+      expect(firstType!.nameJa).toBeDefined();
+      expect(firstType!.color).toBeDefined();
     });
 
     it('should include metadata when requested', async () => {
@@ -166,7 +167,7 @@ describe('TypeManagementUseCase', () => {
       
       // Check if sorted alphabetically
       for (let i = 1; i < response.types.length; i++) {
-        expect(response.types[i].name >= response.types[i - 1].name).toBe(true);
+        expect(response.types[i]?.name >= response.types[i - 1]?.name).toBe(true);
       }
     });
 
@@ -195,7 +196,7 @@ describe('TypeManagementUseCase', () => {
       expect(response.dimensions.attackingTypes).toBe(18);
       expect(response.dimensions.defendingTypes).toBe(18);
       expect(response.matrix.length).toBe(18);
-      expect(response.matrix[0].length).toBe(18);
+      expect(response.matrix[0]?.length).toBe(18);
 
       // Verify statistics
       expect(response.statistics.totalCombinations).toBe(18 * 18);
@@ -214,7 +215,7 @@ describe('TypeManagementUseCase', () => {
       expect(response.dimensions.attackingTypes).toBe(3);
       expect(response.dimensions.defendingTypes).toBe(3);
       expect(response.matrix.length).toBe(3);
-      expect(response.matrix[0].length).toBe(3);
+      expect(response.matrix[0]?.length).toBe(3);
       expect(response.statistics.totalCombinations).toBe(9);
     });
 
@@ -240,7 +241,7 @@ describe('TypeManagementUseCase', () => {
 
       // Find fire attacking grass
       const fireRow = response.matrix[0]; // Assuming fire is first
-      const fireVsGrass = fireRow.find(entry => 
+      const fireVsGrass = fireRow?.find(entry => 
         entry.attackingType === 'fire' && entry.defendingType === 'grass'
       );
 
@@ -384,12 +385,13 @@ describe('TypeManagementUseCase', () => {
 
       // Verify recommendation structure
       const firstRec = response.recommendations[0];
-      expect(firstRec.typeId).toBeDefined();
-      expect(firstRec.typeName).toBeDefined();
-      expect(firstRec.recommendationScore).toBeGreaterThan(0);
-      expect(firstRec.reasons).toBeDefined();
-      expect(firstRec.learningPriority).toMatch(/^(high|medium|low)$/);
-      expect(firstRec.difficultyLevel).toMatch(/^(beginner|intermediate|advanced)$/);
+      expect(firstRec).toBeDefined();
+      expect(firstRec!.typeId).toBeDefined();
+      expect(firstRec!.typeName).toBeDefined();
+      expect(firstRec!.recommendationScore).toBeGreaterThan(0);
+      expect(firstRec!.reasons).toBeDefined();
+      expect(firstRec!.learningPriority).toMatch(/^(high|medium|low)$/);
+      expect(firstRec!.difficultyLevel).toMatch(/^(beginner|intermediate|advanced)$/);
     });
 
     it('should consider user preferences', async () => {
@@ -451,8 +453,8 @@ describe('TypeManagementUseCase', () => {
 
       // Should be sorted by recommendation score (descending)
       for (let i = 1; i < response.recommendations.length; i++) {
-        expect(response.recommendations[i].recommendationScore)
-          .toBeLessThanOrEqual(response.recommendations[i - 1].recommendationScore);
+        expect(response.recommendations[i]?.recommendationScore || 0)
+          .toBeLessThanOrEqual(response.recommendations[i - 1]?.recommendationScore || 0);
       }
     });
 

@@ -2,7 +2,7 @@
  * QuestionGeneratorService Unit Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { QuestionGeneratorService } from '@/infrastructure/services/QuestionGeneratorService';
 import { TypeEffectivenessService } from '@/infrastructure/services/TypeEffectivenessService';
 import { FileTypeRepository } from '@/infrastructure/repositories/FileTypeRepository';
@@ -87,7 +87,7 @@ describe('QuestionGeneratorService', () => {
 
       const result = await service.generateQuestionsWithOptions(options);
       
-      const questionIds = result.questions.map(q => q.getId());
+      const questionIds = result.questions.map((q: Question) => q.getId());
       const uniqueIds = new Set(questionIds);
       
       expect(uniqueIds.size).toBe(questionIds.length); // No duplicates
@@ -104,9 +104,9 @@ describe('QuestionGeneratorService', () => {
       const result = await service.generateQuestionsWithOptions(options);
       
       // At least some questions should involve the focus types
-      const involvesFocusTypes = result.questions.some(q => 
+      const involvesFocusTypes = result.questions.some((q: Question) => 
         options.focusTypes!.includes(q.attackingType) || 
-        q.defendingType.some(type => options.focusTypes!.includes(type))
+        q.defendingType.some((type: TypeId) => options.focusTypes!.includes(type))
       );
       
       expect(involvesFocusTypes).toBe(true);
@@ -123,9 +123,9 @@ describe('QuestionGeneratorService', () => {
       const result = await service.generateQuestionsWithOptions(options);
       
       // No questions should involve excluded types
-      const involvesExcludedTypes = result.questions.some(q => 
+      const involvesExcludedTypes = result.questions.some((q: Question) => 
         options.excludeTypes!.includes(q.attackingType) || 
-        q.defendingType.some(type => options.excludeTypes!.includes(type))
+        q.defendingType.some((type: TypeId) => options.excludeTypes!.includes(type))
       );
       
       expect(involvesExcludedTypes).toBe(false);
@@ -340,10 +340,12 @@ describe('QuestionGeneratorService', () => {
       expect(matchups.length).toBeLessThanOrEqual(10);
       
       if (matchups.length > 0) {
-        expect(matchups[0]).toHaveProperty('attacking');
-        expect(matchups[0]).toHaveProperty('defending');
-        expect(Array.isArray(matchups[0].defending)).toBe(true);
-        expect(matchups[0].defending).toHaveLength(1); // Single-type for normal
+        const firstMatchup = matchups[0];
+        expect(firstMatchup).toBeDefined();
+        expect(firstMatchup!).toHaveProperty('attacking');
+        expect(firstMatchup!).toHaveProperty('defending');
+        expect(Array.isArray(firstMatchup!.defending)).toBe(true);
+        expect(firstMatchup!.defending).toHaveLength(1); // Single-type for normal
       }
     });
 
@@ -351,7 +353,9 @@ describe('QuestionGeneratorService', () => {
       const matchups = await service.getAvailableMatchups('hard', 5);
       
       if (matchups.length > 0) {
-        expect(matchups[0].defending).toHaveLength(2); // Dual-type for hard
+        const firstMatchup = matchups[0];
+        expect(firstMatchup).toBeDefined();
+        expect(firstMatchup!.defending).toHaveLength(2); // Dual-type for hard
       }
     });
   });
