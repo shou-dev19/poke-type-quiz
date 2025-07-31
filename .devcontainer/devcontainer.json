@@ -1,64 +1,56 @@
 {
-  "name": "Pokemon Type Quiz App Development",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:18",
-  
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+  "name": "Devcontainer for Claude Code and Gemini CLI",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:America/Los_Angeles}",
+      "CLAUDE_CODE_VERSION": "latest",
+      "GIT_DELTA_VERSION": "0.18.2",
+      "ZSH_IN_DOCKER_VERSION": "1.2.0"
+    }
   },
-
+  "runArgs": [
+    "--cap-add=NET_ADMIN",
+    "--cap-add=NET_RAW"
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-vscode.vscode-typescript-next",
+        "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "ms-vscode.vscode-eslint",
-        "bradlc.vscode-tailwindcss",
-        "ms-vscode.vscode-json",
-        "ms-playwright.playwright",
-        "ms-vscode.test-adapter-converter",
-        "ms-vscode.js-debug",
-        "formulahendry.auto-rename-tag",
-        "christian-kohler.path-intellisense",
-        "streetsidesoftware.code-spell-checker"
+        "eamodio.gitlens"
       ],
       "settings": {
-        "typescript.preferences.quoteStyle": "single",
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
-          "source.fixAll.eslint": true
+          "source.fixAll.eslint": "explicit"
         },
-        "typescript.updateImportsOnFileMove.enabled": "always",
-        "editor.tabSize": 2,
-        "editor.insertSpaces": true,
-        "files.eol": "\n",
-        "typescript.preferences.importModuleSpecifier": "relative"
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
+        }
       }
     }
   },
-
-  "forwardPorts": [3000, 8080, 5173],
-  "portsAttributes": {
-    "3000": {
-      "label": "Development Server",
-      "onAutoForward": "notify"
-    },
-    "8080": {  
-      "label": "Preview Server",
-      "onAutoForward": "silent"
-    },
-    "5173": {
-      "label": "Vite Dev Server", 
-      "onAutoForward": "notify"
-    }
-  },
-
-  "postCreateCommand": "npm install",
-  
+  "remoteUser": "node",
   "mounts": [
-    "source=${localWorkspaceFolder}/.env.example,target=${containerWorkspaceFolder}/.env,type=bind,consistency=cached"
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume",
+    "source=gemini-config,target=/home/node/.gemini,type=volume"
   ],
-
-  "remoteUser": "node"
+  "containerEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "sudo /usr/local/bin/init-firewall.sh"
 }
