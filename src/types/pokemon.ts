@@ -153,3 +153,78 @@ export const DUAL_TYPES: [PokemonType, PokemonType][] = [
   ['いわ', 'じめん'], ['ゴースト', 'どく'], ['ドラゴン', 'ひこう'], ['あく', 'ひこう'],
   ['はがね', 'いわ'], ['フェアリー', 'ひこう']
 ];
+
+// タイプのシンボル定義
+export const TYPE_SYMBOLS: Record<PokemonType, string> = {
+  'ノーマル': '○',
+  'ほのお': '🔥',
+  'みず': '💧',
+  'でんき': '⚡',
+  'くさ': '🌿',
+  'こおり': '❄️',
+  'かくとう': '👊',
+  'どく': '☠️',
+  'じめん': '🌍',
+  'ひこう': '🪶',
+  'エスパー': '🔮',
+  'むし': '🐛',
+  'いわ': '🗿',
+  'ゴースト': '👻',
+  'ドラゴン': '🐉',
+  'あく': '🌑',
+  'はがね': '⚙️',
+  'フェアリー': '✨'
+};
+
+// アニメーション設定の型定義
+export interface AttackAnimationConfig {
+  duration: number;
+  delay: number;
+  effect: 'pulse' | 'bounce' | 'ping' | 'spin' | 'shake';
+  color: string;
+  intensity: 'low' | 'medium' | 'high';
+}
+
+// タイプ別アニメーション設定
+export const TYPE_ANIMATIONS: Record<PokemonType, AttackAnimationConfig> = {
+  'ノーマル': { duration: 0.5, delay: 0, effect: 'pulse', color: TYPE_COLORS['ノーマル'], intensity: 'low' },
+  'ほのお': { duration: 0.8, delay: 0.1, effect: 'pulse', color: TYPE_COLORS['ほのお'], intensity: 'high' },
+  'みず': { duration: 0.6, delay: 0.1, effect: 'bounce', color: TYPE_COLORS['みず'], intensity: 'medium' },
+  'でんき': { duration: 0.3, delay: 0, effect: 'ping', color: TYPE_COLORS['でんき'], intensity: 'high' },
+  'くさ': { duration: 0.7, delay: 0.2, effect: 'bounce', color: TYPE_COLORS['くさ'], intensity: 'medium' },
+  'こおり': { duration: 0.5, delay: 0.1, effect: 'spin', color: TYPE_COLORS['こおり'], intensity: 'medium' },
+  'かくとう': { duration: 0.4, delay: 0, effect: 'bounce', color: TYPE_COLORS['かくとう'], intensity: 'high' },
+  'どく': { duration: 0.9, delay: 0.2, effect: 'pulse', color: TYPE_COLORS['どく'], intensity: 'medium' },
+  'じめん': { duration: 0.6, delay: 0.3, effect: 'shake', color: TYPE_COLORS['じめん'], intensity: 'high' },
+  'ひこう': { duration: 0.5, delay: 0.1, effect: 'bounce', color: TYPE_COLORS['ひこう'], intensity: 'medium' },
+  'エスパー': { duration: 0.7, delay: 0.2, effect: 'ping', color: TYPE_COLORS['エスパー'], intensity: 'medium' },
+  'むし': { duration: 0.4, delay: 0.1, effect: 'bounce', color: TYPE_COLORS['むし'], intensity: 'low' },
+  'いわ': { duration: 0.8, delay: 0.4, effect: 'shake', color: TYPE_COLORS['いわ'], intensity: 'high' },
+  'ゴースト': { duration: 1.0, delay: 0.3, effect: 'pulse', color: TYPE_COLORS['ゴースト'], intensity: 'medium' },
+  'ドラゴン': { duration: 1.2, delay: 0.2, effect: 'pulse', color: TYPE_COLORS['ドラゴン'], intensity: 'high' },
+  'あく': { duration: 0.6, delay: 0.2, effect: 'pulse', color: TYPE_COLORS['あく'], intensity: 'medium' },
+  'はがね': { duration: 0.5, delay: 0.1, effect: 'spin', color: TYPE_COLORS['はがね'], intensity: 'medium' },
+  'フェアリー': { duration: 0.8, delay: 0.2, effect: 'bounce', color: TYPE_COLORS['フェアリー'], intensity: 'medium' }
+};
+
+// 難易度別の設定
+export const DIFFICULTY_CONFIG = {
+  'かんたん': {
+    types: ['ほのお', 'みず', 'くさ', 'でんき', 'ノーマル', 'かくとう'] as PokemonType[],
+    choices: 4,
+    dualTypes: false,
+    timeLimit: null
+  },
+  'ふつう': {
+    types: POKEMON_TYPES,
+    choices: 4,
+    dualTypes: false,
+    timeLimit: null
+  },
+  'むずかしい': {
+    types: POKEMON_TYPES,
+    choices: 6,
+    dualTypes: true,
+    timeLimit: 30 // 30秒
+  }
+} as const;
