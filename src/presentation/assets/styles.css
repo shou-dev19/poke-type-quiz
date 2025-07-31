@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+  }
+  
+  .btn-disabled {
+    @apply bg-gray-300 text-gray-500 cursor-not-allowed;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+  }
+  
+  .card-header {
+    @apply border-b border-gray-200 pb-4 mb-4;
+  }
+  
+  .input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  .type-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white;
+  }
+  
+  .quiz-question {
+    @apply bg-white rounded-xl shadow-lg p-8 border-2 border-gray-100;
+  }
+  
+  .quiz-option {
+    @apply w-full p-4 text-left rounded-lg border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+  
+  .quiz-option.selected {
+    @apply border-blue-500 bg-blue-100;
+  }
+  
+  .quiz-option.correct {
+    @apply border-green-500 bg-green-100;
+  }
+  
+  .quiz-option.incorrect {
+    @apply border-red-500 bg-red-100;
+  }
+}
+
+/* Pokemon type specific styles */
+@layer utilities {
+  .type-fire { @apply bg-fire; }
+  .type-water { @apply bg-water; }
+  .type-grass { @apply bg-grass; }
+  .type-electric { @apply bg-electric; }
+  .type-psychic { @apply bg-psychic; }
+  .type-ice { @apply bg-ice; }
+  .type-dragon { @apply bg-dragon; }
+  .type-dark { @apply bg-dark; }
+  .type-fairy { @apply bg-fairy; }
+  .type-normal { @apply bg-normal; }
+  .type-fighting { @apply bg-fighting; }
+  .type-poison { @apply bg-poison; }
+  .type-ground { @apply bg-ground; }
+  .type-flying { @apply bg-flying; }
+  .type-bug { @apply bg-bug; }
+  .type-rock { @apply bg-rock; }
+  .type-ghost { @apply bg-ghost; }
+  .type-steel { @apply bg-steel; }
+}
+
+/* Animation utilities */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s infinite;
+  }
+}
+
+/* Responsive utilities */
+@layer utilities {
+  .container-sm {
+    @apply max-w-screen-sm mx-auto px-4;
+  }
+  
+  .container-md {
+    @apply max-w-screen-md mx-auto px-4;
+  }
+  
+  .container-lg {
+    @apply max-w-screen-lg mx-auto px-4;
+  }
+  
+  .container-xl {
+    @apply max-w-screen-xl mx-auto px-4;
+  }
+}
