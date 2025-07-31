@@ -14,22 +14,22 @@
 **所要時間**: 2-3時間  
 **依存関係**: なし
 
-- [ ] **1.1.1** React + TypeScript + Viteプロジェクトの初期化
+- [x] **1.1.1** React + TypeScript + Viteプロジェクトの初期化
   - `npm create vite@latest . -- --template react-ts`
   - 基本的な設定ファイル（vite.config.ts, tsconfig.json）の設定
-- [ ] **1.1.2** Tailwind CSS + PostCSSのセットアップ
+- [x] **1.1.2** Tailwind CSS + PostCSSのセットアップ
   - 依存関係インストール: `tailwindcss`, `postcss`, `autoprefixer`
   - `tailwind.config.js` 設定（カスタムカラーパレット含む）
   - `globals.css` の調整（既存のfigma_outputコードから流用）
-- [ ] **1.1.3** Framer Motionのインストール・設定
+- [x] **1.1.3** Framer Motionのインストール・設定
   - `npm install framer-motion` （攻撃アニメーション用）
-- [ ] **1.1.4** Shadcn/uiコンポーネントライブラリのセットアップ
+- [x] **1.1.4** Shadcn/uiコンポーネントライブラリのセットアップ
   - `npx shadcn@latest init`
   - 必要なUIコンポーネントのインストール（Button, Card, Select, Progress, etc.）
   - `figma_output/components/ui/` から既存コンポーネントの移植
 
 ### 1.2 プロジェクト構造の構築
-- [ ] **1.2.1** ディレクトリ構造の作成
+- [x] **1.2.1** ディレクトリ構造の作成
   ```
   src/
   ├── components/
@@ -41,7 +41,7 @@
   ├── hooks/
   └── styles/
   ```
-- [ ] **1.2.2** 既存Figmaコードの適切な配置
+- [x] **1.2.2** 既存Figmaコードの適切な配置
   - `docs/figma_output/` から各コンポーネントを適切なディレクトリに移動
   - インポートパスの調整
 
@@ -52,15 +52,15 @@
 **所要時間**: 3-4時間  
 **依存関係**: 1.1, 1.2
 
-- [ ] **2.1.1** コアデータ型の定義 (`src/types/pokemon.ts`)
+- [x] **2.1.1** コアデータ型の定義 (`src/types/pokemon.ts`)
   - `PokemonType`, `Difficulty`, `DamageMultiplier` の定義
   - `QuizQuestion`, `QuizState` インターフェースの定義
   - 既存 `figma_output/types/pokemon.ts` をベースに拡張
-- [ ] **2.1.2** タイプ相性データの実装
+- [x] **2.1.2** タイプ相性データの実装
   - `TYPE_EFFECTIVENESS` マトリクス（18×18の完全なデータ）
   - `TYPE_COLORS` と `TYPE_SYMBOLS` の定義（type_table.png準拠）
   - `DUAL_TYPES` 複合タイプパターンの定義
-- [ ] **2.1.3** アニメーション設定データの定義
+- [x] **2.1.3** アニメーション設定データの定義
   - `TYPE_ANIMATIONS` 各タイプのアニメーション設定
   - `AttackAnimationConfig` インターフェースの定義
 
@@ -69,14 +69,14 @@
 **所要時間**: 4-5時間  
 **依存関係**: 2.1
 
-- [ ] **2.2.1** ダメージ計算機能 (`src/utils/quizLogic.ts`)
+- [x] **2.2.1** ダメージ計算機能 (`src/utils/quizLogic.ts`)
   - `calculateDamage` 関数の実装（単一・複合タイプ対応）
   - 既存 `figma_output/utils/quizLogic.ts` を拡張・改修
-- [ ] **2.2.2** 問題生成アルゴリズムの実装
+- [x] **2.2.2** 問題生成アルゴリズムの実装
   - `generateQuestions` 関数の実装
   - 難易度別ロジック（かんたん/ふつう/むずかしい）
   - 重複回避機能とバランス調整
-- [ ] **2.2.3** 選択肢生成機能の実装
+- [x] **2.2.3** 選択肢生成機能の実装
   - `getAnswerChoices` 関数の実装（4択/6択対応）
   - `getAnswerText` 関数の実装（日本語表示）
   - `formatDefendType` 関数の実装（複合タイプ表示）
@@ -86,10 +86,10 @@
 **所要時間**: 3-4時間  
 **依存関係**: 2.1, 2.2
 
-- [ ] **2.3.1** クイズ状態管理フック (`src/hooks/useQuizState.ts`)
+- [x] **2.3.1** クイズ状態管理フック (`src/hooks/useQuizState.ts`)
   - `useQuizState` カスタムフックの実装
   - 状態更新関数（startQuiz, answerQuestion, nextQuestion, resetQuiz）
-- [ ] **2.3.2** アニメーション状態管理 (`src/hooks/useAnimations.ts`)
+- [x] **2.3.2** アニメーション状態管理 (`src/hooks/useAnimations.ts`)
   - `useAnimationControl` カスタムフックの実装
   - アニメーション制御関数の実装
 
@@ -100,16 +100,16 @@
 **所要時間**: 5-6時間  
 **依存関係**: 2.1, 2.2
 
-- [ ] **3.1.1** TypeIconコンポーネントの改修 (`src/components/game/`)
+- [x] **3.1.1** TypeIconコンポーネントの改修 (`src/components/game/`)
   - 既存 `figma_output/components/TypeIcon.tsx` を拡張
   - type_table.png準拠のデザイン適用
   - サイズ可変対応（sm/md/lg）
   - タイプ別アニメーション実装
-- [ ] **3.1.2** QuestionDisplayコンポーネントの実装
+- [x] **3.1.2** QuestionDisplayコンポーネントの実装
   - 問題文表示機能
   - 攻撃側・防御側タイプアイコンの配置
   - 複合タイプの適切な表示
-- [ ] **3.1.3** 選択肢ボタンコンポーネントの実装
+- [x] **3.1.3** 選択肢ボタンコンポーネントの実装
   - 4択/6択対応のボタンレイアウト
   - 選択状態の視覚的フィードバック
   - 無効化状態の実装
@@ -119,7 +119,7 @@
 **所要時間**: 6-8時間  
 **依存関係**: 2.3, 3.1
 
-- [ ] **3.2.1** StartScreenの改修 (`src/components/screens/`)
+- [x] **3.2.1** StartScreenの改修 (`src/components/screens/`)
   - 既存 `figma_output/components/StartScreen.tsx` をベースに改修
   - 難易度選択UI（3段階）
   - 問題数設定機能（5,10,15,20問）
