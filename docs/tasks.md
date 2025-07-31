@@ -130,7 +130,7 @@
   - 難易度表示
   - 中断ボタン機能
   - 問題・選択肢の動的表示
-- [ ] **3.2.3** ResultScreenの改修
+- [x] **3.2.3** ResultScreenの改修
   - 既存 `figma_output/components/ResultScreen.tsx` をベースに改修
   - 最終スコア・正答率の表示
   - 結果詳細（問題別正解/不正解）
