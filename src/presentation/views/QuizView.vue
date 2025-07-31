@@ -5,16 +5,16 @@
       <div class="max-w-2xl mx-auto">
         <div class="setup-header text-center mb-8">
           <div class="setup-icon">🎯</div>
-          <h1 class="setup-title">Start New Quiz</h1>
+          <h1 class="setup-title">新しいクイズを開始</h1>
           <p class="setup-description">
-            Configure your quiz settings and test your Pokemon type knowledge
+            クイズの設定を行い、ポケモンタイプの知識をテストしましょう
           </p>
         </div>
 
         <form @submit.prevent="handleStartQuiz" class="setup-form">
           <!-- Difficulty Selection -->
           <div class="form-section">
-            <label class="form-label">Difficulty Level</label>
+            <label class="form-label">難易度レベル</label>
             <div class="difficulty-grid">
               <button
                 v-for="level in difficultyLevels"
@@ -33,7 +33,7 @@
           <!-- Question Count -->
           <div class="form-section">
             <label for="questionCount" class="form-label">
-              Number of Questions: {{ quizConfig.questionCount }}
+問題数: {{ quizConfig.questionCount }}問
             </label>
             <div class="question-count-control">
               <input
@@ -45,9 +45,9 @@
                 class="question-slider"
               >
               <div class="slider-labels">
-                <span>5 Questions</span>
-                <span>{{ quizConfig.questionCount }} Questions</span>
-                <span>20 Questions</span>
+                <span>5問</span>
+                <span>{{ quizConfig.questionCount }}問</span>
+                <span>20問</span>
               </div>
             </div>
           </div>
@@ -58,8 +58,8 @@
             :disabled="isLoading"
             class="start-quiz-btn"
           >
-            <span v-if="isLoading">Starting Quiz...</span>
-            <span v-else>🚀 Start Quiz</span>
+            <span v-if="isLoading">クイズ開始中...</span>
+            <span v-else">🚀 クイズ開始</span>
           </button>
         </form>
       </div>
@@ -71,10 +71,10 @@
       <div class="quiz-header">
         <div class="progress-info">
           <div class="question-counter">
-            Question {{ currentQuestionNumber }} of {{ totalQuestions }}
+問題 {{ currentQuestionNumber }} / {{ totalQuestions }}
           </div>
           <div class="score-display">
-            <span class="score-label">Score:</span>
+            <span class="score-label">スコア:</span>
             <span class="score-value">{{ gameSession.progress?.score || 0 }}</span>
           </div>
         </div>
@@ -86,7 +86,7 @@
               :style="{ width: `${progressPercentage}%` }"
             ></div>
           </div>
-          <div class="progress-text">{{ Math.round(progressPercentage) }}% Complete</div>
+          <div class="progress-text">{{ Math.round(progressPercentage) }}% 完了</div>
         </div>
       </div>
 
@@ -111,7 +111,7 @@
           class="control-btn secondary"
         >
           <span class="btn-icon">🏁</span>
-          End Quiz
+クイズ終了
         </button>
         
         <button
@@ -121,7 +121,7 @@
           class="control-btn primary"
         >
           <span class="btn-text">
-            {{ isLastQuestion ? 'Finish Quiz' : 'Next Question' }}
+            {{ isLastQuestion ? 'クイズ完了' : '次の問題' }}
           </span>
           <span class="btn-icon">{{ isLastQuestion ? '🎉' : '→' }}</span>
         </button>
@@ -132,15 +132,15 @@
     <div v-else-if="finalResults" class="quiz-results">
       <div class="results-header">
         <div class="celebration-icon">🎉</div>
-        <h2 class="results-title">Quiz Completed!</h2>
-        <p class="results-subtitle">Great job! Here are your results:</p>
+        <h2 class="results-title">クイズ完了！</h2>
+        <p class="results-subtitle">お疲れさまでした！こちらがあなたの結果です:</p>
       </div>
 
       <!-- Results Stats -->
       <div class="results-stats">
         <StatsCard
           :value="finalResults.finalScore"
-          label="Final Score"
+          label="最終スコア"
           color="blue"
           icon="🎯"
           size="lg"
@@ -148,7 +148,7 @@
         />
         <StatsCard
           :value="`${Math.round(finalResults.accuracy)}%`"
-          label="Accuracy"
+          label="正答率"
           color="green"
           icon="✅"
           size="lg"
@@ -156,7 +156,7 @@
         />
         <StatsCard
           :value="finalResults.performance.rank"
-          label="Rank"
+          label="ランク"
           color="purple"
           icon="🏆"
           size="lg"
@@ -183,15 +183,15 @@
       <div class="results-actions">
         <button @click="resetQuiz" class="action-btn primary">
           <span class="btn-icon">🆕</span>
-          New Quiz
+新しいクイズ
         </button>
         <router-link to="/statistics" class="action-btn secondary">
           <span class="btn-icon">📊</span>
-          View Statistics
+統計表示
         </router-link>
         <router-link to="/types" class="action-btn secondary">
           <span class="btn-icon">📚</span>
-          Study Types
+タイプ学習
         </router-link>
       </div>
     </div>
@@ -251,21 +251,21 @@ const quizConfig = ref({
 const difficultyLevels = [
   {
     value: 'easy' as DifficultyLevel,
-    label: 'Easy',
+    label: '初級',
     icon: '😊',
-    description: 'Single-type Pokemon, basic effectiveness'
+    description: '単タイプポケモン、基本的な相性'
   },
   {
     value: 'normal' as DifficultyLevel,
-    label: 'Normal',
+    label: '中級',
     icon: '🤔',
-    description: 'Mixed types, moderate complexity'
+    description: '複合タイプ、中程度の難易度'
   },
   {
     value: 'hard' as DifficultyLevel,
-    label: 'Hard',
+    label: '上級',
     icon: '😤',
-    description: 'Dual-type Pokemon, advanced knowledge'
+    description: 'デュアルタイプポケモン、上級者向け'
   }
 ];
 
@@ -275,7 +275,7 @@ async function handleStartQuiz() {
     await startQuiz(quizConfig.value);
   } catch (error) {
     console.error('Failed to start quiz:', error);
-    alert('Failed to start quiz. Please try again.');
+    alert('クイズの開始に失敗しました。もう一度お試しください。');
   }
 }
 
@@ -284,7 +284,7 @@ async function handleAnswerSelect(answer: string) {
     await submitAnswer(answer);
   } catch (error) {
     console.error('Failed to submit answer:', error);
-    alert('Failed to submit answer. Please try again.');
+    alert('答えの送信に失敗しました。もう一度お試しください。');
   }
 }
 
@@ -293,18 +293,18 @@ async function handleNextQuestion() {
     await nextQuestion();
   } catch (error) {
     console.error('Failed to proceed to next question:', error);
-    alert('Failed to load next question. Please try again.');
+    alert('次の問題の読み込みに失敗しました。もう一度お試しください。');
   }
 }
 
 async function handleEndQuiz() {
-  if (!confirm('Are you sure you want to end the quiz?')) return;
+  if (!confirm('本当にクイズを終了しますか？')) return;
   
   try {
     await endQuiz();
   } catch (error) {
     console.error('Failed to end quiz:', error);
-    alert('Failed to end quiz. Please try again.');
+    alert('クイズの終了に失敗しました。もう一度お試しください。');
   }
 }
 
@@ -316,7 +316,7 @@ function getDifficultyButtonClass(value: DifficultyLevel) {
 }
 
 onMounted(() => {
-  document.title = 'Pokemon Type Quiz - Quiz';
+  document.title = 'ポケモンタイプ相性クイズ - クイズ';
 });
 </script>
 

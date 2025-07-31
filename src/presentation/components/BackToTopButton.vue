@@ -4,10 +4,10 @@
       v-if="isVisible"
       @click="scrollToTop"
       class="back-to-top-btn"
-      aria-label="Back to top"
+      aria-label="トップへ戻る"
     >
       <span class="btn-icon">↑</span>
-      <span class="btn-text">Top</span>
+      <span class="btn-text">トップ</span>
     </button>
   </Transition>
 </template>

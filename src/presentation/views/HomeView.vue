@@ -5,22 +5,22 @@
       <div class="container-lg">
         <div class="text-center">
           <div class="text-6xl mb-6 animate-bounce-slow">🎯</div>
-          <h1 class="text-5xl font-bold mb-4">Pokemon Type Quiz</h1>
+          <h1 class="text-5xl font-bold mb-4">ポケモンタイプ相性クイズ</h1>
           <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Master Pokemon type effectiveness with interactive quizzes and comprehensive learning tools
+            インタラクティブなクイズと総合的な学習ツールでポケモンタイプ相性をマスターしよう
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <router-link 
               to="/quiz" 
               class="btn bg-yellow-500 hover:bg-yellow-600 text-gray-900 text-lg px-8 py-3 font-bold"
             >
-              Start Quiz 🚀
+クイズ開始 🚀
             </router-link>
             <router-link 
               to="/types" 
               class="btn bg-white/20 hover:bg-white/30 text-white text-lg px-8 py-3 border border-white/30"
             >
-              Browse Types 📚
+タイプ一覧 📚
             </router-link>
           </div>
         </div>
@@ -31,9 +31,9 @@
     <section class="py-16 bg-gray-50">
       <div class="container-lg">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">Features</h2>
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">機能</h2>
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-            Everything you need to master Pokemon type effectiveness
+            ポケモンタイプ相性をマスターするためのすべてがここに
           </p>
         </div>
 
@@ -41,31 +41,31 @@
           <!-- Interactive Quiz -->
           <div class="card text-center hover:shadow-lg transition-shadow">
             <div class="text-4xl mb-4">🎮</div>
-            <h3 class="text-xl font-bold mb-3 text-gray-900">Interactive Quiz</h3>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">インタラクティブクイズ</h3>
             <p class="text-gray-600 mb-4">
-              Test your knowledge with adaptive quizzes that adjust to your skill level
+              あなたのスキルレベルに合わせて調整されるアダプティブクイズで知識をテスト
             </p>
-            <router-link to="/quiz" class="btn btn-primary">Start Quiz</router-link>
+            <router-link to="/quiz" class="btn btn-primary">クイズ開始</router-link>
           </div>
 
           <!-- Type Database -->
           <div class="card text-center hover:shadow-lg transition-shadow">
             <div class="text-4xl mb-4">📖</div>
-            <h3 class="text-xl font-bold mb-3 text-gray-900">Type Database</h3>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">タイプデータベース</h3>
             <p class="text-gray-600 mb-4">
-              Comprehensive information about all 18 Pokemon types and their relationships
+              18種類のポケモンタイプとその相性関係に関する総合情報
             </p>
-            <router-link to="/types" class="btn btn-primary">Browse Types</router-link>
+            <router-link to="/types" class="btn btn-primary">タイプ一覧</router-link>
           </div>
 
           <!-- Progress Tracking -->
           <div class="card text-center hover:shadow-lg transition-shadow">
             <div class="text-4xl mb-4">📊</div>
-            <h3 class="text-xl font-bold mb-3 text-gray-900">Progress Tracking</h3>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">進捗追跡</h3>
             <p class="text-gray-600 mb-4">
-              Monitor your learning progress with detailed statistics and performance metrics
+              詳細な統計とパフォーマンス指標で学習進捗を監視
             </p>
-            <router-link to="/statistics" class="btn btn-primary">View Stats</router-link>
+            <router-link to="/statistics" class="btn btn-primary">統計表示</router-link>
           </div>
         </div>
       </div>
@@ -75,9 +75,9 @@
     <section class="py-16">
       <div class="container-lg">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">使い方</h2>
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-            Learn Pokemon type effectiveness in three simple steps
+            3つの簡単なステップでポケモンタイプ相性を学びましょう
           </p>
         </div>
 
@@ -86,9 +86,9 @@
             <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <span class="text-2xl font-bold text-blue-600">1</span>
             </div>
-            <h3 class="text-xl font-bold mb-3">Choose Your Level</h3>
+            <h3 class="text-xl font-bold mb-3">レベルを選択</h3>
             <p class="text-gray-600">
-              Select from Easy, Normal, or Hard difficulty levels based on your experience
+              あなたの経験に基づいて、初級・中級・上級の難易度レベルから選択
             </p>
           </div>
 
@@ -96,9 +96,9 @@
             <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <span class="text-2xl font-bold text-green-600">2</span>
             </div>
-            <h3 class="text-xl font-bold mb-3">Answer Questions</h3>
+            <h3 class="text-xl font-bold mb-3">問題に答える</h3>
             <p class="text-gray-600">
-              Answer type effectiveness questions with instant feedback and explanations
+              タイプ相性の問題に答えて、即座にフィードバックと解説を受け取り
             </p>
           </div>
 
@@ -106,9 +106,9 @@
             <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <span class="text-2xl font-bold text-purple-600">3</span>
             </div>
-            <h3 class="text-xl font-bold mb-3">Track Progress</h3>
+            <h3 class="text-xl font-bold mb-3">進捗を追跡</h3>
             <p class="text-gray-600">
-              Monitor your improvement and identify areas that need more practice
+              上達を監視し、より多くの練習が必要な領域を特定
             </p>
           </div>
         </div>
@@ -119,28 +119,28 @@
     <section class="py-16 bg-gray-50">
       <div class="container-lg">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">System Overview</h2>
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">システム概要</h2>
           <p class="text-lg text-gray-600">
-            Built with clean architecture and modern technologies
+            クリーンアーキテクチャとモダンテクノロジーで構築
           </p>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div class="text-center">
             <div class="text-3xl font-bold text-blue-600 mb-2">18</div>
-            <div class="text-gray-600">Pokemon Types</div>
+            <div class="text-gray-600">ポケモンタイプ</div>
           </div>
           <div class="text-center">
             <div class="text-3xl font-bold text-green-600 mb-2">324</div>
-            <div class="text-gray-600">Type Combinations</div>
+            <div class="text-gray-600">タイプ組み合わせ</div>
           </div>
           <div class="text-center">
             <div class="text-3xl font-bold text-purple-600 mb-2">3</div>
-            <div class="text-gray-600">Difficulty Levels</div>
+            <div class="text-gray-600">難易度レベル</div>
           </div>
           <div class="text-center">
             <div class="text-3xl font-bold text-red-600 mb-2">∞</div>
-            <div class="text-gray-600">Learning Potential</div>
+            <div class="text-gray-600">学習ポテンシャル</div>
           </div>
         </div>
       </div>
@@ -153,7 +153,7 @@ import { onMounted } from 'vue';
 
 onMounted(() => {
   // Set page title
-  document.title = 'Pokemon Type Quiz - Home';
+  document.title = 'ポケモンタイプ相性クイズ - ホーム';
 });
 </script>
 

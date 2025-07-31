@@ -7,8 +7,8 @@
           <div class="brand-content">
             <div class="brand-icon">🎯</div>
             <div class="brand-text">
-              <h1 class="brand-title">Pokemon Type Quiz</h1>
-              <p class="brand-subtitle">Master the type effectiveness system</p>
+              <h1 class="brand-title">ポケモンタイプ相性クイズ</h1>
+              <p class="brand-subtitle">タイプ相性システムをマスターしよう</p>
             </div>
           </div>
         </router-link>
@@ -48,7 +48,7 @@
             <div class="mobile-nav-header">
               <div class="mobile-brand">
                 <div class="brand-icon">🎯</div>
-                <span class="brand-title">Pokemon Type Quiz</span>
+                <span class="brand-title">ポケモンタイプ相性クイズ</span>
               </div>
               <button
                 @click="$emit('close-mobile-menu')"
@@ -99,25 +99,25 @@ const navigationItems = computed(() => [
   {
     path: '/',
     icon: '🏠',
-    label: 'Home',
+    label: 'ホーム',
     badge: null
   },
   {
     path: '/quiz',
     icon: '🎮',
-    label: 'Quiz',
+    label: 'クイズ',
     badge: null
   },
   {
     path: '/types',
     icon: '📚',
-    label: 'Types',
+    label: 'タイプ',
     badge: null
   },
   {
     path: '/statistics',
     icon: '📊',
-    label: 'Statistics',
+    label: '統計',
     badge: null
   }
 ]);

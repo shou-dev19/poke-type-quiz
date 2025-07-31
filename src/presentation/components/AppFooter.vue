@@ -6,11 +6,11 @@
         <div class="footer-section">
           <div class="footer-brand">
             <div class="brand-icon">🎯</div>
-            <h3 class="brand-title">Pokemon Type Quiz</h3>
+            <h3 class="brand-title">ポケモンタイプ相性クイズ</h3>
           </div>
           <p class="brand-description">
-            Learn and master Pokemon type effectiveness with interactive quizzes, 
-            comprehensive type information, and progress tracking.
+インタラクティブクイズ、総合的なタイプ情報、進捗追跡で
+            ポケモンタイプ相性を学び、マスターしましょう。
           </p>
           <div class="social-links">
             <a href="#" class="social-link" aria-label="GitHub">
@@ -27,53 +27,53 @@
 
         <!-- Features Section -->
         <div class="footer-section">
-          <h4 class="section-title">Features</h4>
+          <h4 class="section-title">機能</h4>
           <ul class="footer-list">
             <li class="footer-list-item">
               <span class="list-icon">🎮</span>
-              <span>Interactive Quiz System</span>
+              <span>インタラクティブクイズシステム</span>
             </li>
             <li class="footer-list-item">
               <span class="list-icon">📖</span>
-              <span>Type Database</span>
+              <span>タイプデータベース</span>
             </li>
             <li class="footer-list-item">
               <span class="list-icon">📊</span>
-              <span>Performance Analytics</span>
+              <span>パフォーマンス分析</span>
             </li>
             <li class="footer-list-item">
               <span class="list-icon">🎯</span>
-              <span>Progress Tracking</span>
+              <span>進捗追跡</span>
             </li>
           </ul>
         </div>
 
         <!-- Navigation Section -->
         <div class="footer-section">
-          <h4 class="section-title">Quick Links</h4>
+          <h4 class="section-title">クイックリンク</h4>
           <ul class="footer-list">
             <li class="footer-list-item">
               <router-link to="/" class="footer-link">
                 <span class="list-icon">🏠</span>
-                <span>Home</span>
+                <span>ホーム</span>
               </router-link>
             </li>
             <li class="footer-list-item">
               <router-link to="/quiz" class="footer-link">
                 <span class="list-icon">🎮</span>
-                <span>Start Quiz</span>
+                <span>クイズ開始</span>
               </router-link>
             </li>
             <li class="footer-list-item">
               <router-link to="/types" class="footer-link">
                 <span class="list-icon">📚</span>
-                <span>Browse Types</span>
+                <span>タイプ一覧</span>
               </router-link>
             </li>
             <li class="footer-list-item">
               <router-link to="/statistics" class="footer-link">
                 <span class="list-icon">📊</span>
-                <span>View Statistics</span>
+                <span>統計表示</span>
               </router-link>
             </li>
           </ul>
@@ -81,11 +81,11 @@
 
         <!-- Technical Section -->
         <div class="footer-section">
-          <h4 class="section-title">Architecture</h4>
+          <h4 class="section-title">アーキテクチャ</h4>
           <ul class="footer-list">
             <li class="footer-list-item">
               <span class="list-icon">🏗️</span>
-              <span>Clean Architecture</span>
+              <span>クリーンアーキテクチャ</span>
             </li>
             <li class="footer-list-item">
               <span class="list-icon">⚡</span>
@@ -93,11 +93,11 @@
             </li>
             <li class="footer-list-item">
               <span class="list-icon">🧪</span>
-              <span>Comprehensive Testing</span>
+              <span>総合テスト</span>
             </li>
             <li class="footer-list-item">
               <span class="list-icon">🚀</span>
-              <span>Modern Development</span>
+              <span>モダン開発</span>
             </li>
           </ul>
         </div>
@@ -106,12 +106,12 @@
       <!-- Footer Bottom -->
       <div class="footer-bottom">
         <div class="copyright">
-          <p>&copy; {{ currentYear }} Pokemon Type Quiz. Built with Clean Architecture principles.</p>
+          <p>&copy; {{ currentYear }} ポケモンタイプ相性クイズ. クリーンアーキテクチャ原則で構築。</p>
         </div>
         <div class="footer-links">
-          <a href="#" class="footer-bottom-link">Privacy Policy</a>
-          <a href="#" class="footer-bottom-link">Terms of Service</a>
-          <a href="#" class="footer-bottom-link">Contact</a>
+          <a href="#" class="footer-bottom-link">プライバシーポリシー</a>
+          <a href="#" class="footer-bottom-link">利用規約</a>
+          <a href="#" class="footer-bottom-link">お問い合わせ</a>
         </div>
       </div>
     </div>
