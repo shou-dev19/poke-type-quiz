@@ -54,19 +54,15 @@ export function generateQuestions(difficulty: Difficulty, count: number): QuizQu
         break;
         
       case 'むずかしい':
-        // 複合タイプも含む
+        // 複合タイプのみ出題（100%）
         attackType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-        if (Math.random() < 0.4) {
-          // 40%の確率で複合タイプ
-          let type1 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-          let type2 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-          while (type1 === type2) {
-            type2 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
-          }
-          defendType = [type1, type2];
-        } else {
-          defendType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
+        // 必ず複合タイプを生成
+        let type1 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
+        let type2 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
+        while (type1 === type2) {
+          type2 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
         }
+        defendType = [type1, type2];
         break;
     }
 

@@ -187,3 +187,81 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom animations for Pokemon types */
+@layer utilities {
+  .animate-type-fire {
+    animation: flame 2s ease-in-out infinite;
+  }
+  
+  .animate-type-water {
+    position: relative;
+  }
+  
+  .animate-type-water::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: rgba(59, 130, 246, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: water-ripple 1.5s ease-out infinite;
+  }
+  
+  .animate-type-electric {
+    position: relative;
+  }
+  
+  .animate-type-electric::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 20%;
+    width: 2px;
+    height: 60%;
+    background: rgba(251, 191, 36, 0.8);
+    animation: electric-spark 0.5s ease-in-out infinite;
+  }
+  
+  .animate-type-grass {
+    animation: leaf-sway 3s ease-in-out infinite;
+  }
+  
+  .animate-type-ice {
+    animation: ice-sparkle 2s ease-in-out infinite;
+  }
+}
+
+/* Keyframes for type animations */
+@keyframes flame {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+@keyframes water-ripple {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes electric-spark {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes ice-sparkle {
+  0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.6; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+}
