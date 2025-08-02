@@ -35,28 +35,42 @@ export default function StartScreen({ onStart }: StartScreenProps) {
           {/* タイプアイコンデモンストレーション */}
           <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 p-6 border border-purple-200/50">
             <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 text-center">全18タイプ対応</h3>
-            <div className="flex animate-scroll-right space-x-4">
-              {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type, index) => (
-                <div key={type} className="flex-shrink-0" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <TypeIcon 
-                    type={type as any} 
-                    size="md" 
-                    animated={true}
-                    className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
-                  />
-                </div>
-              ))}
-              {/* 無限ループのための複製 */}
-              {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type, index) => (
-                <div key={`${type}-dup`} className="flex-shrink-0" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <TypeIcon 
-                    type={type as any} 
-                    size="md" 
-                    animated={true}
-                    className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
-                  />
-                </div>
-              ))}
+            <div className="animate-scroll-right">
+              <div className="flex space-x-4 pr-4">
+                {/* 第1セット */}
+                {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type) => (
+                  <div key={`first-${type}`} className="flex-shrink-0">
+                    <TypeIcon 
+                      type={type as any} 
+                      size="md" 
+                      animated={true}
+                      className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
+                    />
+                  </div>
+                ))}
+                {/* 第2セット（シームレス接続用） */}
+                {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type) => (
+                  <div key={`second-${type}`} className="flex-shrink-0">
+                    <TypeIcon 
+                      type={type as any} 
+                      size="md" 
+                      animated={true}
+                      className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
+                    />
+                  </div>
+                ))}
+                {/* 第3セット（完全なループ保証） */}
+                {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり'].map((type) => (
+                  <div key={`third-${type}`} className="flex-shrink-0">
+                    <TypeIcon 
+                      type={type as any} 
+                      size="md" 
+                      animated={true}
+                      className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
