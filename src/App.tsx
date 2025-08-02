@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import StartScreen from './components/StartScreen';
 import QuizScreen from './components/QuizScreen';
 import ResultScreen from './components/ResultScreen';
 import { QuizState, Difficulty, DamageMultiplier } from './types/pokemon';
-import { generateQuestions, calculateDamage } from './utils/quizLogic';
+import { generateQuestions } from './utils/quizLogic';
 
 type AppState = 'start' | 'quiz' | 'result';
 
@@ -89,6 +89,7 @@ export default function App() {
 
   // アニメーション完了時の処理
   const handleAnimationComplete = () => {
+    console.log('App handleAnimationComplete called');
     setQuizState(prev => ({
       ...prev,
       showResult: true,
@@ -108,6 +109,7 @@ export default function App() {
           onAnswer={handleAnswer}
           onNext={handleNext}
           onQuit={handleQuit}
+          onAnimationComplete={handleAnimationComplete}
         />
       )}
       

@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { PokemonType, TYPE_COLORS } from '../types/pokemon';
 
 interface TypeIconProps {
@@ -21,24 +21,24 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
     if (!animated) return baseClass;
 
     const animations: Record<PokemonType, string> = {
-      'ほのお': `${baseClass} animate-pulse hover:animate-bounce`,
-      'みず': `${baseClass} hover:animate-pulse`,
-      'でんき': `${baseClass} animate-pulse hover:animate-ping`,
-      'くさ': `${baseClass} hover:animate-bounce`,
-      'こおり': `${baseClass} animate-pulse hover:animate-spin`,
-      'かくとう': `${baseClass} hover:animate-bounce`,
-      'どく': `${baseClass} animate-pulse`,
-      'じめん': `${baseClass} hover:animate-bounce`,
-      'ひこう': `${baseClass} hover:animate-bounce`,
-      'エスパー': `${baseClass} animate-pulse hover:animate-ping`,
-      'むし': `${baseClass} hover:animate-bounce`,
-      'いわ': `${baseClass} hover:animate-pulse`,
-      'ゴースト': `${baseClass} animate-pulse hover:animate-ping`,
-      'ドラゴン': `${baseClass} animate-pulse hover:animate-bounce`,
-      'あく': `${baseClass} hover:animate-pulse`,
-      'はがね': `${baseClass} hover:animate-pulse`,
-      'フェアリー': `${baseClass} animate-pulse hover:animate-bounce`,
-      'ノーマル': `${baseClass} hover:animate-pulse`
+      'ほのお': `${baseClass} animate-type-fire`,
+      'みず': `${baseClass} animate-type-water`,
+      'でんき': `${baseClass} animate-type-electric`,
+      'くさ': `${baseClass} animate-type-grass`,
+      'こおり': `${baseClass} animate-type-ice`,
+      'かくとう': `${baseClass} animate-type-fighting`,
+      'どく': `${baseClass} animate-type-poison`,
+      'じめん': `${baseClass} animate-type-ground`,
+      'ひこう': `${baseClass} animate-type-flying`,
+      'エスパー': `${baseClass} animate-type-psychic`,
+      'むし': `${baseClass} animate-type-bug`,
+      'いわ': `${baseClass} animate-type-rock`,
+      'ゴースト': `${baseClass} animate-type-ghost`,
+      'ドラゴン': `${baseClass} animate-type-dragon`,
+      'あく': `${baseClass} animate-type-dark`,
+      'はがね': `${baseClass} animate-type-steel`,
+      'フェアリー': `${baseClass} animate-type-fairy`,
+      'ノーマル': `${baseClass} animate-type-normal`
     };
 
     return animations[type];

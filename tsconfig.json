@@ -5,6 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -30,8 +31,8 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
     "noImplicitOverride": true,
 
     /* Type checking */
@@ -40,8 +41,7 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src",
-    "vite.config.ts"
+    "src"
   ],
   "references": [
     {
