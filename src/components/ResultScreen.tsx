@@ -21,7 +21,7 @@ export default function ResultScreen({ quizState, onRestart, onBackToMenu }: Res
     return { grade: 'D', color: 'bg-red-500', message: 'がんばろう！' };
   };
 
-  const { grade, color, message } = getScoreGrade(scorePercentage);
+  const { message } = getScoreGrade(scorePercentage);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-3 sm:p-4">
