@@ -19,47 +19,10 @@ interface QuizScreenProps {
 
 export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnimationComplete }: QuizScreenProps) {
   const [showExplanation, setShowExplanation] = useState(false);
-  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<number>(3);
   
   const currentQuestion = quizState.questions[quizState.currentQuestion];
   const answerChoices = getAnswerChoices(quizState.difficulty);
   const progress = ((quizState.currentQuestion + 1) / quizState.totalQuestions) * 100;
-
-  // 結果表示後の自動進行タイマー
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    let timeout: NodeJS.Timeout;
-
-    if (showExplanation && !quizState.isAnimating) {
-      // カウントダウンタイマー
-      interval = setInterval(() => {
-        setAutoAdvanceTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      // 3秒後に自動進行
-      timeout = setTimeout(() => {
-        handleNext();
-      }, 3000);
-    }
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, [showExplanation, quizState.isAnimating]);
-
-  // showExplanationが変わったときにタイマーをリセット
-  useEffect(() => {
-    if (showExplanation) {
-      setAutoAdvanceTimer(3);
-    }
-  }, [showExplanation]);
 
   const handleAnswer = (answer: DamageMultiplier) => {
     if (quizState.selectedAnswer === null && !quizState.isAnimating) {
@@ -77,7 +40,6 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
 
   const handleNext = () => {
     setShowExplanation(false);
-    setAutoAdvanceTimer(3);
     onNext();
   };
 
@@ -89,7 +51,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
   if (!currentQuestion) return null;
 
   return (
-    <div className="min-h-screen bg-white p-3 sm:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-3 sm:p-4">
       {/* 攻撃アニメーション */}
       {quizState.isAnimating && (
         <AttackAnimation
@@ -97,10 +59,11 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
           defendType={currentQuestion.defendType}
           onAnimationComplete={handleAnimationComplete}
           isCorrect={quizState.selectedAnswer === currentQuestion.correctAnswer}
+          damageMultiplier={currentQuestion.correctAnswer}
         />
       )}
 
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* ヘッダー */}
         <div className="mb-4 sm:mb-6">
           {/* 中断ボタン */}
@@ -150,54 +113,58 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
           </div>
         </div>
 
-        <Card>
-          <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-center text-lg sm:text-xl lg:text-2xl leading-tight">
+        <Card className="shadow-2xl border-2 border-blue-200/50 bg-white/95 backdrop-blur-sm">
+          <CardHeader className="p-6 sm:p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-t-lg">
+            <CardTitle className="text-center text-xl sm:text-2xl lg:text-3xl leading-tight font-bold text-gray-800">
               {currentQuestion.attackType}タイプが{formatDefendType(currentQuestion.defendType)}タイプに与えるダメージは？
             </CardTitle>
           </CardHeader>
           
-          <CardContent className="p-4 sm:p-6">
+          <CardContent className="p-6 sm:p-8">
             {/* タイプアイコン表示 */}
-            <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
-              <div className="text-center">
-                <TypeIcon type={currentQuestion.attackType} size="md" className="sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
-                <p className="mt-1 sm:mt-2 text-sm sm:text-base">{currentQuestion.attackType}</p>
-                <p className="text-xs sm:text-sm text-muted-foreground">攻撃側</p>
+            <div className="flex items-center justify-center gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-10">
+              <div className="text-center p-4 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl border border-red-200/50 shadow-lg">
+                <TypeIcon type={currentQuestion.attackType} size="lg" className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32" />
+                <p className="mt-2 sm:mt-3 text-lg sm:text-xl font-bold text-gray-800">{currentQuestion.attackType}</p>
+                <p className="text-sm sm:text-base text-red-600 font-semibold">攻撃側</p>
               </div>
               
-              <div className="text-2xl sm:text-3xl lg:text-4xl text-muted-foreground">→</div>
+              <div className="text-4xl sm:text-5xl lg:text-6xl text-blue-500 font-bold animate-pulse">⚡</div>
               
-              <div className="text-center">
+              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50 shadow-lg">
                 {Array.isArray(currentQuestion.defendType) ? (
-                  <div className="flex flex-col gap-1 sm:gap-2">
+                  <div className="flex flex-col gap-2 sm:gap-3">
                     <div>
-                      <TypeIcon type={currentQuestion.defendType[0]} size="sm" className="sm:w-16 sm:h-16" />
-                      <p className="text-xs sm:text-sm mt-1">{currentQuestion.defendType[0]}</p>
+                      <TypeIcon type={currentQuestion.defendType[0]} size="md" className="w-20 h-20 sm:w-24 sm:h-24" />
+                      <p className="text-sm sm:text-base font-bold mt-1">{currentQuestion.defendType[0]}</p>
                     </div>
                     <div>
-                      <TypeIcon type={currentQuestion.defendType[1]} size="sm" className="sm:w-16 sm:h-16" />
-                      <p className="text-xs sm:text-sm mt-1">{currentQuestion.defendType[1]}</p>
+                      <TypeIcon type={currentQuestion.defendType[1]} size="md" className="w-20 h-20 sm:w-24 sm:h-24" />
+                      <p className="text-sm sm:text-base font-bold mt-1">{currentQuestion.defendType[1]}</p>
                     </div>
                   </div>
                 ) : (
                   <div>
-                    <TypeIcon type={currentQuestion.defendType} size="md" className="sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
-                    <p className="mt-1 sm:mt-2 text-sm sm:text-base">{currentQuestion.defendType}</p>
+                    <TypeIcon type={currentQuestion.defendType} size="lg" className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32" />
+                    <p className="mt-2 sm:mt-3 text-lg sm:text-xl font-bold text-gray-800">{currentQuestion.defendType}</p>
                   </div>
                 )}
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">防御側</p>
+                <p className="text-sm sm:text-base text-blue-600 font-semibold mt-1 sm:mt-2">防御側</p>
               </div>
             </div>
 
             {/* 選択肢 */}
             {!showExplanation && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 {answerChoices.map((choice) => (
                   <Button
                     key={choice}
                     variant={quizState.selectedAnswer === choice ? "default" : "outline"}
-                    className="h-12 sm:h-14 lg:h-16 text-sm sm:text-base lg:text-lg py-3 px-4"
+                    className={`h-16 sm:h-18 lg:h-20 text-lg sm:text-xl lg:text-2xl py-4 px-6 font-bold shadow-lg transform hover:scale-105 transition-all duration-200 ${
+                      quizState.selectedAnswer === choice 
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-2xl" 
+                        : "bg-white border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                    }`}
                     onClick={() => handleAnswer(choice)}
                     disabled={quizState.selectedAnswer !== null}
                   >
@@ -234,21 +201,12 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
                   </div>
                 )}
 
-                {/* 自動進行タイマー表示 */}
-                <div className="text-center text-muted-foreground text-xs sm:text-sm">
-                  {autoAdvanceTimer > 0 ? (
-                    <p>自動的に次に進みます... {autoAdvanceTimer}秒</p>
-                  ) : (
-                    <p>次に進んでいます...</p>
-                  )}
-                </div>
-
                 <Button 
                   onClick={handleNext} 
-                  className="w-full text-sm sm:text-base py-3 sm:py-4"
+                  className="w-full text-lg sm:text-xl py-4 sm:py-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold shadow-xl transform hover:scale-105 transition-all duration-200 border-0"
                   size="lg"
                 >
-                  {quizState.currentQuestion + 1 < quizState.totalQuestions ? '次の問題' : '結果を見る'}
+                  {quizState.currentQuestion + 1 < quizState.totalQuestions ? '🏃 次の問題へ' : '🎯 結果を見る'}
                 </Button>
               </div>
             )}

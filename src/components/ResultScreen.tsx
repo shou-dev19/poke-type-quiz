@@ -24,21 +24,20 @@ export default function ResultScreen({ quizState, onRestart, onBackToMenu }: Res
   const { grade, color, message } = getScoreGrade(scorePercentage);
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-3 sm:p-4">
-      <Card className="w-full max-w-2xl">
-        <CardHeader className="text-center p-4 sm:p-6">
-          <CardTitle className="text-2xl sm:text-3xl lg:text-4xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            クイズ結果
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-3 sm:p-4">
+      <Card className="w-full max-w-3xl shadow-2xl border-2 border-blue-200/50 bg-white/95 backdrop-blur-sm">
+        <CardHeader className="text-center p-6 sm:p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-t-lg">
+          <CardTitle className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            🎯 クイズ結果
           </CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6">
           {/* スコア表示 */}
           <div className="text-center space-y-3 sm:space-y-4">
-            <div className={`w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 mx-auto rounded-full ${color} flex items-center justify-center text-white text-4xl sm:text-5xl lg:text-6xl font-bold`}>
-              {grade}
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              {message}
             </div>
-            <div className="text-xl sm:text-2xl lg:text-3xl">{message}</div>
             <div className="text-base sm:text-lg lg:text-xl text-muted-foreground">
               {quizState.score} / {quizState.totalQuestions} 問正解
             </div>

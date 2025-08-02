@@ -8,13 +8,15 @@ interface AttackAnimationProps {
   defendType: PokemonType | [PokemonType, PokemonType];
   onAnimationComplete: () => void;
   isCorrect: boolean;
+  damageMultiplier?: number; // 実際のダメージ倍率
 }
 
 export default function AttackAnimation({ 
   attackType, 
   defendType, 
   onAnimationComplete, 
-  isCorrect 
+  isCorrect,
+  damageMultiplier = 1
 }: AttackAnimationProps) {
   const [showImpact, setShowImpact] = useState(false);
   const [showResult, setShowResult] = useState(false);
@@ -53,6 +55,61 @@ export default function AttackAnimation({
 
   const defendTypes = Array.isArray(defendType) ? defendType : [defendType];
 
+  // ダメージ倍率に基づくエフェクト設定
+  const getEffectStyle = (multiplier: number) => {
+    if (multiplier >= 4) {
+      // こうかばつぐん(4倍) - 最強エフェクト
+      return {
+        colors: 'from-red-400 via-orange-400 to-yellow-400',
+        size: 'w-48 h-48 sm:w-56 sm:h-56',
+        intensity: 'animate-ping',
+        sparks: 12
+      };
+    } else if (multiplier >= 2) {
+      // こうかばつぐん(2倍) - 強エフェクト  
+      return {
+        colors: 'from-orange-400 via-red-500 to-red-600',
+        size: 'w-40 h-40 sm:w-44 sm:h-44',
+        intensity: 'animate-pulse',
+        sparks: 8
+      };
+    } else if (multiplier >= 1) {
+      // ふつう(1倍) - 標準エフェクト
+      return {
+        colors: 'from-blue-400 via-blue-500 to-blue-600',
+        size: 'w-32 h-32 sm:w-36 sm:h-36',
+        intensity: '',
+        sparks: 6
+      };
+    } else if (multiplier >= 0.5) {
+      // こうかいまひとつ(0.5倍) - 弱エフェクト
+      return {
+        colors: 'from-gray-400 via-gray-500 to-gray-600',
+        size: 'w-24 h-24 sm:w-28 sm:h-28',
+        intensity: '',
+        sparks: 4
+      };
+    } else if (multiplier >= 0.25) {
+      // こうかいまひとつ(0.25倍) - 很弱エフェクト
+      return {
+        colors: 'from-gray-300 via-gray-400 to-gray-500',
+        size: 'w-20 h-20 sm:w-24 sm:h-24',
+        intensity: '',
+        sparks: 2
+      };
+    } else {
+      // こうかなし(0倍) - 無効エフェクト
+      return {
+        colors: 'from-gray-200 via-gray-300 to-gray-400',
+        size: 'w-16 h-16 sm:w-20 sm:h-20',
+        intensity: 'opacity-50',
+        sparks: 0
+      };
+    }
+  };
+
+  const effectStyle = getEffectStyle(damageMultiplier);
+
   const handleClick = () => {
     // 結果が表示されたらクリックで次に進める
     console.log('AttackAnimation clicked, showResult:', showResult);
@@ -89,28 +146,28 @@ export default function AttackAnimation({
             type: "spring",
             stiffness: 100
           }}
-          className="absolute left-4 sm:left-12 lg:left-20 top-1/2 transform -translate-y-1/2"
+          className="absolute left-4 sm:left-12 lg:left-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center"
         >
-          <TypeIcon type={attackType} size="md" className="sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
-          <p className="text-white text-center mt-1 sm:mt-2 text-sm sm:text-base">{attackType}</p>
+          <TypeIcon type={attackType} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
+          <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{attackType}</p>
         </motion.div>
 
         {/* 防御側アイコン */}
-        <div className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2">
+        <div className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center">
           {defendTypes.length === 1 && defendTypes[0] ? (
-            <div>
-              <TypeIcon type={defendTypes[0]} size="md" className="sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
-              <p className="text-white text-center mt-1 sm:mt-2 text-sm sm:text-base">{defendTypes[0]}</p>
+            <div className="flex flex-col items-center justify-center">
+              <TypeIcon type={defendTypes[0]} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
+              <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{defendTypes[0]}</p>
             </div>
           ) : defendTypes.length >= 2 && defendTypes[0] && defendTypes[1] ? (
-            <div className="flex flex-col gap-1 sm:gap-2">
-              <div>
-                <TypeIcon type={defendTypes[0]} size="sm" className="sm:w-16 sm:h-16" />
-                <p className="text-white text-center text-xs sm:text-sm">{defendTypes[0]}</p>
+            <div className="flex flex-col gap-3 sm:gap-4 items-center justify-center">
+              <div className="flex flex-col items-center">
+                <TypeIcon type={defendTypes[0]} size="md" className="w-16 h-16 sm:w-18 sm:h-18" />
+                <p className="text-white text-center text-xs sm:text-sm font-bold mt-1">{defendTypes[0]}</p>
               </div>
-              <div>
-                <TypeIcon type={defendTypes[1]} size="sm" className="sm:w-16 sm:h-16" />
-                <p className="text-white text-center text-xs sm:text-sm">{defendTypes[1]}</p>
+              <div className="flex flex-col items-center">
+                <TypeIcon type={defendTypes[1]} size="md" className="w-16 h-16 sm:w-18 sm:h-18" />
+                <p className="text-white text-center text-xs sm:text-sm font-bold mt-1">{defendTypes[1]}</p>
               </div>
             </div>
           ) : null}
@@ -151,44 +208,55 @@ export default function AttackAnimation({
           )}
         </motion.div>
 
-        {/* インパクトエフェクト - 改善版 */}
+        {/* インパクトエフェクト - ダメージ倍率別 */}
         {showImpact && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [0, 2, 1], opacity: [0, 1, 0] }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            animate={{ scale: [0, 2.5, 1], opacity: [0, 1, 0] }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2"
           >
             {/* メインインパクト */}
-            <div className={`w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-r ${
-              isCorrect 
-                ? 'from-green-400 via-emerald-500 to-green-600' 
-                : 'from-red-400 via-red-500 to-red-600'
-            } opacity-90`} />
+            <div className={`${effectStyle.size} rounded-full bg-gradient-to-r ${effectStyle.colors} opacity-90 ${effectStyle.intensity}`} />
             
             {/* 外側の光輪 */}
-            <div className="absolute inset-0 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full bg-white animate-ping opacity-60" />
+            <div className={`absolute inset-0 ${effectStyle.size} rounded-full bg-white animate-ping opacity-60`} />
             
             {/* 内側のキラキラエフェクト */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-white rounded-full animate-bounce opacity-80" />
             </div>
             
-            {/* 放射状エフェクト */}
-            <div className="absolute inset-0 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40">
-              {[...Array(8)].map((_, i) => (
+            {/* 放射状エフェクト - スパーク数が倍率で変化 */}
+            <div className={`absolute inset-0 ${effectStyle.size}`}>
+              {[...Array(effectStyle.sparks)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute w-1 h-8 sm:w-1.5 sm:h-12 lg:w-2 lg:h-16 bg-white opacity-50"
+                  className="absolute w-1 h-8 sm:w-1.5 sm:h-12 lg:w-2 lg:h-16 bg-white opacity-70"
                   style={{
                     left: '50%',
                     top: '50%',
-                    transformOrigin: '1px 12px',
-                    transform: `rotate(${i * 45}deg) translateY(-12px)`,
+                    transformOrigin: '1px 16px',
+                    transform: `rotate(${i * (360 / effectStyle.sparks)}deg) translateY(-16px)`,
                   }}
                 />
               ))}
             </div>
+            
+            {/* 4倍ダメージ時の特別エフェクト */}
+            {damageMultiplier >= 4 && (
+              <>
+                <div className="absolute inset-0 w-64 h-64 rounded-full bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 opacity-30 animate-ping" />
+                <div className="absolute inset-0 w-72 h-72 rounded-full bg-gradient-to-r from-red-200 via-orange-200 to-yellow-200 opacity-20 animate-pulse" />
+              </>
+            )}
+            
+            {/* 0倍ダメージ時の無効エフェクト */}
+            {damageMultiplier === 0 && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-4xl sm:text-5xl lg:text-6xl opacity-70">❌</div>
+              </div>
+            )}
           </motion.div>
         )}
 

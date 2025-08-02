@@ -417,3 +417,13 @@ html {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.05); opacity: 0.8; }
 }
+
+/* 右から左へのスクロールアニメーション */
+@keyframes scroll-right {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-scroll-right {
+  animation: scroll-right 20s linear infinite;
+}

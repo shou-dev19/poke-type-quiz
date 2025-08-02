@@ -20,85 +20,112 @@ export default function StartScreen({ onStart }: StartScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl sm:text-3xl lg:text-4xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4 sm:p-6">
+      <Card className="w-full max-w-3xl mx-auto shadow-2xl border-2 border-blue-200/50 bg-white/95 backdrop-blur-sm">
+        <CardHeader className="text-center p-6 sm:p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-t-lg">
+          <CardTitle className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
             ポケモンタイプ相性クイズ
           </CardTitle>
-          <p className="text-muted-foreground mt-4">
+          <p className="text-lg sm:text-xl text-gray-700 font-medium">
             ポケモンのタイプ相性を覚えて、バトルマスターを目指そう！
           </p>
         </CardHeader>
         
-        <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6">
+        <CardContent className="space-y-8 sm:space-y-10 p-6 sm:p-8">
           {/* タイプアイコンデモンストレーション */}
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4 justify-items-center">
-            {['ほのお', 'みず', 'くさ', 'でんき', 'かくとう', 'エスパー'].map((type) => (
-              <TypeIcon 
-                key={type} 
-                type={type as any} 
-                size="sm" 
-                animated={true}
-                className="sm:w-16 sm:h-16"
-              />
-            ))}
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 p-6 border border-purple-200/50">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 text-center">全18タイプ対応</h3>
+            <div className="flex animate-scroll-right space-x-4">
+              {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type, index) => (
+                <div key={type} className="flex-shrink-0" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <TypeIcon 
+                    type={type as any} 
+                    size="md" 
+                    animated={true}
+                    className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
+                  />
+                </div>
+              ))}
+              {/* 無限ループのための複製 */}
+              {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type, index) => (
+                <div key={`${type}-dup`} className="flex-shrink-0" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <TypeIcon 
+                    type={type as any} 
+                    size="md" 
+                    animated={true}
+                    className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* 設定セクション */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {/* 難易度選択 */}
-            <div className="space-y-3 sm:space-y-4">
-              <label className="block text-sm sm:text-base font-medium">難易度を選択してください</label>
+            <div className="space-y-4 sm:space-y-5 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50">
+              <label className="block text-lg sm:text-xl font-semibold text-gray-800">難易度を選択してください</label>
               <Select value={difficulty} onValueChange={(value) => setDifficulty(value as Difficulty)}>
-                <SelectTrigger className="h-12">
+                <SelectTrigger className="h-14 text-lg bg-white shadow-md border-2 border-blue-200 hover:border-blue-300 transition-colors">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="かんたん">かんたん</SelectItem>
-                  <SelectItem value="ふつう">ふつう</SelectItem>
-                  <SelectItem value="むずかしい">むずかしい</SelectItem>
+                <SelectContent className="bg-white border-2 border-blue-200">
+                  <SelectItem value="かんたん" className="text-lg py-3">かんたん</SelectItem>
+                  <SelectItem value="ふつう" className="text-lg py-3">ふつう</SelectItem>
+                  <SelectItem value="むずかしい" className="text-lg py-3">むずかしい</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
                 {difficultyDescriptions[difficulty]}
               </p>
             </div>
 
             {/* 問題数選択 */}
-            <div className="space-y-3 sm:space-y-4">
-              <label className="block text-sm sm:text-base font-medium">問題数を選択してください</label>
+            <div className="space-y-4 sm:space-y-5 p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200/50">
+              <label className="block text-lg sm:text-xl font-semibold text-gray-800">問題数を選択してください</label>
               <Select value={questionCount.toString()} onValueChange={(value) => setQuestionCount(parseInt(value))}>
-                <SelectTrigger className="h-12">
+                <SelectTrigger className="h-14 text-lg bg-white shadow-md border-2 border-purple-200 hover:border-purple-300 transition-colors">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5問</SelectItem>
-                  <SelectItem value="10">10問</SelectItem>
-                  <SelectItem value="15">15問</SelectItem>
-                  <SelectItem value="20">20問</SelectItem>
+                <SelectContent className="bg-white border-2 border-purple-200">
+                  <SelectItem value="5" className="text-lg py-3">5問</SelectItem>
+                  <SelectItem value="10" className="text-lg py-3">10問</SelectItem>
+                  <SelectItem value="15" className="text-lg py-3">15問</SelectItem>
+                  <SelectItem value="20" className="text-lg py-3">20問</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           {/* ルール説明 */}
-          <div className="bg-muted p-3 sm:p-4 rounded-lg space-y-2">
-            <h3 className="text-sm sm:text-base font-medium">ルール</h3>
-            <ul className="text-xs sm:text-sm space-y-1 list-disc list-inside">
-              <li>攻撃側のタイプが防御側のタイプに与えるダメージ倍率を答えてください</li>
-              <li>選択後に攻撃アニメーションが表示されます</li>
-              <li>複合タイプの場合は両方のタイプとの相性を計算します</li>
-              <li>全問題終了後に結果が表示されます</li>
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 sm:p-7 rounded-xl border border-amber-200/50 shadow-md">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">📋 ルール</h3>
+            <ul className="text-sm sm:text-base space-y-3 text-gray-700">
+              <li className="flex items-start gap-3">
+                <span className="text-blue-500 font-bold">•</span>
+                <span>攻撃側のタイプが防御側のタイプに与えるダメージ倍率を答えてください</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-purple-500 font-bold">•</span>
+                <span>選択後に攻撃アニメーションが表示されます</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-green-500 font-bold">•</span>
+                <span>複合タイプの場合は両方のタイプとの相性を計算します</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-500 font-bold">•</span>
+                <span>全問題終了後に結果が表示されます</span>
+              </li>
             </ul>
           </div>
 
           <Button 
             onClick={() => onStart(difficulty, questionCount)}
-            className="w-full text-base sm:text-lg py-4 sm:py-6 mt-6"
+            className="w-full text-xl sm:text-2xl py-6 sm:py-8 mt-8 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold shadow-2xl transform hover:scale-105 transition-all duration-200 border-0"
             size="lg"
           >
-            クイズを開始する
+            🚀 クイズを開始する
           </Button>
         </CardContent>
       </Card>
