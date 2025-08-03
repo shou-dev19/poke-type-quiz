@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /pokemon-quiz/
+
+# Pokemon Quiz specific
+Allow: /pokemon-quiz/images/
+Allow: /pokemon-quiz/assets/
+
+# Sitemap
+Sitemap: https://shou-devlog.com/pokemon-quiz/sitemap.xml
