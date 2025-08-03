@@ -3,16 +3,6 @@
   "outputDirectory": "dist", 
   "installCommand": "npm install",
   "framework": "vite",
-  "rewrites": [
-    {
-      "source": "/pokemon-quiz/(.*)",
-      "destination": "/pokemon-quiz/index.html"
-    },
-    {
-      "source": "/pokemon-quiz",
-      "destination": "/pokemon-quiz/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
