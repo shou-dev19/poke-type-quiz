@@ -35,6 +35,15 @@ class Analytics {
   }
 
   private generateUserId(): string {
+    // セキュアな乱数生成を使用
+    if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+      const array = new Uint32Array(2);
+      window.crypto.getRandomValues(array);
+      const randomPart = array[0].toString(36) + array[1].toString(36);
+      return 'user_' + randomPart + '_' + Date.now();
+    }
+    
+    // フォールバック（サーバーサイドレンダリング時など）
     return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
   }
 
