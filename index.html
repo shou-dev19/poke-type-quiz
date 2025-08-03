@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/pokemon-quiz/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ポケモンタイプ相性クイズ</title>
     
@@ -29,11 +29,19 @@
     <link rel="canonical" href="https://shou-devlog.com/pokemon-quiz" />
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="/pokemon-quiz/images/types/normal.svg" as="image" type="image/svg+xml" />
-    <link rel="preload" href="/pokemon-quiz/images/types/fire.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="/images/types/normal.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="/images/types/fire.svg" as="image" type="image/svg+xml" />
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // 動的ベースパス設定：リライト転送時の /pokemon-quiz パス対応
+      if (window.location.pathname.startsWith('/pokemon-quiz')) {
+        const base = document.createElement('base');
+        base.href = '/pokemon-quiz/';
+        document.head.insertBefore(base, document.head.firstChild);
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

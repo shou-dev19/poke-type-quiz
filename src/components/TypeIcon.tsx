@@ -80,7 +80,7 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
     );
   };
 
-  const imageUrl = `/pokemon-quiz/images/types/${getTypeFileName(type)}.svg`;
+  const imageUrl = `/images/types/${getTypeFileName(type)}.svg`;
 
   return (
     <div 
