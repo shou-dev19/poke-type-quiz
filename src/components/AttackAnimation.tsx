@@ -146,7 +146,7 @@ export default function AttackAnimation({
             type: "spring",
             stiffness: 100
           }}
-          className="absolute left-4 sm:left-12 lg:left-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center"
+          className="absolute left-4 sm:left-12 lg:left-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center h-20 sm:h-24 lg:h-28"
         >
           <TypeIcon type={attackType} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
           <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{attackType}</p>
@@ -155,18 +155,18 @@ export default function AttackAnimation({
         {/* 防御側アイコン */}
         <div className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center">
           {defendTypes.length === 1 && defendTypes[0] ? (
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center h-20 sm:h-24 lg:h-28">
               <TypeIcon type={defendTypes[0]} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
               <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{defendTypes[0]}</p>
             </div>
           ) : defendTypes.length >= 2 && defendTypes[0] && defendTypes[1] ? (
-            <div className="flex flex-col gap-3 sm:gap-4 items-center justify-center">
+            <div className="flex flex-col gap-1 sm:gap-2 items-center justify-center h-20 sm:h-24 lg:h-28">
               <div className="flex flex-col items-center">
-                <TypeIcon type={defendTypes[0]} size="md" className="w-16 h-16 sm:w-18 sm:h-18" />
+                <TypeIcon type={defendTypes[0]} size="md" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
                 <p className="text-white text-center text-xs sm:text-sm font-bold mt-1">{defendTypes[0]}</p>
               </div>
               <div className="flex flex-col items-center">
-                <TypeIcon type={defendTypes[1]} size="md" className="w-16 h-16 sm:w-18 sm:h-18" />
+                <TypeIcon type={defendTypes[1]} size="md" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
                 <p className="text-white text-center text-xs sm:text-sm font-bold mt-1">{defendTypes[1]}</p>
               </div>
             </div>
