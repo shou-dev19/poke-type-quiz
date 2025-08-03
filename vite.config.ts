@@ -10,8 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // ポートフォリオプロジェクトからの転送に対応した /pokemon-quiz パス
-  base: '/pokemon-quiz/',
+  // ルートパスでビルド、リライトで /pokemon-quiz パスを実現
+  base: '/',
   server: {
     port: 3000,
     open: true,
