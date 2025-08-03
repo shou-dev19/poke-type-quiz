@@ -33,16 +33,15 @@ jobs:
     - name: Run lint
       run: npm run lint
       
-    # Temporarily disabled unit tests due to configuration issues
-    # - name: Run unit tests
-    #   run: npm run test
-    #   
-    # - name: Upload test coverage
-    #   uses: codecov/codecov-action@v3
-    #   with:
-    #     file: ./coverage/lcov.info
-    #     flags: unittests
-    #     name: codecov-umbrella
+    - name: Run unit tests
+      run: npm run test
+      
+    - name: Upload test coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
         
   # Temporarily disabled E2E tests
   # e2e-test:

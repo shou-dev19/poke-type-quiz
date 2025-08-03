@@ -63,7 +63,7 @@ describe('TypeIcon', () => {
     typeMapping.forEach(({ japanese, english }) => {
       const { unmount } = render(<TypeIcon type={japanese as PokemonType} />);
       const image = screen.getByRole('img');
-      expect(image).toHaveAttribute('src', `/pokemon-quiz/images/types/${english}.svg`);
+      expect(image).toHaveAttribute('src', `/images/types/${english}.svg`);
       unmount();
     });
   });
