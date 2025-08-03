@@ -3,12 +3,6 @@
   "outputDirectory": "dist", 
   "installCommand": "npm ci",
   "framework": "vite",
-  "analytics": {
-    "enable": true
-  },
-  "speed": {
-    "enable": true
-  },
   "rewrites": [
     {
       "source": "/pokemon-quiz/(.*)",
