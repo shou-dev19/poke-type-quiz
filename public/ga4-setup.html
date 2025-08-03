@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Analytics 4 セットアップガイド</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+    code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; }
+    pre { background: #f5f5f5; padding: 16px; border-radius: 8px; overflow-x: auto; }
+    .step { background: #e3f2fd; padding: 16px; margin: 16px 0; border-radius: 8px; border-left: 4px solid #2196f3; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Google Analytics 4 セットアップガイド</h1>
+  
+  <h2>概要</h2>
+  <p>ポケモンタイプ相性クイズアプリにGoogle Analytics 4を統合し、ユーザー行動を分析できるようにします。</p>
+  
+  <h2>セットアップ手順</h2>
+  
+  <div class="step">
+    <h3>Step 1: Google Analytics アカウント作成</h3>
+    <ol>
+      <li><a href="https://analytics.google.com/">Google Analytics</a>にアクセス</li>
+      <li>「測定を開始」をクリック</li>
+      <li>アカウント名を入力（例：「Pokemon Quiz App」）</li>
+      <li>プロパティ名を入力（例：「ポケモンタイプ相性クイズ」）</li>
+      <li>ウェブストリームを作成し、サイトURLを入力</li>
+    </ol>
+  </div>
+  
+  <div class="step">
+    <h3>Step 2: 測定IDの取得</h3>
+    <p>プロパティ作成後、<strong>測定ID</strong>（G-XXXXXXXXXX形式）をコピーします。</p>
+  </div>
+  
+  <div class="step">
+    <h3>Step 3: index.htmlに追加</h3>
+    <p><code>index.html</code>の<code>&lt;head&gt;</code>タグ内に以下を追加：</p>
+    <pre><code>&lt;!-- Google tag (gtag.js) --&gt;
+&lt;script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+&lt;/script&gt;</code></pre>
+    <p><strong>GA_MEASUREMENT_ID</strong> を実際の測定IDに置き換えてください。</p>
+  </div>
+  
+  <div class="step">
+    <h3>Step 4: 環境変数設定</h3>
+    <p>プラットフォーム別に環境変数を設定：</p>
+    <h4>GitHub Pages</h4>
+    <p>リポジトリの Settings > Secrets and variables > Actions で設定：</p>
+    <code>VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX</code>
+    
+    <h4>Vercel</h4>
+    <p>Project Settings > Environment Variables で設定：</p>
+    <code>VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX</code>
+    
+    <h4>Netlify</h4>
+    <p>Site settings > Environment variables で設定：</p>
+    <code>VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX</code>
+  </div>
+  
+  <div class="step">
+    <h3>Step 5: 動的設定の実装</h3>
+    <p>環境変数を使用した動的設定を<code>index.html</code>に追加：</p>
+    <pre><code>&lt;script&gt;
+  if (import.meta.env.VITE_GA_MEASUREMENT_ID) {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script);
+    
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', import.meta.env.VITE_GA_MEASUREMENT_ID);
+  }
+&lt;/script&gt;</code></pre>
+  </div>
+  
+  <h2>追跡可能な指標</h2>
+  
+  <h3>クイズ関連イベント</h3>
+  <ul>
+    <li><strong>quiz_start</strong>: クイズ開始（難易度・問題数別）</li>
+    <li><strong>quiz_answer</strong>: 回答（正解/不正解・回答時間）</li>
+    <li><strong>quiz_complete</strong>: クイズ完了（スコア・難易度別）</li>
+    <li><strong>quiz_quit</strong>: 途中離脱（離脱ポイント）</li>
+  </ul>
+  
+  <h3>パフォーマンス指標</h3>
+  <ul>
+    <li><strong>LCP</strong>: Largest Contentful Paint</li>
+    <li><strong>FID</strong>: First Input Delay</li>
+    <li><strong>CLS</strong>: Cumulative Layout Shift</li>
+  </ul>
+  
+  <h3>エラー追跡</h3>
+  <ul>
+    <li><strong>javascript_error</strong>: JavaScriptエラー</li>
+    <li><strong>exception</strong>: 未処理の例外</li>
+  </ul>
+  
+  <h2>分析レポート例</h2>
+  
+  <h3>ユーザー行動分析</h3>
+  <ul>
+    <li>難易度別の完了率</li>
+    <li>問題数別の離脱率</li>
+    <li>平均回答時間</li>
+    <li>正解率の分布</li>
+  </ul>
+  
+  <h3>パフォーマンス分析</h3>
+  <ul>
+    <li>ページロード時間の推移</li>
+    <li>デバイス別のパフォーマンス</li>
+    <li>ネットワーク速度別の体験</li>
+  </ul>
+  
+  <h2>プライバシー考慮事項</h2>
+  
+  <div class="step">
+    <h3>データ収集の透明性</h3>
+    <p>以下の情報をプライバシーポリシーに記載：</p>
+    <ul>
+      <li>収集するデータの種類</li>
+      <li>データの使用目的</li>
+      <li>データの保持期間</li>
+      <li>ユーザーの選択権</li>
+    </ul>
+  </div>
+  
+  <div class="step">
+    <h3>GDPR/CCPA準拠</h3>
+    <p>必要に応じてクッキー同意バナーを実装し、ユーザーの同意を取得してください。</p>
+  </div>
+  
+  <h2>テスト・検証</h2>
+  
+  <div class="step">
+    <h3>リアルタイム確認</h3>
+    <ol>
+      <li>Google Analytics > レポート > リアルタイム</li>
+      <li>アプリケーションを操作</li>
+      <li>イベントが正しく記録されることを確認</li>
+    </ol>
+  </div>
+  
+  <div class="step">
+    <h3>デバッグモード</h3>
+    <p>開発時は以下のコードでデバッグモードを有効化：</p>
+    <pre><code>gtag('config', 'GA_MEASUREMENT_ID', {
+  debug_mode: true
+});</code></pre>
+  </div>
+  
+  <h2>次のステップ</h2>
+  <ul>
+    <li>カスタムディメンション設定</li>
+    <li>コンバージョン目標設定</li>
+    <li>自動レポート配信設定</li>
+    <li>アラート設定</li>
+  </ul>
+</body>
+</html>

@@ -2,81 +2,38 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/pokemon-quiz/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Pokemon Type Effectiveness Quiz - Learn and master Pokemon type effectiveness with interactive quizzes" />
-    <meta name="keywords" content="pokemon, type, effectiveness, quiz, game, learning, typescript, vue" />
-    <meta name="author" content="Pokemon Quiz Team" />
+    <title>ポケモンタイプ相性クイズ</title>
     
-    <!-- Open Graph / Social Media -->
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="ポケモンのタイプ相性を楽しく学べるインタラクティブなクイズアプリケーション。3段階の難易度でリアルタイムアニメーション付き。" />
+    <meta name="keywords" content="ポケモン,タイプ相性,クイズ,ゲーム,学習" />
+    <meta name="author" content="shou-devlog" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="ポケモンタイプ相性クイズ" />
+    <meta property="og:description" content="ポケモンのタイプ相性を楽しく学べるインタラクティブなクイズアプリケーション。" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Pokemon Type Quiz" />
-    <meta property="og:description" content="Master Pokemon type effectiveness with interactive quizzes and comprehensive type information" />
-    <meta property="og:url" content="https://pokemon-type-quiz.example.com" />
+    <meta property="og:url" content="https://shou-devlog.com/pokemon-quiz" />
+    <meta property="og:image" content="https://shou-devlog.com/pokemon-quiz/og-image.png" />
+    <meta property="og:site_name" content="shou-devlog" />
     
-    <!-- Twitter Card -->
+    <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Pokemon Type Quiz" />
-    <meta name="twitter:description" content="Master Pokemon type effectiveness with interactive quizzes" />
+    <meta name="twitter:title" content="ポケモンタイプ相性クイズ" />
+    <meta name="twitter:description" content="ポケモンのタイプ相性を楽しく学べるインタラクティブなクイズアプリケーション。" />
+    <meta name="twitter:image" content="https://shou-devlog.com/pokemon-quiz/og-image.png" />
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate icon" href="/favicon.ico" />
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://shou-devlog.com/pokemon-quiz" />
     
-    <!-- Theme color for mobile browsers -->
-    <meta name="theme-color" content="#3b82f6" />
-    
-    <!-- PWA manifest -->
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Preconnect to improve performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <title>Pokemon Type Quiz</title>
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/pokemon-quiz/images/types/normal.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="/pokemon-quiz/images/types/fire.svg" as="image" type="image/svg+xml" />
   </head>
   <body>
-    <div id="app">
-      <!-- Loading screen while Vue app initializes -->
-      <div style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        font-family: system-ui, -apple-system, sans-serif;
-        color: white;
-        text-align: center;
-      ">
-        <div style="margin-bottom: 2rem; font-size: 4rem;">🎯</div>
-        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 1rem;">
-          Pokemon Type Quiz
-        </h1>
-        <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem;">
-          Loading application...
-        </p>
-        <div style="
-          width: 40px;
-          height: 40px;
-          border: 4px solid rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          border-top-color: white;
-          animation: spin 1s ease-in-out infinite;
-        "></div>
-      </div>
-    </div>
-    
-    <style>
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-      
-      /* Hide loading screen once Vue app loads */
-      #app > div:first-child {
-        transition: opacity 0.3s ease-out;
-      }
-    </style>
-    
-    <script type="module" src="/src/presentation/main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
