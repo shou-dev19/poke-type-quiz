@@ -5,12 +5,15 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/pokemon-quiz/(.*)",
-      "destination": "/$1"
-    },
-    {
       "source": "/pokemon-quiz",
       "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/pokemon-quiz/(.*)",
+      "destination": "/pokemon-quiz",
+      "permanent": false
     }
   ],
   "headers": [
