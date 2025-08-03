@@ -18,7 +18,8 @@
       "Bash(rm:*)",
       "Bash(npx playwright:*)",
       "Bash(git add:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(npm audit:*)"
     ],
     "deny": []
   }
