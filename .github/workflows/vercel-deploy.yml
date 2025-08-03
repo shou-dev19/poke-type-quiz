@@ -3,8 +3,9 @@ name: Vercel Deployment
 on:
   push:
     branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+  # Temporarily disabled for pull requests until Vercel is properly configured
+  # pull_request:
+  #   branches: [ main ]
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
