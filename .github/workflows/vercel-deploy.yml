@@ -3,9 +3,8 @@ name: Vercel Deployment
 on:
   push:
     branches: [ main, develop ]
-  # Temporarily disabled for pull requests until Vercel is properly configured
-  # pull_request:
-  #   branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -31,9 +30,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    # Temporarily disabled tests due to configuration issues
-    # - name: Run tests
-    #   run: npm run test
+    - name: Run tests
+      run: npm run test
       
     - name: Run type check
       run: npm run type-check
