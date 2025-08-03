@@ -10,8 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Vercel環境ではルートパス、その他ではサブディレクトリ
-  base: process.env.VERCEL ? '/' : '/pokemon-quiz/',
+  // サブディレクトリ構成用のベースパス設定
+  base: '/pokemon-quiz/',
   server: {
     port: 3000,
     open: true,
