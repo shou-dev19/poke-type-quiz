@@ -10,8 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Vercel環境ではルートパス、リライト転送で /pokemon-quiz パスを実現
-  base: '/',
+  // リライト転送用の絶対URLベースパス設定
+  base: 'https://poke-type-quiz.vercel.app/',
   server: {
     port: 3000,
     open: true,
