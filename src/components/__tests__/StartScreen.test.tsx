@@ -64,7 +64,7 @@ describe('StartScreen', () => {
   it('should have start button', () => {
     render(<StartScreen onStart={mockOnStart} />);
     
-    const startButton = screen.getByRole('button', { name: 'クイズを始める' });
+    const startButton = screen.getByRole('button', { name: /クイズを開始する/ });
     expect(startButton).toBeInTheDocument();
   });
 
@@ -80,7 +80,7 @@ describe('StartScreen', () => {
     fireEvent.click(fiveQuestionsOption);
     
     // Click start button
-    const startButton = screen.getByRole('button', { name: 'クイズを始める' });
+    const startButton = screen.getByRole('button', { name: /クイズを開始する/ });
     fireEvent.click(startButton);
     
     expect(mockOnStart).toHaveBeenCalledWith('かんたん', 5);
@@ -96,7 +96,7 @@ describe('StartScreen', () => {
     const tenQuestionsOption = screen.getByText('10問');
     fireEvent.click(tenQuestionsOption);
     
-    const startButton = screen.getByRole('button', { name: 'クイズを始める' });
+    const startButton = screen.getByRole('button', { name: /クイズを開始する/ });
     fireEvent.click(startButton);
     
     expect(mockOnStart).toHaveBeenCalledWith('ふつう', 10);
@@ -112,7 +112,7 @@ describe('StartScreen', () => {
     const twentyQuestionsOption = screen.getByText('20問');
     fireEvent.click(twentyQuestionsOption);
     
-    const startButton = screen.getByRole('button', { name: 'クイズを始める' });
+    const startButton = screen.getByRole('button', { name: /クイズを開始する/ });
     fireEvent.click(startButton);
     
     expect(mockOnStart).toHaveBeenCalledWith('むずかしい', 20);
@@ -122,7 +122,7 @@ describe('StartScreen', () => {
     render(<StartScreen onStart={mockOnStart} />);
     
     // Click start without selecting anything (should use defaults)
-    const startButton = screen.getByRole('button', { name: 'クイズを始める' });
+    const startButton = screen.getByRole('button', { name: /クイズを開始する/ });
     fireEvent.click(startButton);
     
     // Should be called with default values

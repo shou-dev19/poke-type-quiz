@@ -158,7 +158,9 @@ describe('QuizScreen', () => {
     
     expect(screen.getByText('問題 2 / 3')).toBeInTheDocument();
     expect(screen.getByTestId('type-icon-みず')).toBeInTheDocument();
-    expect(screen.getByText('ほのお・いわ')).toBeInTheDocument();
+    // Check that dual type is rendered correctly
+    expect(screen.getByTestId('type-icon-ほのお')).toBeInTheDocument();
+    expect(screen.getByTestId('type-icon-いわ')).toBeInTheDocument();
   });
 
   it('should show quit dialog when quit button is clicked', () => {
@@ -175,7 +177,7 @@ describe('QuizScreen', () => {
     const quitButton = screen.getByText('中断');
     fireEvent.click(quitButton);
     
-    expect(screen.getByText('クイズを終了しますか？')).toBeInTheDocument();
+    expect(screen.getByText('クイズを中断しますか？')).toBeInTheDocument();
   });
 
   it('should display progress correctly', () => {

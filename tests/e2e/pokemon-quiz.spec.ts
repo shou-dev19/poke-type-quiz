@@ -7,13 +7,13 @@ test.describe('Pokemon Type Quiz E2E Tests', () => {
 
   test('should load the start screen correctly', async ({ page }) => {
     // Check if the main title is visible
-    await expect(page.locator('text=ポケモン タイプ相性クイズ')).toBeVisible();
+    await expect(page.locator('text=ポケモンタイプ相性クイズ')).toBeVisible();
     
     // Check if the description is visible
-    await expect(page.locator('text=攻撃技のタイプと防御側のタイプから、ダメージ倍率を当てよう！')).toBeVisible();
+    await expect(page.locator('text=ポケモンのタイプ相性を覚えて、バトルマスターを目指そう！')).toBeVisible();
     
     // Check if the start button is present
-    await expect(page.locator('button:has-text("クイズを始める")')).toBeVisible();
+    await expect(page.locator('button:has-text("クイズを開始する")')).toBeVisible();
   });
 
   test('should display difficulty and question count selection', async ({ page }) => {
@@ -41,7 +41,7 @@ test.describe('Pokemon Type Quiz E2E Tests', () => {
 
   test('should start quiz with default settings', async ({ page }) => {
     // Click start button
-    await page.click('button:has-text("クイズを始める")');
+    await page.click('button:has-text("クイズを開始する")');
     
     // Should navigate to quiz screen
     await expect(page.locator('text=問題 1 /')).toBeVisible();
