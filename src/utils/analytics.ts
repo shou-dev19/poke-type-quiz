@@ -19,7 +19,7 @@ class Analytics {
   private userId: string | null = null;
 
   constructor() {
-    this.isEnabled = (import.meta as any).env.PROD && typeof window !== 'undefined';
+    this.isEnabled = (import.meta as ImportMeta & { env: { PROD: boolean } }).env.PROD && typeof window !== 'undefined';
     this.initializeUserId();
   }
 
@@ -56,7 +56,7 @@ class Analytics {
 
     // Google Analytics gtag関数を使用
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      (window as any).gtag('event', event.action, {
+      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', event.action, {
         event_category: event.category,
         event_label: event.label,
         value: event.value,
@@ -144,12 +144,14 @@ class Analytics {
         // FID (First Input Delay) 
         new PerformanceObserver((entryList) => {
           const entries = entryList.getEntries();
-          entries.forEach((entry: any) => {
-            this.trackPerformance({
-              name: 'FID',
-              value: entry.processingStart - entry.startTime,
-              timestamp: Date.now(),
-            });
+          entries.forEach((entry) => {
+            if ('processingStart' in entry) {
+              this.trackPerformance({
+                name: 'FID',
+                value: (entry as PerformanceEntry & { processingStart: number }).processingStart - entry.startTime,
+                timestamp: Date.now(),
+              });
+            }
           });
         }).observe({ entryTypes: ['first-input'] });
 
@@ -157,9 +159,15 @@ class Analytics {
         let clsValue = 0;
         new PerformanceObserver((entryList) => {
           const entries = entryList.getEntries();
-          entries.forEach((entry: any) => {
-            if (!entry.hadRecentInput) {
-              clsValue += entry.value;
+          entries.forEach((entry) => {
+            if ('hadRecentInput' in entry && 'value' in entry) {
+              const layoutShiftEntry = entry as PerformanceEntry & { 
+                hadRecentInput: boolean; 
+                value: number; 
+              };
+              if (!layoutShiftEntry.hadRecentInput) {
+                clsValue += layoutShiftEntry.value;
+              }
             }
           });
           this.trackPerformance({
@@ -190,7 +198,7 @@ class Analytics {
 
     // 詳細なエラー情報も送信（本番環境のみ）
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      (window as any).gtag('event', 'exception', {
+      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', 'exception', {
         description: `${error.name}: ${error.message}`,
         fatal: false,
         custom_parameter_context: context,
@@ -206,7 +214,7 @@ class Analytics {
     }
 
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      (window as any).gtag('config', 'GA_MEASUREMENT_ID', {
+      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('config', 'GA_MEASUREMENT_ID', {
         page_title: pageName,
         page_location: window.location.href,
         custom_parameter_user_id: this.userId,

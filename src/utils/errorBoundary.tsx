@@ -68,7 +68,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </p>
             
             {/* 開発環境でのみエラー詳細を表示 */}
-            {(import.meta as any).env.DEV && this.state.error && (
+            {(import.meta as ImportMeta & { env: { DEV: boolean } }).env.DEV && this.state.error && (
               <details className="text-left bg-black/20 p-4 rounded-lg mb-6 text-xs">
                 <summary className="cursor-pointer text-red-300 font-semibold">
                   エラー詳細（開発環境のみ）

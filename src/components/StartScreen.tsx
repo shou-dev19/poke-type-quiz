@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Difficulty } from '../types/pokemon';
+import { Difficulty, PokemonType } from '../types/pokemon';
 import TypeIcon from './TypeIcon';
 
 interface StartScreenProps {
@@ -41,7 +41,7 @@ export default function StartScreen({ onStart }: StartScreenProps) {
                 {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type) => (
                   <div key={`first-${type}`} className="flex-shrink-0">
                     <TypeIcon 
-                      type={type as any} 
+                      type={type as PokemonType} 
                       size="md" 
                       animated={true}
                       className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
@@ -52,7 +52,7 @@ export default function StartScreen({ onStart }: StartScreenProps) {
                 {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり', 'かくとう', 'どく', 'じめん', 'ひこう', 'エスパー', 'むし', 'いわ', 'ゴースト', 'ドラゴン', 'あく', 'はがね', 'フェアリー'].map((type) => (
                   <div key={`second-${type}`} className="flex-shrink-0">
                     <TypeIcon 
-                      type={type as any} 
+                      type={type as PokemonType} 
                       size="md" 
                       animated={true}
                       className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"
@@ -63,7 +63,7 @@ export default function StartScreen({ onStart }: StartScreenProps) {
                 {['ノーマル', 'ほのお', 'みず', 'でんき', 'くさ', 'こおり'].map((type) => (
                   <div key={`third-${type}`} className="flex-shrink-0">
                     <TypeIcon 
-                      type={type as any} 
+                      type={type as PokemonType} 
                       size="md" 
                       animated={true}
                       className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg"

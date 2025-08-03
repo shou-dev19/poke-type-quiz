@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import TypeIcon from '../TypeIcon';
+import { PokemonType } from '../../types/pokemon';
 
 // Mock console.error to avoid noise in test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -60,7 +61,7 @@ describe('TypeIcon', () => {
     ];
 
     typeMapping.forEach(({ japanese, english }) => {
-      const { unmount } = render(<TypeIcon type={japanese as any} />);
+      const { unmount } = render(<TypeIcon type={japanese as PokemonType} />);
       const image = screen.getByRole('img');
       expect(image).toHaveAttribute('src', `/images/types/${english}.svg`);
       unmount();

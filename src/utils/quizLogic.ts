@@ -40,12 +40,13 @@ export function generateQuestions(difficulty: Difficulty, count: number): QuizQu
 
     // 難易度に応じて問題を生成
     switch (difficulty) {
-      case 'かんたん':
+      case 'かんたん': {
         // 基本的なタイプのみ（効果的な相性がわかりやすいもの）
         const basicTypes: PokemonType[] = ['ほのお', 'みず', 'くさ', 'でんき', 'こおり', 'かくとう', 'ひこう', 'いわ'];
         attackType = basicTypes[Math.floor(Math.random() * basicTypes.length)];
         defendType = basicTypes[Math.floor(Math.random() * basicTypes.length)];
         break;
+      }
         
       case 'ふつう':
         // 全18タイプから選択
@@ -53,17 +54,18 @@ export function generateQuestions(difficulty: Difficulty, count: number): QuizQu
         defendType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
         break;
         
-      case 'むずかしい':
+      case 'むずかしい': {
         // 複合タイプのみ出題（100%）
         attackType = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
         // 必ず複合タイプを生成
-        let type1 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
+        const type1 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
         let type2 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
         while (type1 === type2) {
           type2 = POKEMON_TYPES[Math.floor(Math.random() * POKEMON_TYPES.length)];
         }
         defendType = [type1, type2];
         break;
+      }
     }
 
     // 重複チェック
