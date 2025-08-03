@@ -108,6 +108,9 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
           className="w-full h-full object-contain p-1"
           onError={() => setImageError(true)}
           loading="lazy"
+          decoding="async"
+          width="64"
+          height="64"
         />
       ) : (
         <div className="w-8 h-8 flex items-center justify-center">

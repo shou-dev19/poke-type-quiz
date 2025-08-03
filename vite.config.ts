@@ -16,7 +16,23 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false, // プロダクションではsourcemap無効化
+    minify: 'terser', // より良い圧縮
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'ui-vendor': ['@radix-ui/react-alert-dialog', '@radix-ui/react-select', '@radix-ui/react-progress'],
+          'animation-vendor': ['framer-motion'],
+        },
+      },
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true, // console.logを本番で削除
+        drop_debugger: true,
+      },
+    },
   },
   test: {
     globals: true,

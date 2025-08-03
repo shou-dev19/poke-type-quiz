@@ -193,6 +193,39 @@ html {
 @tailwind components;
 @tailwind utilities;
 
+/* パフォーマンス最適化 */
+@layer utilities {
+  /* will-change最適化 */
+  .animate-type-fire,
+  .animate-type-water,
+  .animate-type-electric,
+  .animate-type-grass,
+  .animate-type-ice,
+  .animate-type-fighting,
+  .animate-type-poison,
+  .animate-type-ground,
+  .animate-type-flying,
+  .animate-type-psychic,
+  .animate-type-bug,
+  .animate-type-rock,
+  .animate-type-ghost,
+  .animate-type-dragon,
+  .animate-type-dark,
+  .animate-type-steel,
+  .animate-type-fairy,
+  .animate-type-normal {
+    will-change: transform, opacity, filter;
+    transform: translateZ(0); /* ハードウェアアクセラレーション */
+    backface-visibility: hidden; /* 3D変換の最適化 */
+    perspective: 1000px; /* パフォーマンス向上 */
+  }
+  
+  /* 非アクティブ時のwill-change削除 */
+  .animation-paused {
+    will-change: auto;
+  }
+}
+
 /* Custom animations for Pokemon types */
 @layer utilities {
   /* Fire - 炎がゆらゆらと揺れる */
