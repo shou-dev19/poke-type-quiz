@@ -6,11 +6,11 @@
   "rewrites": [
     {
       "source": "/pokemon-quiz/(.*)",
-      "destination": "/pokemon-quiz/index.html"
+      "destination": "/index.html"
     },
     {
       "source": "/pokemon-quiz",
-      "destination": "/pokemon-quiz/index.html"
+      "destination": "/index.html"
     }
   ],
   "headers": [
