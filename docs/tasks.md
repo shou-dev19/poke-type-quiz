@@ -386,7 +386,8 @@ requirements.mdで定義された要件とdesign.mdで設計されたアーキ�
 
 ## 🚀 デプロイ準備完了
 
-**予定本番環境URL**: [shou-devlog.com/pokemon-quiz](https://shou-devlog.com/pokemon-quiz)
+**本番環境URL**: [poke-type-quiz.vercel.app](https://poke-type-quiz.vercel.app) ✅  
+**予定サブドメインURL**: [shou-devlog.com/pokemon-quiz](https://shou-devlog.com/pokemon-quiz) ⚠️ **未完了**
 **開発完了**: 2025年8月3日
 
 ---
@@ -483,60 +484,64 @@ requirements.mdで定義された要件とdesign.mdで設計されたアーキ�
 
 ### 🔴 CRITICAL - パイプライン修復
 
-**T031: テスト機能復活**
-- [ ] **単体テスト・コンポーネントテストの再有効化**
-  - `ci.yml`のテストステップをコメントアウト解除
-  - TypeIconテストの画像パス問題修正
-  - StartScreen/QuizScreenテストの期待値調整
-  - **影響ファイル**: `.github/workflows/ci.yml`、`src/components/__tests__/*.test.tsx`
+**T031: テスト機能復活** ✅ **完了**
+- [x] **単体テスト・コンポーネントテストの再有効化**
+  - `ci.yml`のテストステップをコメントアウト解除 ✅
+  - TypeIconテストの画像パス問題修正 ✅
+  - StartScreen/QuizScreenテストの期待値調整 ✅
+  - **完了日**: 2025年8月3日
 
-**T032: E2Eテスト復活**
-- [ ] **Playwrightテストの再有効化**
-  - E2Eテストステップのコメントアウト解除
-  - テスト設定の問題修正
-  - **影響ファイル**: `.github/workflows/ci.yml`、`tests/e2e/pokemon-quiz.spec.ts`
+**T032: E2Eテスト復活** ✅ **完了**
+- [x] **Playwrightテストの再有効化**
+  - E2Eテストステップのコメントアウト解除 ✅
+  - テスト設定の問題修正 ✅
+  - **完了日**: 2025年8月3日
 
-**T033: セキュリティ監査復活**
-- [ ] **セキュリティワークフローの再有効化**
-  - `security-audit.yml.disabled`を`security-audit.yml`にリネーム
-  - npm auditとaudit-ciステップの復活
-  - Snyk、CodeQL設定の確認
-  - **影響ファイル**: `.github/workflows/security-audit.yml.disabled`
+**T033: セキュリティ監査復活** ✅ **完了**
+- [x] **セキュリティワークフローの再有効化**
+  - `security-audit.yml.disabled`を`security-audit.yml`にリネーム ✅
+  - npm auditとaudit-ciステップの復活 ✅
+  - Snyk、CodeQL設定の確認 ✅
+  - **完了日**: 2025年8月3日
 
-**T034: 依存関係管理修復**
-- [ ] **package-lock.json再生成とキャッシュ復活**
-  - `npm install`実行してpackage-lock.json生成
-  - 全ワークフローで`cache: 'npm'`を再有効化
-  - `npm install`を`npm ci`に戻す
-  - **影響ファイル**: 全ワークフローファイル、`package-lock.json`
+**T034: 依存関係管理修復** ✅ **完了**
+- [x] **package-lock.json再生成とキャッシュ復活**
+  - `npm install`実行してpackage-lock.json生成 ✅
+  - 全ワークフローで`cache: 'npm'`を再有効化 ✅
+  - `npm install`を`npm ci`に戻す ✅
+  - **完了日**: 2025年8月3日
 
-**T035: Vercelデプロイ設定修復**
-- [ ] **プルリクエストでのVercelデプロイ再有効化**
-  - `vercel-deploy.yml`のpull_requestトリガー復活
-  - プレビューデプロイ機能の確認
-  - **影響ファイル**: `.github/workflows/vercel-deploy.yml`
+**T035: Vercelデプロイ設定修復** ✅ **完了**
+- [x] **プルリクエストでのVercelデプロイ再有効化**
+  - `vercel-deploy.yml`のpull_requestトリガー復活 ✅
+  - プレビューデプロイ機能の確認 ✅
+  - **完了日**: 2025年8月3日
 
 ### 🟡 HIGH PRIORITY - セキュリティ強化
 
-**T036: 脆弱性対応**
+**T036: 脆弱性対応** ⚠️ **未完了**
 - [ ] **esbuild脆弱性の解決**
   - 依存関係の更新（vite, vitest等）
   - セキュリティ監査の再実行
   - 脆弱性スキャン結果の確認
+  - **状況**: moderate級脆弱性5件、high級脆弱性0件
+  - **優先度**: 中（moderate級のため）
 
 ### 修復作業の優先順位
 
-1. **T034**: 依存関係管理修復（最重要）
-2. **T031**: テスト機能復活
-3. **T033**: セキュリティ監査復活
-4. **T032**: E2Eテスト復活
-5. **T035**: Vercelデプロイ設定修復
-6. **T036**: 脆弱性対応
+1. **T034**: 依存関係管理修復（最重要） ✅ **完了**
+2. **T031**: テスト機能復活 ✅ **完了**
+3. **T033**: セキュリティ監査復活 ✅ **完了**
+4. **T032**: E2Eテスト復活 ✅ **完了**
+5. **T035**: Vercelデプロイ設定修復 ✅ **完了**
+6. **T036**: 脆弱性対応 ⚠️ **残タスク**
 
 ### 修復完了の確認方法
 
-- [ ] 全ワークフローが正常実行される
-- [ ] テストカバレッジが80%以上を維持
-- [ ] セキュリティ監査がクリア
-- [ ] プルリクエストでプレビューデプロイが動作
-- [ ] mainブランチで本番デプロイが正常実行
+- [x] 全ワークフローが正常実行される ✅
+- [x] テストカバレッジが80%以上を維持 ✅
+- [x] セキュリティ監査がクリア ✅
+- [x] プルリクエストでプレビューデプロイが動作 ✅
+- [x] mainブランチで本番デプロイが正常実行 ✅
+
+**🎉 CI/CDパイプライン修復作業完了** (2025年8月3日)
