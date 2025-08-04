@@ -11,7 +11,7 @@
 ## 🌐 デプロイ済みアプリ
 
 **本番環境**: [poke-type-quiz.vercel.app](https://poke-type-quiz.vercel.app)  
-**代替URL**: [shou-devlog.com/pokemon-quiz](https://shou-devlog.com/pokemon-quiz) (設定中)
+**代替URL**: [shou-devlog.com/pokemon-quiz](https://shou-devlog.com/pokemon-quiz) ⚠️ **未完了**
 
 ## ✨ 主な機能
 
@@ -57,7 +57,7 @@ graph TB
     
     subgraph "デプロイ・インフラ"
         Q[Vercel Platform<br/>Edge Network]
-        R[Custom Domain<br/>shou-devlog.com]
+        R[Custom Domain<br/>shou-devlog.com ⚠️]
         S[SSL/TLS<br/>Security Headers]
     end
     
@@ -218,7 +218,7 @@ npm run test:e2e:ui  # UI付きで実行
    VITE_APP_URL=https://shou-devlog.com/pokemon-quiz
    ```
 
-3. **サブディレクトリ設定**
+3. **サブディレクトリ設定** ⚠️ **未完了**
    - Vercel Dashboard > Domains > Add Domain
    - `shou-devlog.com` を設定（既存ドメイン活用）
    - `vercel.json` でパスルーティング設定
@@ -290,9 +290,9 @@ graph TD
 ## 📈 監視・分析
 
 ### 分析ツール
-- **Google Analytics 4**: ユーザー行動分析
-- **Vercel Analytics**: パフォーマンス監視
-- **Sentry**: エラー監視（オプション）
+- **Google Analytics 4**: ユーザー行動分析 ⚠️ **未設定**
+- **Vercel Analytics**: パフォーマンス監視 ✅
+- **Sentry**: エラー監視 ⚠️ **未設定** (オプション)
 
 ### 監視指標
 - Core Web Vitals（LCP、FID、CLS）
@@ -361,3 +361,20 @@ graph TD
 - **CI/CD構築**: 依存関係管理からデプロイ自動化まで
 - **品質保証**: 80%以上のテストカバレッジ維持
 - **レスポンシブ**: モバイルファーストのUI/UX設計
+
+### 🔄 今後の改善予定
+
+#### 🔴 高優先度（未完了項目）
+- **カスタムドメイン設定**: `shou-devlog.com/pokemon-quiz` の完全設定
+- **Google Analytics 4**: ユーザー行動分析の実装
+- **T036**: moderate級脆弱性の解決（esbuild等）
+
+#### 🟡 中優先度（機能拡張）
+- **PWA化**: オフライン対応・アプリ化
+- **Sentry統合**: エラー監視・レポート自動化
+- **A/Bテスト**: ユーザー体験最適化
+
+#### 🟢 低優先度（将来構想）
+- **ユーザーアカウント**: プログレス管理・成績記録
+- **マルチプレイヤー**: リアルタイム対戦機能
+- **モバイルアプリ**: React Native版開発
