@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import TypeIcon from './TypeIcon';
+import MoveEffect from './MoveEffects';
 import { PokemonType } from '../types/pokemon';
 
 interface AttackAnimationProps {
@@ -18,7 +19,9 @@ export default function AttackAnimation({
   isCorrect,
   damageMultiplier = 1
 }: AttackAnimationProps) {
-  const [showImpact, setShowImpact] = useState(false);
+  // 新しい3Phase構成の状態管理
+  const [phase, setPhase] = useState<'preparation' | 'move-effect' | 'result'>('preparation');
+  const [showMoveEffect, setShowMoveEffect] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const onAnimationCompleteRef = useRef(onAnimationComplete);
 
@@ -28,22 +31,28 @@ export default function AttackAnimation({
   }, [onAnimationComplete]);
 
   useEffect(() => {
-    console.log('AttackAnimation mounted, setting timers');
-    // 攻撃アニメーション: 0.8s + 0.3s delay = 1.1s後にインパクト
+    console.log('AttackAnimation mounted, setting 3-phase timers');
+    
+    // Phase 1: 技発動準備 (0-300ms) - アイコン強調のみ
+    // Phase 2: 技エフェクト実行 (300-1300ms)
     const timer1 = setTimeout(() => {
-      console.log('Timer 1: Setting showImpact to true');
-      setShowImpact(true);
-    }, 1100);
-    // インパクト後0.6s後に結果表示
+      console.log('Phase 2: 技エフェクト開始');
+      setPhase('move-effect');
+      setShowMoveEffect(true);
+    }, 300);
+
+    // Phase 3: 結果表示 (1300-3000ms)
     const timer2 = setTimeout(() => {
-      console.log('Timer 2: Setting showResult to true');
+      console.log('Phase 3: 結果表示開始');
+      setPhase('result');
       setShowResult(true);
-    }, 1700);
-    // 結果表示後5秒で自動的に閉じる（ユーザーがクリックしなかった場合のフォールバック）
+    }, 1300);
+
+    // 自動完了 (5秒後のフォールバック)
     const timer3 = setTimeout(() => {
       console.log('Timer 3: Auto-calling onAnimationComplete');
       onAnimationCompleteRef.current();
-    }, 6700);
+    }, 6000);
 
     return () => {
       console.log('AttackAnimation unmounting, clearing timers');
@@ -54,6 +63,7 @@ export default function AttackAnimation({
   }, []); // マウント時のみ実行
 
   const defendTypes = Array.isArray(defendType) ? defendType : [defendType];
+  
 
   // ダメージ倍率に基づくエフェクト設定
   const getEffectStyle = (multiplier: number) => {
@@ -121,12 +131,13 @@ export default function AttackAnimation({
 
   // デバッグ用: 状態変化をログ出力
   useEffect(() => {
-    console.log('AttackAnimation showImpact:', showImpact);
-  }, [showImpact]);
+    console.log('AttackAnimation phase:', phase);
+  }, [phase]);
 
   useEffect(() => {
     console.log('AttackAnimation showResult:', showResult);
   }, [showResult]);
+
 
   return (
     <div 
@@ -135,32 +146,37 @@ export default function AttackAnimation({
       }`}
       onClick={handleClick}
     >
-      <div className="relative w-full max-w-2xl h-48 sm:h-56 lg:h-64">
-        {/* 攻撃側アイコン */}
+      <div className="relative w-full max-w-3xl h-64 sm:h-72 lg:h-80">
+        {/* Phase 1: 攻撃側アイコン強調表示 */}
         <motion.div
-          initial={{ x: -200, y: 0 }}
-          animate={{ x: 0, y: 0 }}
-          transition={{ 
-            duration: 1, 
-            ease: "easeOut",
-            type: "spring",
-            stiffness: 100
+          initial={{ scale: 1, opacity: 0.7 }}
+          animate={{ 
+            scale: phase === 'preparation' ? 1.1 : 1, 
+            opacity: 1,
+            filter: phase === 'preparation' ? 'brightness(1.3) drop-shadow(0 0 20px rgba(255,255,255,0.5))' : 'brightness(1)'
           }}
-          className="absolute left-4 sm:left-12 lg:left-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center h-20 sm:h-24 lg:h-28"
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="absolute left-4 sm:left-12 lg:left-20 top-1/2 transform -translate-y-1/2"
         >
-          <TypeIcon type={attackType} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
-          <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{attackType}</p>
+          <div className="flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center">
+              <TypeIcon type={attackType} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
+            </div>
+            <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{attackType}</p>
+          </div>
         </motion.div>
 
-        {/* 防御側アイコン */}
-        <div className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2 flex flex-col items-center justify-center">
+        {/* 防御側アイコン - 固定表示 */}
+        <div className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2">
           {defendTypes.length === 1 && defendTypes[0] ? (
-            <div className="flex flex-col items-center justify-center h-20 sm:h-24 lg:h-28">
-              <TypeIcon type={defendTypes[0]} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center">
+                <TypeIcon type={defendTypes[0]} size="lg" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28" />
+              </div>
               <p className="text-white text-center mt-2 text-sm sm:text-base font-bold">{defendTypes[0]}</p>
             </div>
           ) : defendTypes.length >= 2 && defendTypes[0] && defendTypes[1] ? (
-            <div className="flex flex-col gap-1 sm:gap-2 items-center justify-center h-20 sm:h-24 lg:h-28">
+            <div className="flex flex-col items-center justify-center gap-2">
               <div className="flex flex-col items-center">
                 <TypeIcon type={defendTypes[0]} size="md" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24" />
                 <p className="text-white text-center text-xs sm:text-sm font-bold mt-1">{defendTypes[0]}</p>
@@ -173,71 +189,37 @@ export default function AttackAnimation({
           ) : null}
         </div>
 
-        {/* 攻撃エフェクト - タイプ別エフェクト */}
-        <motion.div
-          initial={{ x: -150, opacity: 0, scale: 0.5 }}
-          animate={{ x: 150, opacity: 1, scale: 1 }}
-          transition={{ 
-            duration: 0.8, 
-            delay: 0.3,
-            ease: "easeInOut"
-          }}
-          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        >
-          {attackType === 'ほのお' && (
-            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-400 rounded-full animate-ping" />
-          )}
-          {attackType === 'みず' && (
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full animate-pulse" />
-          )}
-          {attackType === 'でんき' && (
-            <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-200 rounded-full animate-ping" />
-          )}
-          {attackType === 'くさ' && (
-            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-lime-400 rounded-full animate-bounce" />
-          )}
-          {attackType === 'こおり' && (
-            <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-300 rounded-full animate-pulse" />
-          )}
-          {/* デフォルトエフェクト */}
-          {!['ほのお', 'みず', 'でんき', 'くさ', 'こおり'].includes(attackType) && (
-            <>
-              <div className="w-8 h-8 bg-yellow-400 rounded-full animate-ping" />
-              <div className="absolute inset-0 w-8 h-8 bg-orange-500 rounded-full animate-pulse" />
-            </>
-          )}
-        </motion.div>
 
-        {/* インパクトエフェクト - ダメージ倍率別 */}
-        {showImpact && (
+        {/* Phase 2: 技エフェクト実行 */}
+        {showMoveEffect && (
+          <MoveEffect 
+            attackType={attackType} 
+            className="w-full h-full"
+          />
+        )}
+
+        {/* Phase 2: 防御側への着弾表現 */}
+        {showMoveEffect && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [0, 2.5, 1], opacity: [0, 1, 0] }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            animate={{ scale: [0, 2, 1], opacity: [0, 1, 0.6] }}
+            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
             className="absolute right-4 sm:right-12 lg:right-20 top-1/2 transform -translate-y-1/2"
           >
-            {/* メインインパクト */}
-            <div className={`${effectStyle.size} rounded-full bg-gradient-to-r ${effectStyle.colors} opacity-90 ${effectStyle.intensity}`} />
-            
-            {/* 外側の光輪 */}
-            <div className={`absolute inset-0 ${effectStyle.size} rounded-full bg-white animate-ping opacity-60`} />
-            
-            {/* 内側のキラキラエフェクト */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-white rounded-full animate-bounce opacity-80" />
-            </div>
+            {/* ダメージ倍率に基づくインパクトエフェクト */}
+            <div className={`${effectStyle.size} rounded-full bg-gradient-to-r ${effectStyle.colors} opacity-80 ${effectStyle.intensity}`} />
             
             {/* 放射状エフェクト - スパーク数が倍率で変化 */}
             <div className={`absolute inset-0 ${effectStyle.size}`}>
               {[...Array(effectStyle.sparks)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute w-1 h-8 sm:w-1.5 sm:h-12 lg:w-2 lg:h-16 bg-white opacity-70"
+                  className="absolute w-1 h-6 sm:w-1.5 sm:h-8 lg:w-2 lg:h-10 bg-white opacity-70"
                   style={{
                     left: '50%',
                     top: '50%',
-                    transformOrigin: '1px 16px',
-                    transform: `rotate(${i * (360 / effectStyle.sparks)}deg) translateY(-16px)`,
+                    transformOrigin: '1px 12px',
+                    transform: `rotate(${i * (360 / effectStyle.sparks)}deg) translateY(-12px)`,
                   }}
                 />
               ))}
@@ -245,22 +227,19 @@ export default function AttackAnimation({
             
             {/* 4倍ダメージ時の特別エフェクト */}
             {damageMultiplier >= 4 && (
-              <>
-                <div className="absolute inset-0 w-64 h-64 rounded-full bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 opacity-30 animate-ping" />
-                <div className="absolute inset-0 w-72 h-72 rounded-full bg-gradient-to-r from-red-200 via-orange-200 to-yellow-200 opacity-20 animate-pulse" />
-              </>
+              <div className="absolute inset-0 w-48 h-48 rounded-full bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 opacity-20 animate-ping" />
             )}
             
             {/* 0倍ダメージ時の無効エフェクト */}
             {damageMultiplier === 0 && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-4xl sm:text-5xl lg:text-6xl opacity-70">❌</div>
+                <div className="text-3xl sm:text-4xl lg:text-5xl opacity-70">❌</div>
               </div>
             )}
           </motion.div>
         )}
 
-        {/* 結果表示 - 改善版 */}
+        {/* Phase 3: 結果表示 */}
         {showResult && (
           <motion.div
             initial={{ scale: 0, opacity: 0, y: -20 }}
@@ -271,14 +250,14 @@ export default function AttackAnimation({
               stiffness: 200,
               damping: 20
             }}
-            className="absolute top-4 sm:top-6 lg:top-8 left-1/2 transform -translate-x-1/2 text-center"
+            className="absolute top-12 sm:top-16 lg:top-20 left-1/2 transform -translate-x-1/2 text-center"
           >
             {/* メイン結果アイコン */}
             <motion.div
               initial={{ rotate: -180 }}
               animate={{ rotate: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className={`text-5xl sm:text-6xl lg:text-8xl font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'} filter drop-shadow-lg`}
+              className={`text-4xl sm:text-5xl lg:text-6xl font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'} filter drop-shadow-lg`}
             >
               {isCorrect ? '○' : '×'}
             </motion.div>
@@ -288,9 +267,19 @@ export default function AttackAnimation({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className={`text-lg sm:text-xl lg:text-2xl mt-1 sm:mt-2 font-bold ${isCorrect ? 'text-green-300' : 'text-red-300'}`}
+              className={`text-base sm:text-lg lg:text-xl mt-1 sm:mt-2 font-bold ${isCorrect ? 'text-green-300' : 'text-red-300'}`}
             >
               {isCorrect ? '正解！' : '不正解'}
+            </motion.div>
+
+            {/* ダメージ倍率表示 */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="text-white text-sm sm:text-base mt-2 bg-black/50 px-3 py-1 rounded-full"
+            >
+              ダメージ倍率: {damageMultiplier}倍
             </motion.div>
             
             {/* 成功時のキラキラエフェクト */}
