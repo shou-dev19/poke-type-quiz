@@ -1,773 +1,252 @@
-import { motion } from 'framer-motion';
-import { PokemonType } from '../types/pokemon';
+import { motion, useReducedMotion } from 'framer-motion';
+import { PokemonType, TYPE_COLORS } from '../types/pokemon';
 
 interface MoveEffectProps {
   attackType: PokemonType;
   className?: string;
 }
 
-export default function MoveEffect({ attackType, className = '' }: MoveEffectProps) {
-  const baseClassName = `absolute inset-0 pointer-events-none ${className}`;
-
-  switch (attackType) {
-    case 'ほのお': // かえんほうしゃ
+// 右向きの技を共通の座標系で描く。軌道の回転はステージ側が担当する。
+function MoveShape({ type }: { type: PokemonType }) {
+  switch (type) {
+    case 'ほのお':
       return (
-        <div className={baseClassName}>
-          {/* 炎の軌跡エフェクト */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.8] }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute left-0 top-1/2 w-full h-6 bg-gradient-to-r from-red-500 via-orange-400 to-yellow-300 transform -translate-y-1/2 origin-left"
-            style={{ clipPath: 'polygon(0 30%, 100% 0%, 100% 100%, 0 70%)' }}
+        <>
+          <path d="M108 60C108 88 70 108 28 83L8 94 24 66 8 45 41 50 25 17 68 38C90 20 111 36 108 60Z" fill="#F08030" />
+          <path d="M92 61C99 80 71 91 46 73L54 59 40 42 75 55 78 40Z" fill="#F8D030" stroke="none" />
+          <path d="M88 65Q92 81 69 76L72 63Z" fill="#FFF9DC" stroke="none" />
+        </>
+      );
+    case 'みず':
+      return (
+        <>
+          <path d="M8 77Q29 52 51 65C34 28 79 12 100 39 124 71 94 102 62 92 35 83 25 94 8 90Z" fill="#6890F0" />
+          <path
+            d="M15 78Q45 64 69 79C94 94 110 53 84 43 70 38 59 50 69 59"
+            fill="none"
+            stroke="#DDFBFF"
+            strokeWidth="8"
           />
-          {/* 火花パーティクル */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                x: Math.random() * 200 - 100,
-                y: Math.random() * 100 - 50,
-                opacity: [0, 1, 0]
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: 0.3 + i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute left-1/2 top-1/2 w-2 h-2 bg-orange-400 rounded-full"
-            />
-          ))}
-        </div>
+          <path d="M25 35Q42 10 43 35C42 49 24 49 25 35Z" fill="#98D8D8" />
+        </>
       );
-
-    case 'みず': // ハイドロポンプ
+    case 'でんき':
       return (
-        <div className={baseClassName}>
-          {/* 水流エフェクト */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.9] }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute left-0 top-1/2 w-full h-8 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-300 transform -translate-y-1/2 origin-left rounded-full"
+        <>
+          <path d="M7 64 47 17 65 44 96 13 79 53 115 49 70 106 58 75 24 96 41 61Z" fill="#F8D030" />
+          <path d="M31 59 47 40 60 61 76 46 68 67 91 61 73 84" stroke="#FFFDF0" strokeWidth="6" fill="none" />
+        </>
+      );
+    case 'くさ':
+      return (
+        <>
+          <path d="M21 85C1 30 55 17 101 17 99 68 77 107 21 85Z" fill="#78C850" />
+          <path d="m21 85 65-45m-32 22-3-24m19 12 23 1" fill="none" stroke="#315C31" strokeWidth="4" />
+          <path d="M70 95Q83 69 111 79 104 105 70 95Z" fill="#B6E577" />
+        </>
+      );
+    case 'こおり':
+      return (
+        <>
+          <path d="m60 7 17 24 26 14v30L77 90l-17 23-17-23-26-15V45l26-14Z" fill="#DDFBFF" />
+          <g fill="none" stroke="#459BAA" strokeWidth="5">
+            <path d="M60 17v86M23 39l74 43M23 82l74-43M48 25l12 12 12-12M48 95l12-12 12 12M27 52l16-5-3-17M80 90l-3-17 16-5M27 68l16 5-3 17M80 30l-3 17 16 5" />
+          </g>
+        </>
+      );
+    case 'かくとう':
+      return (
+        <>
+          <path
+            d="m9 48 25 2-5-30 27 18 21-27 6 32 31 6-24 21 10 32-34-9-22 20-9-29-29 2 18-20Z"
+            fill="#F8D030"
+            stroke="none"
           />
-          {/* 水滴パーティクル */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                x: Math.random() * 150 - 75,
-                y: Math.random() * 60 - 30,
-                opacity: [0, 0.8, 0]
-              }}
-              transition={{ 
-                duration: 1, 
-                delay: 0.2 + i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute left-1/2 top-1/2 w-3 h-3 bg-cyan-300 rounded-full"
-            />
-          ))}
-        </div>
+          <path d="M34 75V43q0-12 12-9 0-16 14-10 8-10 18 0 14-5 17 8l5 31q0 15-17 29H50Z" fill="#C03028" />
+          <path d="M48 36v21m14-29v26m16-25v27M36 68q23-17 28 2l-8 9" fill="none" stroke="#FFD7BA" strokeWidth="5" />
+        </>
       );
-
-    case 'でんき': // かみなり
+    case 'どく':
       return (
-        <div className={baseClassName}>
-          {/* 稲妻エフェクト */}
-          <motion.div
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: [0, 1, 0.7] }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute inset-0"
-          >
-            <svg className="w-full h-full" viewBox="0 0 400 200">
-              <motion.path
-                d="M50 100 L120 60 L180 120 L250 40 L320 100 L370 80"
-                stroke="url(#lightning-gradient)"
-                strokeWidth="4"
-                fill="none"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              />
-              <defs>
-                <linearGradient id="lightning-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#fbbf24" />
-                  <stop offset="50%" stopColor="#f59e0b" />
-                  <stop offset="100%" stopColor="#fef3c7" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </motion.div>
-          {/* 電気火花 */}
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                opacity: [0, 1, 0],
-                rotate: Math.random() * 360
-              }}
-              transition={{ 
-                duration: 0.8, 
-                delay: 0.1 + i * 0.05,
-                ease: "easeOut"
-              }}
-              className="absolute w-1 h-6 bg-yellow-300"
-              style={{
-                left: `${20 + (i * 35)}%`,
-                top: `${40 + Math.random() * 20}%`
-              }}
-            />
-          ))}
-        </div>
-      );
-
-    case 'くさ': // ソーラービーム
-      return (
-        <div className={baseClassName}>
-          {/* 光線エフェクト */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.8] }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute left-0 top-1/2 w-full h-4 bg-gradient-to-r from-lime-400 via-green-300 to-yellow-200 transform -translate-y-1/2 origin-left"
-            style={{ 
-              boxShadow: '0 0 20px rgba(34, 197, 94, 0.8), 0 0 40px rgba(34, 197, 94, 0.4)',
-              filter: 'brightness(1.2)'
-            }}
+        <>
+          <path
+            d="M23 77Q4 61 22 44 14 18 41 22 63 3 79 27 110 20 106 48 124 71 98 83 92 103 69 93 37 110 23 77Z"
+            fill="#A040A0"
           />
-          {/* 光粒子 */}
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, x: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                x: i * 30,
-                opacity: [0, 1, 0]
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute left-4 top-1/2 w-2 h-2 bg-lime-300 rounded-full transform -translate-y-1/2"
-              style={{ filter: 'brightness(1.5)' }}
-            />
-          ))}
-        </div>
+          <circle cx="45" cy="45" r="14" fill="#DE94DC" />
+          <circle cx="83" cy="64" r="17" fill="#C869C9" />
+          <path d="M39 39q5-5 10-1m28 19q6-6 11 0" fill="none" stroke="white" strokeWidth="5" />
+          <circle cx="24" cy="99" r="7" fill="#A040A0" />
+        </>
       );
-
-    case 'こおり': // れいとうビーム
+    case 'じめん':
       return (
-        <div className={baseClassName}>
-          {/* 氷の結晶軌跡 */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.9] }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-            className="absolute left-0 top-1/2 w-full h-5 bg-gradient-to-r from-cyan-400 via-blue-300 to-white transform -translate-y-1/2 origin-left"
-            style={{ 
-              filter: 'brightness(1.3)',
-              boxShadow: '0 0 15px rgba(59, 130, 246, 0.6)'
-            }}
+        <>
+          <path d="m9 77 15-26 22 8 15-24 19 13 28-7 6 38-30 23-45-3Z" fill="#E0C068" />
+          <path d="m65 37-9 27 22 8-29 27M57 64l-22 8-13-3m55 4 21-9" fill="none" stroke="#795333" strokeWidth="7" />
+          <path d="m14 30 12-12 11 16-14 6m61-18 18-9 8 16-16 9" fill="#B18A45" />
+        </>
+      );
+    case 'ひこう':
+      return (
+        <>
+          <path
+            d="M10 43h65q29 0 24-19C92 7 73 18 82 28M5 62h86q29 0 19 24c-9 19-32 8-24-6M17 81h38q25 0 14 23"
+            fill="none"
+            stroke="#A890F0"
+            strokeWidth="12"
           />
-          {/* 氷の結晶 */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, rotate: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0.8], 
-                rotate: [0, 360],
-                opacity: [0, 1, 0]
-              }}
-              transition={{ 
-                duration: 1.1, 
-                delay: 0.2 + i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute text-cyan-300 text-lg"
-              style={{
-                left: `${10 + i * 12}%`,
-                top: `${45 + Math.random() * 10}%`
-              }}
-            >
-              ❄️
-            </motion.div>
-          ))}
-        </div>
+          <path d="M11 43h65M6 62h84M18 81h37" fill="none" stroke="#F4F0FF" strokeWidth="4" />
+        </>
       );
-
-    case 'かくとう': // インファイト
+    case 'エスパー':
       return (
-        <div className={baseClassName}>
-          {/* パンチエフェクト */}
-          <motion.div
-            initial={{ scale: 0, x: -100, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.5, 1], 
-              x: [0, 50, 150],
-              opacity: [0, 1, 0.8]
-            }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute left-1/4 top-1/2 w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full transform -translate-y-1/2"
-            style={{ filter: 'blur(2px) brightness(1.2)' }}
+        <>
+          <g fill="none" stroke="#F85888" strokeWidth="7">
+            <ellipse cx="73" cy="60" rx="36" ry="47" />
+            <ellipse cx="55" cy="60" rx="25" ry="34" />
+            <ellipse cx="37" cy="60" rx="15" ry="21" />
+          </g>
+          <path d="m73 39 6 15 16 6-16 6-6 15-6-15-16-6 16-6Z" fill="#FFF0F7" stroke="#AD3067" />
+        </>
+      );
+    case 'むし':
+      return (
+        <>
+          <path
+            d="M60 60C-5 60 14-6 48 25L60 48C90-10 126 25 85 54 130 71 94 107 65 76 27 122-5 81 45 65Z"
+            fill="#DAE884"
           />
-          {/* 衝撃波 */}
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 2 + i * 0.5], 
-                opacity: [0, 0.8, 0]
-              }}
-              transition={{ 
-                duration: 1, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute right-1/4 top-1/2 w-8 h-8 border-4 border-orange-400 rounded-full transform -translate-y-1/2"
-            />
-          ))}
-        </div>
+          <path d="m30 35 24 23m38-23L70 58M27 83l27-15m38 15L71 67" stroke="#A8B820" strokeWidth="5" />
+          <path d="m47 63 17-17 23 17-23 16Z" fill="#A8B820" />
+        </>
       );
-
-    case 'どく': // ヘドロウェーブ
+    case 'いわ':
       return (
-        <div className={baseClassName}>
-          {/* 毒の波動 */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.7] }}
-            transition={{ duration: 1.1, ease: "easeInOut" }}
-            className="absolute left-0 top-1/2 w-full h-10 bg-gradient-to-r from-purple-600 via-violet-500 to-purple-400 transform -translate-y-1/2 origin-left"
-            style={{ 
-              clipPath: 'polygon(0 20%, 100% 10%, 100% 90%, 0 80%)',
-              filter: 'brightness(1.1)'
-            }}
+        <>
+          <path d="m34 20 42-8 31 31-7 43-41 21-40-31Z" fill="#B8A038" />
+          <path d="m34 20 23 34 50-11M57 54l2 53M19 76l38-22 43 32" fill="none" stroke="#75632F" strokeWidth="4" />
+          <path d="m36 24 23 25 34-9-20-21Z" fill="#E6D586" stroke="none" />
+          <path d="m9 94 13-8 9 16-15 7m78-4 13-9 8 11-12 8" fill="#B8A038" />
+        </>
+      );
+    case 'ゴースト':
+      return (
+        <>
+          <path d="M104 56c9 32-22 48-48 38L14 104l13-24L6 69l29-12C20 31 51 12 77 21q29 5 27 35Z" fill="#705898" />
+          <path d="M30 78 9 87m19-40L10 39" stroke="#B09BCB" strokeWidth="7" />
+          <path d="m57 49 13 6-10 8m29-18-11 9 10 4" fill="#F4EDFF" stroke="#F4EDFF" />
+          <path d="m63 77 13-5 9 3" fill="none" stroke="#35254F" strokeWidth="4" />
+        </>
+      );
+    case 'ドラゴン':
+      return (
+        <>
+          <path d="M11 90Q52 93 35 64L17 45l28 4-5-32 29 20 23-27-1 31 24 9-16 35-33 13-15 15Z" fill="#7038F8" />
+          <path d="m51 52 20 5 14-16 17 15-14 17-21 4Q51 91 28 88q40-3 23-36Z" fill="#BEA5FF" stroke="none" />
+          <path d="m80 54 10 2-7 7" fill="white" />
+          <path d="m98 78-14 5" stroke="white" strokeWidth="4" />
+        </>
+      );
+    case 'あく':
+      return (
+        <>
+          <path
+            d="M102 10Q75 54 21 77L43 83Q87 60 102 10Zm11 26Q83 80 35 94l22 7q45-23 56-65ZM72 8Q47 41 9 55l16 9Q60 40 72 8Z"
+            fill="#443840"
+            stroke="#705848"
           />
-          {/* 毒の泡 */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, y: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                y: [0, -Math.random() * 30, -Math.random() * 60],
-                opacity: [0, 0.8, 0]
-              }}
-              transition={{ 
-                duration: 1.3, 
-                delay: 0.3 + i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute w-4 h-4 bg-purple-400 rounded-full"
-              style={{
-                left: `${20 + i * 10}%`,
-                top: '50%'
-              }}
-            />
-          ))}
-        </div>
+          <path d="M93 26Q75 55 44 71m59-21Q87 76 57 88" fill="none" stroke="#E8C4D5" strokeWidth="3" />
+        </>
       );
-
-    case 'じめん': // じしん
+    case 'はがね':
       return (
-        <div className={baseClassName}>
-          {/* 地面の揺れエフェクト */}
-          <motion.div
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ 
-              scaleY: [0, 1, 0.8],
-              opacity: [0, 1, 0.7],
-              y: [0, -5, 0, -3, 0]
-            }}
-            transition={{ 
-              duration: 1.2, 
-              ease: "easeOut",
-              y: { repeat: 3, duration: 0.3 }
-            }}
-            className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-amber-700 via-yellow-600 to-amber-500 origin-bottom"
+        <>
+          <path d="m13 96 35-48 50-35 11 11-35 50-47 35Z" fill="#B8B8D0" />
+          <path d="m23 99 39-39 42-41M48 48l26 26" fill="none" stroke="white" strokeWidth="5" />
+          <path
+            d="m29 8 5 15 16 6-16 5-5 16-6-16-15-5 15-6m70 54 4 11 12 5-12 4-4 12-5-12-11-4 11-5"
+            fill="#F8D030"
+            stroke="none"
           />
-          {/* 土の粒子 */}
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, y: 0, x: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                y: [-20, -40, -60],
-                x: Math.random() * 100 - 50,
-                opacity: [0, 0.9, 0]
-              }}
-              transition={{ 
-                duration: 1.5, 
-                delay: 0.2 + i * 0.08,
-                ease: "easeOut"
-              }}
-              className="absolute w-2 h-2 bg-amber-600 rounded-sm"
-              style={{
-                left: `${10 + i * 8}%`,
-                bottom: '0%'
-              }}
-            />
-          ))}
-        </div>
+        </>
       );
-
-    case 'ひこう': // ゴッドバード
+    case 'フェアリー':
       return (
-        <div className={baseClassName}>
-          {/* 羽ばたきエフェクト */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0, rotate: -10 }}
-            animate={{ 
-              scaleX: 1, 
-              opacity: [0, 1, 0.8],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ 
-              duration: 1, 
-              ease: "easeOut",
-              rotate: { repeat: 2, duration: 0.3 }
-            }}
-            className="absolute left-0 top-1/2 w-full h-6 bg-gradient-to-r from-sky-400 via-white to-cyan-300 transform -translate-y-1/2 origin-left"
-            style={{ clipPath: 'polygon(0 0%, 100% 20%, 100% 80%, 0 100%)' }}
+        <>
+          <path d="m65 12 14 28 32 5-23 23 6 32-29-15-29 15 6-32-23-23 32-5Z" fill="#EE99AC" />
+          <path d="m65 32 9 20 22 3-16 15 3 15-18-10-18 10 3-15-16-15 22-3Z" fill="#FFF5CE" stroke="none" />
+          <path
+            d="m19 6 4 11 12 4-12 4-4 12-4-12-11-4 11-4m-1 56 4 10 11 4-11 4-4 10-4-10-10-4 10-4"
+            fill="#F8D030"
+            stroke="none"
           />
-          {/* 風の渦 */}
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, rotate: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1.5, 1], 
-                rotate: [0, 720],
-                opacity: [0, 0.6, 0]
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute w-6 h-6 border-2 border-sky-300 rounded-full"
-              style={{
-                left: `${20 + i * 15}%`,
-                top: `${40 + Math.random() * 20}%`
-              }}
-            />
-          ))}
-        </div>
+        </>
       );
-
-    case 'エスパー': // サイコキネシス
+    case 'ノーマル':
       return (
-        <div className={baseClassName}>
-          {/* サイキック波動 */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: [0, 2, 1.5],
-              opacity: [0, 0.8, 0.6],
-              rotate: [0, 180]
-            }}
-            transition={{ duration: 1.1, ease: "easeOut" }}
-            className="absolute left-1/2 top-1/2 w-32 h-32 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <div className="w-full h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 animate-pulse"
-                 style={{ filter: 'blur(4px) brightness(1.2)' }} />
-          </motion.div>
-          {/* スピラル */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, rotate: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                rotate: [0, 360],
-                opacity: [0, 1, 0]
-              }}
-              transition={{ 
-                duration: 1.3, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute w-3 h-3 bg-purple-400 rounded-full"
-              style={{
-                left: `${40 + Math.cos(i) * 20}%`,
-                top: `${40 + Math.sin(i) * 20}%`
-              }}
-            />
-          ))}
-        </div>
-      );
-
-    case 'むし': // とんぼがえり
-      return (
-        <div className={baseClassName}>
-          {/* 虫の軌跡エフェクト */}
-          <motion.div
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: [0, 1, 0.7] }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <svg className="w-full h-full" viewBox="0 0 400 200">
-              <motion.path
-                d="M50 100 Q150 50 250 100 Q300 150 350 100"
-                stroke="url(#bug-gradient)"
-                strokeWidth="3"
-                fill="none"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1, ease: "easeInOut" }}
-              />
-              <defs>
-                <linearGradient id="bug-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#22c55e" />
-                  <stop offset="50%" stopColor="#84cc16" />
-                  <stop offset="100%" stopColor="#eab308" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </motion.div>
-          {/* 虫の羽音エフェクト */}
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                opacity: [0, 0.8, 0],
-                y: [0, -10, 0]
-              }}
-              transition={{ 
-                duration: 0.8, 
-                delay: 0.2 + i * 0.2,
-                ease: "easeOut",
-                y: { repeat: 2, duration: 0.2 }
-              }}
-              className="absolute w-6 h-4 bg-green-400 rounded-full opacity-60"
-              style={{
-                left: `${30 + i * 20}%`,
-                top: `${45 + Math.random() * 10}%`
-              }}
-            />
-          ))}
-        </div>
-      );
-
-    case 'いわ': // いわなだれ
-      return (
-        <div className={baseClassName}>
-          {/* 岩の落下エフェクト */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, y: -100, x: 0, rotate: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0.8], 
-                y: [0, 150, 200],
-                x: Math.random() * 100 - 50,
-                rotate: Math.random() * 720,
-                opacity: [0, 1, 0.8]
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: i * 0.1,
-                ease: "easeIn"
-              }}
-              className="absolute w-4 h-4 bg-stone-600 rounded-sm"
-              style={{
-                left: `${20 + i * 8}%`,
-                top: '0%',
-                boxShadow: '2px 2px 4px rgba(0,0,0,0.5)'
-              }}
-            />
-          ))}
-          {/* 地面の衝撃 */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.5] }}
-            transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-            className="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-t from-stone-700 to-stone-500 origin-center"
-          />
-        </div>
-      );
-
-    case 'ゴースト': // シャドーボール
-      return (
-        <div className={baseClassName}>
-          {/* 暗闇の球体 */}
-          <motion.div
-            initial={{ scale: 0, x: -150, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.2, 1], 
-              x: [0, 150],
-              opacity: [0, 0.9, 0.8]
-            }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            className="absolute left-1/4 top-1/2 w-16 h-16 bg-gradient-to-br from-purple-900 via-gray-800 to-black rounded-full transform -translate-y-1/2"
-            style={{ 
-              filter: 'blur(1px)',
-              boxShadow: '0 0 20px rgba(75, 0, 130, 0.8), inset 0 0 20px rgba(139, 69, 19, 0.3)'
-            }}
-          />
-          {/* 幽霊のオーラ */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0, rotate: 0 }}
-              animate={{ 
-                scale: [0, 1.5, 1], 
-                opacity: [0, 0.6, 0.3],
-                rotate: [0, 360],
-                x: Math.random() * 100 - 50,
-                y: Math.random() * 60 - 30
-              }}
-              transition={{ 
-                duration: 1.5, 
-                delay: 0.2 + i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute w-8 h-8 bg-gradient-to-br from-purple-600 to-gray-700 rounded-full"
-              style={{
-                left: '50%',
-                top: '50%',
-                filter: 'blur(2px)'
-              }}
-            />
-          ))}
-        </div>
-      );
-
-    case 'ドラゴン': // りゅうせいぐん
-      return (
-        <div className={baseClassName}>
-          {/* 流星群エフェクト */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, x: -200, y: -100, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0.8], 
-                x: [0, 200 + i * 20],
-                y: [0, 100 + i * 15],
-                opacity: [0, 1, 0.8]
-              }}
-              transition={{ 
-                duration: 1.3, 
-                delay: i * 0.15,
-                ease: "easeOut"
-              }}
-              className="absolute w-6 h-2 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400 rounded-full"
-              style={{
-                left: '10%',
-                top: '20%',
-                filter: 'brightness(1.3)',
-                boxShadow: '0 0 10px rgba(147, 51, 234, 0.7)'
-              }}
-            />
-          ))}
-          {/* 竜のオーラ */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0, rotate: 0 }}
-            animate={{ 
-              scale: [0, 2, 1.5], 
-              opacity: [0, 0.8, 0.6],
-              rotate: [0, 180]
-            }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
-            className="absolute left-1/2 top-1/2 w-24 h-24 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <div className="w-full h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500"
-                 style={{ filter: 'blur(3px) brightness(1.2)' }} />
-          </motion.div>
-        </div>
-      );
-
-    case 'あく': // かみくだく
-      return (
-        <div className={baseClassName}>
-          {/* 牙のエフェクト */}
-          <motion.div
-            initial={{ scale: 0, rotate: -30, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.3, 1], 
-              rotate: [0, 30, 0],
-              opacity: [0, 1, 0.9]
-            }}
-            transition={{ duration: 0.9, ease: "easeInOut" }}
-            className="absolute right-1/4 top-1/2 transform -translate-y-1/2"
-          >
-            {/* 上の牙 */}
-            <div className="w-8 h-12 bg-gradient-to-b from-gray-300 to-gray-600 transform rotate-12"
-                 style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
-            {/* 下の牙 */}
-            <div className="w-8 h-12 bg-gradient-to-t from-gray-300 to-gray-600 transform -rotate-12 -mt-2"
-                 style={{ clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)' }} />
-          </motion.div>
-          {/* 暗闇エフェクト */}
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 2 + i * 0.3], 
-                opacity: [0, 0.3, 0]
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute right-1/4 top-1/2 w-6 h-6 bg-black rounded-full transform -translate-y-1/2"
-            />
-          ))}
-        </div>
-      );
-
-    case 'はがね': // アイアンテール
-      return (
-        <div className={baseClassName}>
-          {/* 金属光沢の軌跡 */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0, rotate: -15 }}
-            animate={{ 
-              scaleX: 1, 
-              opacity: [0, 1, 0.9],
-              rotate: [0, 15, 0]
-            }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute left-0 top-1/2 w-full h-8 bg-gradient-to-r from-gray-400 via-white to-gray-300 transform -translate-y-1/2 origin-left"
-            style={{ 
-              filter: 'brightness(1.5)',
-              boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)'
-            }}
-          />
-          {/* メタルスパーク */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                opacity: [0, 1, 0],
-                x: Math.random() * 150 - 75,
-                y: Math.random() * 60 - 30
-              }}
-              transition={{ 
-                duration: 1, 
-                delay: 0.2 + i * 0.08,
-                ease: "easeOut"
-              }}
-              className="absolute left-1/2 top-1/2 w-2 h-2 bg-white rounded-full"
-              style={{ filter: 'brightness(2)' }}
-            />
-          ))}
-        </div>
-      );
-
-    case 'フェアリー': // ムーンフォース
-      return (
-        <div className={baseClassName}>
-          {/* 妖精の光 */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.8, 1.4],
-              opacity: [0, 0.9, 0.8],
-              rotate: [0, 360]
-            }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="absolute left-1/2 top-1/2 w-28 h-28 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <div className="w-full h-full rounded-full bg-gradient-to-r from-pink-300 via-purple-200 to-blue-200"
-                 style={{ 
-                   filter: 'blur(2px) brightness(1.4)',
-                   boxShadow: '0 0 30px rgba(236, 72, 153, 0.6)'
-                 }} />
-          </motion.div>
-          {/* キラキラパーティクル */}
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0, rotate: 0 }}
-              animate={{ 
-                scale: [0, 1, 0], 
-                opacity: [0, 1, 0],
-                rotate: [0, 180],
-                x: Math.cos(i * 30 * Math.PI / 180) * 80,
-                y: Math.sin(i * 30 * Math.PI / 180) * 80
-              }}
-              transition={{ 
-                duration: 1.5, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute left-1/2 top-1/2 text-pink-300 text-lg"
-            >
-              ✨
-            </motion.div>
-          ))}
-        </div>
-      );
-
-    case 'ノーマル': // はかいこうせん
-      return (
-        <div className={baseClassName}>
-          {/* 直線的な光線 */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: [0, 1, 0.9] }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute left-0 top-1/2 w-full h-6 bg-gradient-to-r from-white via-yellow-200 to-orange-200 transform -translate-y-1/2 origin-left"
-            style={{ 
-              filter: 'brightness(1.6)',
-              boxShadow: '0 0 20px rgba(255, 255, 255, 0.9)'
-            }}
-          />
-          {/* エネルギー放射 */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 2 + i * 0.2], 
-                opacity: [0, 0.6, 0]
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: i * 0.1,
-                ease: "easeOut"
-              }}
-              className="absolute right-1/4 top-1/2 w-4 h-4 border-2 border-yellow-300 rounded-full transform -translate-y-1/2"
-            />
-          ))}
-        </div>
-      );
-
-    default:
-      return (
-        <div className={baseClassName}>
-          {/* デフォルトエフェクト */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [0, 1.2, 1], opacity: [0, 1, 0.8] }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute left-1/2 top-1/2 w-12 h-12 bg-gradient-to-r from-gray-400 to-gray-600 rounded-full transform -translate-x-1/2 -translate-y-1/2"
-          />
-        </div>
+        <>
+          <path d="m60 10 13 26 30-13-13 30 25 13-28 11 9 30-29-15-21 20-5-30-31-3 23-22-14-27 30 8Z" fill="#A8A878" />
+          <path d="m63 38 8 16 19 5-17 12-3 19-15-13-19 3 8-18-9-17 20 2Z" fill="#FFF9DC" stroke="none" />
+        </>
       );
   }
+}
+
+export default function MoveEffect({ attackType, className = '' }: MoveEffectProps) {
+  const reducedMotion = useReducedMotion();
+  const rotates =
+    attackType === 'くさ' || attackType === 'むし' || attackType === 'こおり' || attackType === 'フェアリー';
+
+  return (
+    <div className={`pointer-events-none absolute inset-0 ${className}`} aria-hidden="true">
+      {/* 少数の残像と主役の形状。固定値のみなので再レンダーでも軌道が変わらない。 */}
+      {(reducedMotion ? [0] : [2, 1, 0]).map((index) => (
+        <motion.div
+          key={index}
+          className="absolute inset-0"
+          initial={{ opacity: 0, x: reducedMotion ? '55%' : '0%' }}
+          animate={reducedMotion ? { opacity: [0, 0.85, 0] } : { x: ['0%', '100%', '100%'], opacity: [0, 1, 1, 0] }}
+          transition={
+            reducedMotion
+              ? { duration: 1 }
+              : {
+                  duration: 1.05,
+                  delay: index * 0.045,
+                  x: { duration: 1.05, times: [0, 2 / 3, 1], ease: 'easeInOut' },
+                  opacity: { duration: 1.05, times: [0, 0.12, 0.68, 1] },
+                }
+          }
+        >
+          <div
+            className="absolute left-0 top-1/2 size-[104px] -translate-x-1/2 -translate-y-1/2 sm:size-[144px]"
+            style={{ opacity: index === 0 ? 1 : 0.28 }}
+          >
+            <motion.svg
+              viewBox="0 0 120 120"
+              className="size-full overflow-visible"
+              fill={TYPE_COLORS[attackType]}
+              stroke="#26313D"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              initial={{ rotate: 0, y: 0, scale: reducedMotion ? 1 : 0.45 * (1 - index * 0.22) }}
+              animate={
+                reducedMotion
+                  ? {}
+                  : {
+                      rotate: rotates ? [0, 135] : attackType === 'いわ' ? [-30, 20] : 0,
+                      y: attackType === 'いわ' ? [0, -48, 0, 0] : 0,
+                      scale: [0.45, 1, 1, 0.7].map((value) => value * (1 - index * 0.22)),
+                    }
+              }
+              transition={{ duration: 1.05, times: [0, 0.35, 2 / 3, 1], ease: 'easeOut' }}
+            >
+              <MoveShape type={attackType} />
+            </motion.svg>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
 }
