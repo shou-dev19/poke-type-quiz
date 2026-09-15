@@ -17,7 +17,20 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"M PLUS Rounded 1c"', '"Hiragino Maru Gothic ProN"', '"Yu Gothic"', 'sans-serif'],
+        display: ['"M PLUS Rounded 1c"', '"Hiragino Maru Gothic ProN"', '"Yu Gothic"', 'sans-serif'],
+      },
       colors: {
+        pop: {
+          ink: 'rgb(var(--pop-ink) / <alpha-value>)',
+          paper: 'rgb(var(--pop-paper) / <alpha-value>)',
+          yellow: 'rgb(var(--pop-yellow) / <alpha-value>)',
+          orange: 'rgb(var(--pop-orange) / <alpha-value>)',
+          blue: 'rgb(var(--pop-blue) / <alpha-value>)',
+          green: 'rgb(var(--pop-green) / <alpha-value>)',
+          pink: 'rgb(var(--pop-pink) / <alpha-value>)',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -53,9 +66,19 @@ export default {
         },
       },
       borderRadius: {
+        panel: 'var(--radius-panel)',
+        pill: '9999px',
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        pop: '0 4px 0 rgb(var(--pop-ink))',
+        'pop-lg': '0 7px 0 rgb(var(--pop-ink))',
+        'pop-soft': '0 5px 0 rgb(38 49 61 / 10%)',
+      },
+      spacing: {
+        panel: 'var(--space-panel)',
       },
       keyframes: {
         "accordion-down": {

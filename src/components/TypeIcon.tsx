@@ -88,24 +88,22 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
         ${sizeClasses[size]} 
         ${getTypeAnimation(type)} 
         ${className}
-        rounded-full 
+        type-token rounded-full shrink-0
         flex items-center justify-center 
-        border-2 border-white
-        shadow-lg
-        cursor-pointer
+        border-2 border-pop-ink/80
+        shadow-pop-soft
         relative
         overflow-hidden
       `}
       style={{ 
-        backgroundColor: TYPE_COLORS[type],
-        background: `linear-gradient(135deg, ${TYPE_COLORS[type]}, ${TYPE_COLORS[type]}dd)`
+        backgroundColor: TYPE_COLORS[type]
       }}
     >
       {!imageError ? (
         <img 
           src={imageUrl}
           alt={`${type}タイプ`}
-          className="w-full h-full object-contain p-1"
+          className="w-full h-full object-contain p-1.5"
           onError={() => setImageError(true)}
           loading="lazy"
           decoding="async"
@@ -116,37 +114,6 @@ export default function TypeIcon({ type, size = 'md', animated = true, className
         <div className="w-8 h-8 flex items-center justify-center">
           {getFallbackIcon(type)}
         </div>
-      )}
-      
-      {/* タイプ別の特殊エフェクト */}
-      {type === 'ほのお' && animated && (
-        <div className="absolute inset-0 bg-gradient-to-t from-red-600 via-orange-500 to-yellow-400 opacity-30 animate-pulse pointer-events-none" />
-      )}
-      
-      {type === 'みず' && animated && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-2 left-2 w-2 h-2 bg-blue-200 rounded-full animate-ping opacity-40" />
-          <div className="absolute bottom-3 right-3 w-1 h-1 bg-white rounded-full animate-pulse opacity-60" />
-        </div>
-      )}
-      
-      {type === 'でんき' && animated && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1 right-2 w-1 h-4 bg-yellow-200 animate-pulse opacity-50" />
-          <div className="absolute bottom-2 left-3 w-1 h-3 bg-white animate-ping opacity-40" />
-        </div>
-      )}
-      
-      {type === 'フェアリー' && animated && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-2 left-2 w-1 h-1 bg-pink-200 rounded-full animate-ping opacity-60" />
-          <div className="absolute top-4 right-3 w-1 h-1 bg-white rounded-full animate-pulse opacity-70" />
-          <div className="absolute bottom-3 left-4 w-1 h-1 bg-pink-100 rounded-full animate-ping opacity-50" style={{ animationDelay: '0.5s' }} />
-        </div>
-      )}
-      
-      {type === 'ゴースト' && animated && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-700 via-purple-900 to-gray-900 opacity-30 animate-pulse pointer-events-none" />
       )}
     </div>
   );
