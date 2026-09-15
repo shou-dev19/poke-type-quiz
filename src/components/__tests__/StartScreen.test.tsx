@@ -26,7 +26,7 @@ describe('StartScreen', () => {
     render(<StartScreen onStart={mockOnStart} />);
     
     expect(screen.getByText('ポケモンタイプ相性クイズ')).toBeInTheDocument();
-    expect(screen.getByText('ポケモンのタイプ相性を覚えて、バトルマスターを目指そう！')).toBeInTheDocument();
+    expect(screen.getByText('ポケモンのタイプ相性を覚えて、ポケモンマスターを目指そう！')).toBeInTheDocument();
   });
 
   it('should render type icons in the animation', () => {

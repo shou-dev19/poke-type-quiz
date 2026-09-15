@@ -10,7 +10,7 @@ test.describe('Pokemon Type Quiz E2E Tests', () => {
     await expect(page.locator('text=ポケモンタイプ相性クイズ')).toBeVisible();
     
     // Check if the description is visible
-    await expect(page.locator('text=ポケモンのタイプ相性を覚えて、バトルマスターを目指そう！')).toBeVisible();
+    await expect(page.locator('text=ポケモンのタイプ相性を覚えて、ポケモンマスターを目指そう！')).toBeVisible();
     
     // Check if the start button is present
     await expect(page.locator('button:has-text("クイズを開始する")')).toBeVisible();
