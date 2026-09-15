@@ -21,7 +21,8 @@
       "WebFetch(domain:github.com)",
       "Bash(npm audit:*)",
       "Bash(grep:*)",
-      "WebFetch(domain:poke-type-quiz.vercel.app)"
+      "WebFetch(domain:poke-type-quiz.vercel.app)",
+      "Bash(codex exec:*)"
     ],
     "deny": []
   }
