@@ -135,9 +135,9 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
 
             <span className="absolute left-1/2 top-1/2 z-10 flex size-10 -translate-x-1/2 -translate-y-1/2 -rotate-6 items-center justify-center rounded-xl border-2 border-pop-ink bg-pop-yellow text-sm font-black italic shadow-pop sm:size-12 sm:text-lg" aria-hidden="true">VS</span>
 
-            <div className="flex flex-col items-center justify-center rounded-2xl border-2 px-2 py-3 shadow-pop-soft" style={{ borderColor: TYPE_COLORS[defendTypes[0]], background: defendTypes.length === 2 ? `linear-gradient(115deg, ${TYPE_COLORS[defendTypes[0]]}18 50%, ${TYPE_COLORS[defendTypes[1]]}18 50%)` : `${TYPE_COLORS[defendTypes[0]]}18` }}>
+            <div className="flex flex-col items-center justify-center rounded-2xl border-2 px-2 py-3 shadow-pop-soft" style={{ borderColor: TYPE_COLORS[defendTypes[0]], background: defendTypes.length === 2 ? `linear-gradient(90deg, ${TYPE_COLORS[defendTypes[0]]}18 50%, ${TYPE_COLORS[defendTypes[1]]}18 50%)` : `${TYPE_COLORS[defendTypes[0]]}18` }}>
               <p className="mb-3 flex items-center gap-1.5 text-xs font-extrabold"><Shield className="size-3.5" aria-hidden="true" />防御側</p>
-              <div className="flex items-center justify-center gap-2 sm:gap-5">
+              <div className="grid w-full grid-flow-col auto-cols-fr items-center gap-2 sm:gap-5">
                 {defendTypes.map(type => (
                   <div key={type} className="flex flex-col items-center">
                     <TypeIcon type={type} size={Array.isArray(currentQuestion.defendType) ? 'sm' : 'md'} animated={false} className="sm:!h-20 sm:!w-20" />
@@ -194,7 +194,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
                   <h4 className="mb-3 flex items-center gap-2 text-sm font-extrabold"><Layers className="size-4" aria-hidden="true" />複合タイプの計算</h4>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {currentQuestion.defendType.map(type => (
-                      <div key={type} className="flex items-center justify-between gap-2 rounded-xl bg-white p-2">
+                      <div key={type} className="flex items-center gap-2 rounded-xl bg-white p-2">
                         <p className="sr-only">{currentQuestion.attackType} → {type} = {getAnswerText(calculateSingleTypeEffectiveness(currentQuestion.attackType, type))}</p>
                         <div className="flex shrink-0 items-center gap-2 sm:gap-3" aria-hidden="true">
                           <TypeIcon type={currentQuestion.attackType} size="sm" animated={false} className="!h-8 !w-8 sm:!h-10 sm:!w-10" />
@@ -202,7 +202,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
                           <TypeIcon type={type} size="sm" animated={false} className="!h-8 !w-8 sm:!h-10 sm:!w-10" />
                           <Equal className="size-4" />
                         </div>
-                        <span className="text-right text-xs font-bold sm:text-sm" aria-hidden="true">{getAnswerText(calculateSingleTypeEffectiveness(currentQuestion.attackType, type))}</span>
+                        <span className="rounded-lg border border-pop-ink/15 bg-pop-yellow/20 px-2 py-1.5 text-xs font-bold sm:text-sm" aria-hidden="true">{getAnswerText(calculateSingleTypeEffectiveness(currentQuestion.attackType, type))}</span>
                       </div>
                     ))}
                   </div>
