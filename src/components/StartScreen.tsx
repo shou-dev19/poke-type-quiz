@@ -13,6 +13,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { Button } from './ui/button';
+import { Switch } from './ui/switch';
 import {
   Select,
   SelectContent,
@@ -25,6 +26,9 @@ import TypeIcon from './TypeIcon';
 
 interface StartScreenProps {
   onStart: (difficulty: Difficulty, questionCount: number) => void;
+  attackAnimationEnabled?: boolean;
+  onAttackAnimationEnabledChange?: (enabled: boolean) => void;
+  reducedMotion?: boolean;
 }
 
 const difficulties: Difficulty[] = ['かんたん', 'ふつう', 'むずかしい'];
@@ -38,7 +42,7 @@ const rules = [
   {
     icon: Zap,
     color: 'bg-pop-yellow',
-    text: '選択後に攻撃アニメーションが表示されます',
+    text: '回答後に正解とタイプ相性の解説が表示されます',
   },
   {
     icon: Layers,
@@ -52,7 +56,12 @@ const rules = [
   },
 ];
 
-export default function StartScreen({ onStart }: StartScreenProps) {
+export default function StartScreen({
+  onStart,
+  attackAnimationEnabled = true,
+  onAttackAnimationEnabledChange = () => undefined,
+  reducedMotion: reducedMotionPreference = false,
+}: StartScreenProps) {
   const [difficulty, setDifficulty] = useState<Difficulty>('ふつう');
   const [questionCount, setQuestionCount] = useState(10);
   const [marqueePaused, setMarqueePaused] = useState(false);
@@ -244,6 +253,35 @@ export default function StartScreen({ onStart }: StartScreenProps) {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-pop-ink/15 bg-pop-paper px-4 py-3">
+                  <label htmlFor="attack-animation" className="min-w-0 cursor-pointer">
+                    <span className="flex items-center gap-2.5 text-base font-extrabold">
+                      <span
+                        className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-pop-yellow text-xs"
+                        aria-hidden="true"
+                      >
+                        03
+                      </span>
+                      回答後のバトル演出
+                    </span>
+                    <span id="attack-animation-description" className="mt-1.5 block text-sm font-medium leading-relaxed text-muted-foreground">
+                      {reducedMotionPreference
+                        ? '端末の「視差効果を減らす」設定により、現在は演出を省略します'
+                        : attackAnimationEnabled
+                          ? '回答後に攻撃アニメーションを表示します'
+                          : '回答後すぐに正解と解説を表示します'}
+                    </span>
+                  </label>
+                  <Switch
+                    id="attack-animation"
+                    checked={attackAnimationEnabled}
+                    onCheckedChange={onAttackAnimationEnabledChange}
+                    aria-describedby="attack-animation-description"
+                    className="h-7 w-12 border-2 border-pop-ink bg-white data-[state=checked]:bg-pop-green [&_[data-slot=switch-thumb]]:size-5 [&_[data-slot=switch-thumb]]:border [&_[data-slot=switch-thumb]]:border-pop-ink"
+                  />
+                </div>
               </div>
             </div>
             <Button

@@ -221,4 +221,27 @@ describe('QuizScreen', () => {
     
     expect(mockOnAnimationComplete).toHaveBeenCalled();
   });
+
+  it('should show the explanation immediately when showResult is true', () => {
+    const stateWithoutAnimation: QuizState = {
+      ...mockQuizState,
+      selectedAnswer: 2,
+      showResult: true,
+      isAnimating: false,
+    };
+
+    render(
+      <QuizScreen
+        quizState={stateWithoutAnimation}
+        onAnswer={mockOnAnswer}
+        onNext={mockOnNext}
+        onQuit={mockOnQuit}
+        onAnimationComplete={mockOnAnimationComplete}
+      />,
+    );
+
+    expect(screen.queryByTestId('attack-animation')).not.toBeInTheDocument();
+    expect(screen.getByText('正解！')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /次の問題へ/ })).toBeInTheDocument();
+  });
 });

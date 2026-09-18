@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Button, buttonVariants } from './ui/button';
 import { Progress } from './ui/progress';
+import { Switch } from './ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import TypeIcon from './TypeIcon';
 import AttackAnimation from './AttackAnimation';
@@ -15,10 +15,21 @@ interface QuizScreenProps {
   onNext: () => void;
   onQuit: () => void;
   onAnimationComplete: () => void;
+  attackAnimationEnabled?: boolean;
+  onAttackAnimationEnabledChange?: (enabled: boolean) => void;
+  reducedMotion?: boolean;
 }
 
-export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnimationComplete }: QuizScreenProps) {
-  const [showExplanation, setShowExplanation] = useState(false);
+export default function QuizScreen({
+  quizState,
+  onAnswer,
+  onNext,
+  onQuit,
+  onAnimationComplete,
+  attackAnimationEnabled = true,
+  onAttackAnimationEnabledChange = () => undefined,
+  reducedMotion: reducedMotionPreference = false,
+}: QuizScreenProps) {
   const reducedMotion = useReducedMotion();
   
   const currentQuestion = quizState.questions[quizState.currentQuestion];
@@ -29,19 +40,6 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
     if (quizState.selectedAnswer === null && !quizState.isAnimating) {
       onAnswer(answer);
     }
-  };
-
-  // AttackAnimationが完了したときの処理
-  const handleAnimationComplete = useCallback(() => {
-    console.log('QuizScreen handleAnimationComplete called');
-    // App.tsxの状態を更新してからローカル状態も更新
-    onAnimationComplete();
-    setShowExplanation(true);
-  }, [onAnimationComplete]);
-
-  const handleNext = () => {
-    setShowExplanation(false);
-    onNext();
   };
 
   // 単一タイプの効果計算
@@ -60,7 +58,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
         <AttackAnimation
           attackType={currentQuestion.attackType}
           defendType={currentQuestion.defendType}
-          onAnimationComplete={handleAnimationComplete}
+          onAnimationComplete={onAnimationComplete}
           isCorrect={quizState.selectedAnswer === currentQuestion.correctAnswer}
           damageMultiplier={currentQuestion.correctAnswer}
         />
@@ -98,6 +96,25 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
                     現在の進行状況は保存されません。本当にクイズを中断してメニューに戻りますか？
                   </AlertDialogDescription>
                 </AlertDialogHeader>
+                <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-pop-ink/15 bg-white p-4">
+                  <label htmlFor="quiz-attack-animation" className="min-w-0 cursor-pointer">
+                    <span className="block text-sm font-extrabold">回答後のバトル演出</span>
+                    <span id="quiz-attack-animation-description" className="mt-1 block text-xs font-medium leading-relaxed text-muted-foreground">
+                      {reducedMotionPreference
+                        ? '端末の設定により現在は演出を省略します'
+                        : attackAnimationEnabled
+                          ? '次の回答でも攻撃演出を表示します'
+                          : '次の回答からすぐに解説を表示します'}
+                    </span>
+                  </label>
+                  <Switch
+                    id="quiz-attack-animation"
+                    checked={attackAnimationEnabled}
+                    onCheckedChange={onAttackAnimationEnabledChange}
+                    aria-describedby="quiz-attack-animation-description"
+                    className="h-7 w-12 border-2 border-pop-ink bg-white data-[state=checked]:bg-pop-green [&_[data-slot=switch-thumb]]:size-5 [&_[data-slot=switch-thumb]]:border [&_[data-slot=switch-thumb]]:border-pop-ink"
+                  />
+                </div>
                 <AlertDialogFooter className="mt-3 gap-3">
                   <AlertDialogCancel className={buttonVariants({ variant: 'pop-outline', className: 'min-h-[48px]' })}>キャンセル</AlertDialogCancel>
                   <AlertDialogAction onClick={onQuit} className={buttonVariants({ variant: 'pop', className: 'min-h-[48px] bg-pop-pink hover:bg-pop-pink' })}>
@@ -149,7 +166,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
           </div>
 
           {/* 選択肢の色は倍率だけに対応し、正解による強調はしない。 */}
-          {!showExplanation && (
+          {!quizState.showResult && (
             <div className={`grid grid-cols-2 gap-3 pb-1 sm:gap-4 ${answerChoices.length === 6 ? 'lg:grid-cols-3' : ''}`}>
               {answerChoices.map((choice) => (
                 <Button
@@ -174,7 +191,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
           )}
 
           {/* 結果と説明 */}
-          {showExplanation && !quizState.isAnimating && (
+          {quizState.showResult && !quizState.isAnimating && (
             <div className="space-y-4">
               <div className="border-t-2 border-dashed border-pop-ink/15 pt-4 text-center" role="status">
                 <motion.div
@@ -213,7 +230,7 @@ export default function QuizScreen({ quizState, onAnswer, onNext, onQuit, onAnim
                 </div>
               )}
 
-              <Button onClick={handleNext} variant="pop" size="hero" className="w-full justify-between">
+              <Button onClick={onNext} variant="pop" size="hero" className="w-full justify-between">
                 {quizState.currentQuestion + 1 < quizState.totalQuestions ? <Swords className="size-5" aria-hidden="true" /> : <Trophy className="size-5" aria-hidden="true" />}
                 {quizState.currentQuestion + 1 < quizState.totalQuestions ? '次の問題へ' : '結果を見る'}
                 <ArrowRight className="size-5" aria-hidden="true" />

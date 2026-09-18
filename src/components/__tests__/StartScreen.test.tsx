@@ -17,9 +17,11 @@ vi.mock('../TypeIcon', () => ({
 
 describe('StartScreen', () => {
   const mockOnStart = vi.fn();
+  const mockOnAttackAnimationEnabledChange = vi.fn();
 
   beforeEach(() => {
     mockOnStart.mockClear();
+    mockOnAttackAnimationEnabledChange.mockClear();
   });
 
   it('should render title and description', () => {
@@ -76,6 +78,20 @@ describe('StartScreen', () => {
     
     // Should use default values
     expect(mockOnStart).toHaveBeenCalledWith('ふつう', 10);
+  });
+
+  it('should let the user change the attack animation preference', () => {
+    render(
+      <StartScreen
+        onStart={mockOnStart}
+        attackAnimationEnabled={true}
+        onAttackAnimationEnabledChange={mockOnAttackAnimationEnabledChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('switch', { name: /回答後のバトル演出/ }));
+
+    expect(mockOnAttackAnimationEnabledChange).toHaveBeenCalledWith(false);
   });
 
   it('should render with proper styling classes', () => {
