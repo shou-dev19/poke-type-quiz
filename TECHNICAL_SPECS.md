@@ -97,21 +97,13 @@ Jobs:
   ├── test (Unit Tests)
   ├── e2e-test (E2E Tests)  
   ├── build (Production Build)
-  ├── lighthouse (Performance Check)
-  └── deploy (GitHub Pages)
+  └── lighthouse (Performance Check)
 ```
 
-#### 2. Vercel Deployment (`vercel-deploy.yml`)
-```yaml
-Trigger: push (main), pull_request
-Jobs:
-  ├── Install & Test
-  ├── Type Check & Lint
-  ├── Vercel Build
-  └── Vercel Deploy
-```
+> 本番デプロイは Vercel の GitHub 連携（vercel[bot]）が push をトリガーに自動実行します。
+> GitHub Actions 側にデプロイジョブは持ちません。
 
-#### 3. Security Audit (`security-audit.yml`)
+#### 2. Security Audit (`security-audit.yml`)
 ```yaml
 Trigger: weekly, push (main), pull_request
 Jobs:
@@ -120,7 +112,7 @@ Jobs:
   └── CodeQL Analysis
 ```
 
-#### 4. Dependency Update (`dependency-update.yml`)
+#### 3. Dependency Update (`dependency-update.yml`)
 ```yaml
 Trigger: weekly (Saturday)
 Jobs:
