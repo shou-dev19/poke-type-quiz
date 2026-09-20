@@ -40,8 +40,12 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev',
+    // CIではビルド済みのdistをpreviewで配信する（起動が速く、本番に近い）
+    command: process.env.CI
+      ? 'npm run preview -- --port 5173 --strictPort'
+      : 'npm run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
   },
 });

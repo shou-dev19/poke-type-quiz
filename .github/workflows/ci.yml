@@ -126,15 +126,9 @@ jobs:
     - name: Build application
       run: npm run build
       
-    - name: Serve built app
-      run: |
-        npm install -g serve
-        serve -s dist -p 3000 &
-        sleep 5
-        
     - name: Run Lighthouse CI
       run: |
-        npm install -g @lhci/cli
-        lhci autorun
+        npm install -g serve @lhci/cli
+        lhci autorun --config=./lighthouserc.cjs
       env:
         LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
